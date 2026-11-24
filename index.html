@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapply</title>
+<meta name="description" content="Yapply is a voice-first AI career agent for US new grads and interns. Talk for 10 minutes, get a resume built from your real story, matched jobs and one-click applications.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a newsroom-style job desk. Ink-on-paper base, one highlighter yellow that marks
+   the words Yapply "heard" in your story; cobalt for anything you can click. */
+:root {
+  --paper: #f4f5f0;
+  --panel: #ffffff;
+  --ink: #14162a;
+  --muted: #5a5f74;
+  --line: #dddfd6;
+  --accent: #2b37d4;
+  --accent-ink: #ffffff;
+  --hi: #ffe04a;
+  --hi-ink: #14162a;
+  --good: #17825a;
+  --warn: #b36b00;
+  --bad: #b3362f;
+  --soft: #eceee6;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 10px;
+  --wrap: 1160px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1120; --panel: #171a2c; --ink: #eceef6; --muted: #a3a8bf; --line: #2a2e46;
+    --accent: #9aa2ff; --accent-ink: #0f1120; --hi: #f2cd2c; --hi-ink: #14162a;
+    --good: #48c58d; --warn: #e0a243; --bad: #f07b72; --soft: #1d2136; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1120; --panel: #171a2c; --ink: #eceef6; --muted: #a3a8bf; --line: #2a2e46;
+  --accent: #9aa2ff; --accent-ink: #0f1120; --hi: #f2cd2c; --hi-ink: #14162a;
+  --good: #48c58d; --warn: #e0a243; --bad: #f07b72; --soft: #1d2136; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--paper); color: var(--ink); font: 16px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+img, svg { max-width: 100%; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+h1, h2, h3, h4 { font-family: var(--display); line-height: 1.1; text-wrap: balance; margin: 0 0 .5em; letter-spacing: -0.02em; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 750; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+h4 { font-size: 1.02rem; font-weight: 700; letter-spacing: 0; }
+p { margin: 0 0 1em; }
+.prose { max-width: 68ch; }
+.prose h2 { margin-top: 1.6em; }
+.prose h3 { margin-top: 1.3em; }
+.prose li { margin-bottom: .35em; }
+.muted { color: var(--muted); }
+.small { font-size: .875rem; }
+.mono { font-family: var(--mono); font-size: .85em; }
+.num { font-variant-numeric: tabular-nums; }
+mark, .mark { background: linear-gradient(transparent 12%, var(--hi) 12%, var(--hi) 88%, transparent 88%); color: var(--hi-ink); padding: 0 .15em; border-radius: 2px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+.section { padding: clamp(40px, 6vw, 72px) 0; }
+.section + .section { border-top: 1px solid var(--line); }
+.stack { display: grid; gap: 16px; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+.grid-2 { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); align-items: start; }
+.eyebrow { font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--ink); background: var(--panel); color: var(--ink); padding: 10px 18px; border-radius: 999px; font: 600 .95rem var(--body); cursor: pointer; text-decoration: none; transition: transform .12s ease, background .12s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn.primary { background: var(--ink); color: var(--paper); }
+.btn.accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.ghost { border-color: var(--line); }
+.btn.sm { padding: 6px 12px; font-size: .85rem; }
+
+/* header */
+.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 22px; height: 64px; }
+.logo { font: 800 1.45rem var(--display); color: var(--ink); text-decoration: none; letter-spacing: -0.04em; display: flex; align-items: center; gap: 8px; }
+.logo .dot { width: 22px; height: 22px; border-radius: 6px; background: var(--hi); display: grid; place-items: center; }
+.logo .dot i { display: block; width: 3px; border-radius: 2px; background: var(--hi-ink); margin: 0 1px; }
+.nav { display: flex; gap: 4px; align-items: center; margin-left: 8px; }
+.nav > * { position: relative; }
+.nav a.nl, .nav button.nl { background: none; border: 0; font: 600 .95rem var(--body); color: var(--ink); padding: 8px 12px; border-radius: 8px; cursor: pointer; text-decoration: none; }
+.nav a.nl:hover, .nav button.nl:hover, .nav .open > button.nl { background: var(--soft); }
+.dd { position: absolute; top: calc(100% + 8px); left: 0; min-width: 300px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 10px; box-shadow: 0 18px 40px rgba(10, 12, 30, .12); display: none; }
+.open > .dd { display: grid; gap: 2px; }
+.dd a { display: block; padding: 9px 12px; border-radius: 8px; color: var(--ink); text-decoration: none; }
+.dd a:hover { background: var(--soft); }
+.dd a b { display: block; font-weight: 700; font-size: .93rem; }
+.dd a span { font-size: .82rem; color: var(--muted); }
+.top .spacer { flex: 1; }
+.menu-btn { display: none; }
+@media (max-width: 880px) {
+  .nav { display: none; position: absolute; top: 64px; left: 0; right: 0; background: var(--panel); flex-direction: column; align-items: stretch; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .nav.show { display: flex; }
+  .dd { position: static; box-shadow: none; border: 0; padding: 0 0 0 12px; min-width: 0; }
+  .menu-btn { display: inline-flex; }
+  .top .login { display: none; }
+}
+
+/* url chip that maps prototype routes to production URLs */
+.urlbar { font-family: var(--mono); font-size: .78rem; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 14px 0 0; }
+.urlbar .path { background: var(--soft); border: 1px solid var(--line); padding: 2px 8px; border-radius: 6px; color: var(--ink); }
+.crumbs { font-size: .85rem; color: var(--muted); }
+.crumbs a { color: var(--muted); }
+
+/* page head */
+.phead { padding: 28px 0 32px; border-bottom: 1px solid var(--line); }
+.phead p.lead { font-size: 1.15rem; color: var(--muted); max-width: 62ch; }
+.answer { border-left: 4px solid var(--hi); background: var(--panel); padding: 14px 18px; border-radius: 0 var(--r) var(--r) 0; max-width: 72ch; }
+
+/* cards */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.card h3 { margin-bottom: .35em; }
+a.card { color: inherit; text-decoration: none; display: block; transition: border-color .15s ease, transform .15s ease; }
+a.card:hover { border-color: var(--ink); transform: translateY(-2px); }
+.tag { display: inline-flex; align-items: center; gap: 5px; font-size: .75rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--soft); color: var(--ink); white-space: nowrap; }
+.tag.good { color: var(--good); border-color: color-mix(in srgb, var(--good) 35%, transparent); background: color-mix(in srgb, var(--good) 10%, transparent); }
+.tag.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); background: color-mix(in srgb, var(--warn) 10%, transparent); }
+.tag.bad { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 35%, transparent); background: color-mix(in srgb, var(--bad) 10%, transparent); }
+.tag.hi { background: var(--hi); color: var(--hi-ink); border-color: transparent; }
+.demo-note { display: inline-flex; gap: 6px; align-items: center; font-size: .78rem; color: var(--warn); border: 1px dashed color-mix(in srgb, var(--warn) 50%, transparent); padding: 3px 10px; border-radius: 999px; }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* job list */
+.jobs { display: grid; gap: 10px; }
+.job { display: grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.job:hover { border-color: var(--ink); }
+.job .logo-sq { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font: 800 1rem var(--display); color: #fff; }
+.job h4 { margin: 0; }
+.job h4 a { color: var(--ink); text-decoration: none; }
+.job h4 a:hover { text-decoration: underline; }
+.job .meta { font-size: .85rem; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; margin-top: 2px; }
+.job .side { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+@media (max-width: 600px) { .job { grid-template-columns: 44px 1fr; } .job .side { grid-column: 1 / -1; flex-direction: row; align-items: center; } }
+
+/* filters & forms */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 16px; }
+label { font-size: .82rem; font-weight: 600; display: grid; gap: 5px; }
+input, select, textarea { font: inherit; color: var(--ink); background: var(--paper); border: 1.5px solid var(--line); border-radius: 9px; padding: 9px 11px; min-width: 0; }
+textarea { min-height: 150px; resize: vertical; line-height: 1.5; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; }
+.form { display: grid; gap: 14px; }
+.form .two { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+.out { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; white-space: pre-wrap; }
+
+/* stats */
+.stats { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.stat b { display: block; font: 800 1.9rem var(--display); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.stat span { font-size: .83rem; color: var(--muted); }
+
+/* hero voice demo */
+.hero { padding: clamp(36px, 6vw, 80px) 0 clamp(40px, 6vw, 72px); }
+.hero h1 { font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: 1; }
+.hero .grid-2 { align-items: center; }
+.call { background: var(--ink); color: var(--paper); border-radius: 22px; padding: 22px; box-shadow: 0 30px 60px rgba(10, 12, 30, .22); }
+:root[data-theme="dark"] .call { background: #1f2340; color: var(--ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .call { background: #1f2340; color: var(--ink); } }
+.call .bar { display: flex; justify-content: space-between; align-items: center; font: 600 .8rem var(--mono); opacity: .75; }
+.wave { display: flex; gap: 3px; align-items: center; height: 46px; margin: 14px 0; }
+.wave i { flex: 1; background: var(--hi); border-radius: 3px; height: 30%; animation: wv 1.2s ease-in-out infinite; }
+@keyframes wv { 0%, 100% { height: 18%; } 50% { height: 92%; } }
+@media (prefers-reduced-motion: reduce) { .wave i { animation: none; height: 50%; } * { transition: none !important; } }
+.bubble { padding: 10px 14px; border-radius: 14px; margin: 8px 0; font-size: .95rem; max-width: 92%; }
+.bubble.ai { background: rgba(255, 255, 255, .1); }
+.bubble.me { background: rgba(255, 255, 255, .18); margin-left: auto; }
+.bubble small { display: block; font: 600 .7rem var(--mono); opacity: .6; margin-bottom: 2px; letter-spacing: .05em; }
+.resume-line { background: var(--panel); color: var(--ink); border-radius: 12px; padding: 12px 14px; margin-top: 12px; font-size: .9rem; border-left: 4px solid var(--hi); }
+
+/* steps */
+.steps { counter-reset: s; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.step { position: relative; padding-top: 44px; }
+.step::before { counter-increment: s; content: counter(s, decimal-leading-zero); position: absolute; top: 0; left: 0; font: 800 1.9rem var(--display); color: var(--accent); }
+
+/* accordion */
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 4px 16px; margin-bottom: 10px; }
+summary { cursor: pointer; font-weight: 700; padding: 12px 0; }
+details[open] summary { border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+
+/* chat demo */
+.chat { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; gap: 10px; }
+.chat .msg { padding: 10px 14px; border-radius: 12px; max-width: 88%; }
+.chat .msg.ai { background: var(--soft); }
+.chat .msg.me { background: var(--accent); color: var(--accent-ink); margin-left: auto; }
+
+/* pricing */
+.plans { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); }
+.plan { background: var(--panel); border: 1.5px solid var(--line); border-radius: 18px; padding: 24px; display: grid; gap: 12px; align-content: start; }
+.plan.featured { border-color: var(--ink); box-shadow: 8px 8px 0 var(--hi); }
+.plan .price { font: 800 2.6rem var(--display); letter-spacing: -0.04em; }
+.plan ul { margin: 0; padding-left: 18px; }
+
+/* footer */
+footer.site { border-top: 1px solid var(--line); margin-top: 40px; padding: 48px 0 28px; background: var(--panel); }
+.fgrid { display: grid; gap: 28px; grid-template-columns: 1.3fr repeat(5, 1fr); }
+.fgrid h5 { font: 700 .8rem var(--mono); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 12px; color: var(--muted); }
+.fgrid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; font-size: .9rem; }
+.fgrid a { color: var(--ink); text-decoration: none; }
+.fgrid a:hover { text-decoration: underline; }
+.fbottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); font-size: .82rem; color: var(--muted); }
+@media (max-width: 980px) { .fgrid { grid-template-columns: repeat(3, 1fr); } .fgrid .fbrand { grid-column: 1 / -1; } }
+@media (max-width: 560px) { .fgrid { grid-template-columns: repeat(2, 1fr); } }
+
+.cta-band { background: var(--ink); color: var(--paper); border-radius: 22px; padding: clamp(28px, 5vw, 48px); display: grid; gap: 14px; }
+.cta-band h2 { color: var(--paper); }
+:root[data-theme="dark"] .cta-band { background: #1f2340; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cta-band { background: #1f2340; } }
+.cta-band .btn { border-color: var(--hi); background: var(--hi); color: var(--hi-ink); justify-self: start; }
+
+.toc { position: sticky; top: 84px; font-size: .9rem; }
+.toc a { display: block; padding: 4px 0; color: var(--muted); text-decoration: none; }
+.toc a:hover { color: var(--ink); }
+.layout-side { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 40px; }
+@media (max-width: 900px) { .layout-side { grid-template-columns: 1fr; } .toc { position: static; } }
+
+.meter { height: 12px; border-radius: 99px; background: var(--soft); overflow: hidden; border: 1px solid var(--line); }
+.meter i { display: block; height: 100%; background: var(--accent); }
+.bars { display: grid; gap: 8px; }
+.bars .b { display: grid; grid-template-columns: 160px 1fr 48px; gap: 10px; align-items: center; font-size: .88rem; }
+.bars .b .t { height: 14px; background: var(--soft); border-radius: 4px; overflow: hidden; }
+.bars .b .t i { display: block; height: 100%; background: var(--muted); }
+.bars .b.on .t i { background: var(--accent); }
+.kbd { font-family: var(--mono); font-size: .8rem; background: var(--soft); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--line); }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 999px; font-size: .9rem; z-index: 50; }
+.hidden { display: none !important; }
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#home" aria-label="Yapply home"><span class="dot" aria-hidden="true"><i style="height:8px"></i><i style="height:13px"></i><i style="height:6px"></i></span>yapply</a>
+    <nav class="nav" id="nav" aria-label="Primary"></nav>
+    <span class="spacer"></span>
+    <a class="btn ghost sm login" href="#signup">Log in</a>
+    <a class="btn accent sm" href="#signup">Join now</a>
+    <button class="btn ghost sm menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+  </div>
+</header>
+<main id="app" tabindex="-1"></main>
+<footer class="site">
+  <div class="wrap" id="footer"></div>
+</footer>
+<script>
+// ---------- DEMO DATA ----------
+// Every company below is fictional. Job, salary and sponsorship numbers are illustrative,
+// so the templates can be reviewed before the real crawler data is connected.
+const AS_OF = "Nov 24, 2026";
+
+const COMPANIES = [
+  { slug: "northwind-labs", name: "Northwind Labs", industry: "AI infrastructure", hq: "San Francisco, CA", size: "1,200 employees", color: "#2b37d4", h1b: [41, 58, 73], ng: 0.34, opens: "Aug", closes: "Oct", about: "Builds GPU scheduling and model-serving software for enterprise AI teams.", interview: ["Online assessment: 2 coding problems, 70 minutes", "Technical phone screen with an engineer", "Virtual onsite: 2 coding, 1 system design (light), 1 behavioral"] },
+  { slug: "brightline-capital", name: "Brightline Capital", industry: "Quantitative trading", hq: "New York, NY", size: "650 employees", color: "#0f766e", h1b: [22, 29, 31], ng: 0.52, opens: "Jul", closes: "Sep", about: "Systematic trading firm running market-making strategies across equities and options.", interview: ["Probability and mental math test", "Two technical interviews (stats, coding)", "Superday: 4 back-to-back interviews"] },
+  { slug: "halcyon-health", name: "Halcyon Health", industry: "Health tech", hq: "Boston, MA", size: "900 employees", color: "#b4235a", h1b: [12, 15, 19], ng: 0.21, opens: "Sep", closes: "Nov", about: "Care-coordination software used by hospital networks in 14 states.", interview: ["Recruiter screen", "Take-home data exercise (3 hours)", "Panel: case discussion + behavioral"] },
+  { slug: "ferro-robotics", name: "Ferro Robotics", industry: "Robotics", hq: "Pittsburgh, PA", size: "420 employees", color: "#9a3412", h1b: [9, 14, 18], ng: 0.40, opens: "Aug", closes: "Nov", about: "Designs autonomous material-handling robots for warehouses.", interview: ["Hiring manager call", "Technical deep dive on a past project", "Onsite: hands-on design problem + team lunch"] },
+  { slug: "juniper-cloud", name: "Juniper Cloud", industry: "Cloud software", hq: "Seattle, WA", size: "3,400 employees", color: "#1d4ed8", h1b: [88, 102, 117], ng: 0.29, opens: "Aug", closes: "Dec", about: "Developer platform for deploying and observing cloud applications.", interview: ["Online assessment", "Two 45-minute coding interviews", "Behavioral interview on ownership and teamwork"] },
+  { slug: "mosaic-retail", name: "Mosaic Retail", industry: "Retail tech", hq: "Chicago, IL", size: "2,100 employees", color: "#7c3aed", h1b: [6, 4, 7], ng: 0.12, opens: "Sep", closes: "Jan", about: "Pricing and inventory software for mid-size retailers.", interview: ["Recruiter screen", "SQL and Excel case", "Final round with the analytics team"] },
+  { slug: "atlas-freight", name: "Atlas Freight", industry: "Logistics", hq: "Austin, TX", size: "1,600 employees", color: "#0369a1", h1b: [3, 5, 4], ng: 0.08, opens: "Oct", closes: "Feb", about: "Digital freight brokerage matching shippers with carriers.", interview: ["Phone screen", "Business case presentation", "Meet the team"] },
+  { slug: "quill-analytics", name: "Quill Analytics", industry: "Data and analytics", hq: "New York, NY", size: "300 employees", color: "#a16207", h1b: [17, 21, 26], ng: 0.45, opens: "Aug", closes: "Oct", about: "Alternative-data research platform for investment teams.", interview: ["Python and SQL assessment", "Data case with a researcher", "Behavioral + culture conversation"] },
+  { slug: "orbit-aerospace", name: "Orbit Aerospace", industry: "Aerospace", hq: "Los Angeles, CA", size: "2,800 employees", color: "#334155", h1b: [0, 0, 0], ng: 0, opens: "Aug", closes: "Oct", about: "Builds small-satellite launch vehicles. Roles require US person status (ITAR).", interview: ["Recruiter screen", "Technical interview with an engineer", "Onsite: 4 technical interviews"] },
+  { slug: "cedar-bank", name: "Cedar Bank", industry: "Banking and fintech", hq: "Charlotte, NC", size: "11,000 employees", color: "#15803d", h1b: [64, 71, 69], ng: 0.27, opens: "Jul", closes: "Sep", about: "Regional bank with a large technology development program for new grads.", interview: ["Pre-recorded video interview", "Superday: technical + behavioral"] },
+  { slug: "lumen-media", name: "Lumen Media", industry: "Media", hq: "New York, NY", size: "1,000 employees", color: "#be123c", h1b: [2, 3, 2], ng: 0.10, opens: "Oct", closes: "Mar", about: "Digital publisher of news and lifestyle brands.", interview: ["Portfolio or writing sample review", "Two interviews with editors or product leads"] },
+  { slug: "pine-consulting", name: "Pine Consulting", industry: "Consulting", hq: "Chicago, IL", size: "5,200 employees", color: "#065f46", h1b: [31, 35, 40], ng: 0.38, opens: "Jul", closes: "Sep", about: "Strategy and operations consulting for Fortune 500 clients.", interview: ["Online test", "First round: 2 case interviews", "Final round: partner case + fit"] }
+];
+
+const ROLES = [
+  { slug: "software-engineer", name: "Software Engineer", short: "SWE", salary: [115, 165] },
+  { slug: "data-analyst", name: "Data Analyst", short: "Data Analyst", salary: [70, 95] },
+  { slug: "data-scientist", name: "Data Scientist", short: "Data Scientist", salary: [105, 140] },
+  { slug: "product-manager", name: "Product Manager", short: "APM", salary: [110, 145] },
+  { slug: "quant-researcher", name: "Quant Researcher", short: "Quant", salary: [150, 225] },
+  { slug: "mechanical-engineer", name: "Mechanical Engineer", short: "MechE", salary: [80, 105] },
+  { slug: "business-analyst", name: "Business Analyst", short: "Business Analyst", salary: [75, 100] },
+  { slug: "ux-designer", name: "UX Designer", short: "UX", salary: [80, 110] }
+];
+
+const CITIES = [
+  { slug: "new-york", name: "New York, NY" }, { slug: "san-francisco", name: "San Francisco, CA" },
+  { slug: "seattle", name: "Seattle, WA" }, { slug: "boston", name: "Boston, MA" },
+  { slug: "austin", name: "Austin, TX" }, { slug: "chicago", name: "Chicago, IL" },
+  { slug: "remote", name: "Remote (US)" }
+];
+
+// Which roles each company hires for, and where.
+const HIRING = {
+  "northwind-labs": [["software-engineer", "san-francisco"], ["software-engineer", "seattle"], ["data-scientist", "san-francisco"], ["product-manager", "san-francisco"], ["ux-designer", "remote"]],
+  "brightline-capital": [["quant-researcher", "new-york"], ["software-engineer", "new-york"], ["data-analyst", "new-york"]],
+  "halcyon-health": [["data-analyst", "boston"], ["software-engineer", "boston"], ["business-analyst", "boston"], ["ux-designer", "boston"]],
+  "ferro-robotics": [["mechanical-engineer", "boston"], ["software-engineer", "remote"], ["mechanical-engineer", "austin"]],
+  "juniper-cloud": [["software-engineer", "seattle"], ["software-engineer", "remote"], ["product-manager", "seattle"], ["data-scientist", "seattle"], ["data-analyst", "seattle"]],
+  "mosaic-retail": [["data-analyst", "chicago"], ["business-analyst", "chicago"], ["software-engineer", "chicago"]],
+  "atlas-freight": [["business-analyst", "austin"], ["data-analyst", "austin"], ["software-engineer", "austin"]],
+  "quill-analytics": [["data-analyst", "new-york"], ["data-scientist", "new-york"], ["software-engineer", "remote"]],
+  "orbit-aerospace": [["mechanical-engineer", "san-francisco"], ["software-engineer", "san-francisco"]],
+  "cedar-bank": [["software-engineer", "new-york"], ["data-analyst", "new-york"], ["business-analyst", "chicago"]],
+  "lumen-media": [["ux-designer", "new-york"], ["product-manager", "new-york"], ["data-analyst", "remote"]],
+  "pine-consulting": [["business-analyst", "chicago"], ["business-analyst", "new-york"], ["data-analyst", "chicago"]]
+};
+
+function seeded(n) { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
+
+const JOBS = (() => {
+  const out = []; let id = 1001;
+  Object.entries(HIRING).forEach(([cslug, pairs], ci) => {
+    const c = COMPANIES.find(x => x.slug === cslug);
+    pairs.forEach(([rslug, city], pi) => {
+      ["New Grad", "Internship"].forEach((level, li) => {
+        const k = ci * 31 + pi * 7 + li;
+        if (seeded(k) < 0.22) return; // not every combo is open
+        const r = ROLES.find(x => x.slug === rslug);
+        const total = c.h1b.reduce((a, b) => a + b, 0);
+        const sponsor = c.slug === "orbit-aerospace" ? "no" : total > 40 ? "yes" : total > 12 ? "likely" : "unknown";
+        const lo = level === "Internship" ? Math.round(r.salary[0] / 2.08) : r.salary[0];
+        const hi = level === "Internship" ? Math.round(r.salary[1] / 2.08) : r.salary[1];
+        const posted = 1 + Math.floor(seeded(k + 3) * 20);
+        const dl = 3 + Math.floor(seeded(k + 5) * 40);
+        const deadline = new Date(Date.UTC(2026, 10, 24 + dl)).toISOString().slice(0, 10);
+        const year = level === "Internship" ? "Summer 2027" : "2027 Start";
+        const title = level === "Internship" ? `${r.name} Intern, ${year}` : `${r.name}, New Grad ${year.replace(" Start", "")}`;
+        out.push({ id: id++, company: c.slug, role: rslug, city, level, title, sponsor,
+          salary: level === "Internship" ? `$${lo}–$${hi}/hr` : `$${lo}K–$${hi}K`,
+          posted, deadline, model: city === "remote" ? "Remote" : seeded(k + 9) > 0.5 ? "Hybrid" : "Onsite" });
+      });
+    });
+  });
+  return out;
+})();
+
+const SPONSOR_LABEL = { yes: ["Sponsors H-1B", "good"], likely: ["H-1B likely", "good"], unknown: ["Sponsorship unclear", "warn"], no: ["No sponsorship", "bad"] };
+
+const VERBS = {
+  created: { alts: ["built", "launched", "designed", "established", "developed", "authored", "introduced", "founded"], before: "Created a dashboard for the marketing team.", after: "Built a Tableau dashboard that cut the marketing team's weekly reporting from 6 hours to 1." },
+  developed: { alts: ["engineered", "built", "implemented", "prototyped", "shipped", "programmed", "designed", "formulated"], before: "Developed a web app for the club.", after: "Shipped a React web app that 300 club members use to book study rooms." },
+  managed: { alts: ["led", "ran", "oversaw", "coordinated", "directed", "owned", "supervised", "administered"], before: "Managed social media accounts.", after: "Ran 3 social accounts and grew followers from 1.2K to 4.5K in one semester." },
+  led: { alts: ["headed", "spearheaded", "directed", "guided", "steered", "chaired", "orchestrated", "captained"], before: "Led a team project.", after: "Headed a 5-person capstone team that delivered a demand-forecasting model to a local grocer." },
+  collaborated: { alts: ["partnered", "co-led", "worked with", "teamed up", "joined forces", "liaised", "contributed", "cooperated"], before: "Collaborated with other interns.", after: "Partnered with 4 interns across design and engineering to ship an onboarding flow in 6 weeks." },
+  improved: { alts: ["increased", "boosted", "streamlined", "optimized", "upgraded", "refined", "strengthened", "accelerated"], before: "Improved the checkout process.", after: "Streamlined checkout from 5 steps to 3, lifting conversion by 8% in an A/B test." },
+  analyzed: { alts: ["evaluated", "assessed", "examined", "modeled", "investigated", "measured", "audited", "forecasted"], before: "Analyzed survey data.", after: "Modeled 2,400 survey responses in Python to find the 3 drivers of student churn." },
+  helped: { alts: ["supported", "enabled", "assisted", "facilitated", "contributed to", "advised", "coached", "equipped"], before: "Helped customers with questions.", after: "Resolved 40+ customer tickets a week with a 96% satisfaction score." },
+  organized: { alts: ["planned", "coordinated", "arranged", "hosted", "structured", "scheduled", "mobilized", "produced"], before: "Organized events for the society.", after: "Planned 6 recruiting events that brought 22 employers and 500 students to campus." },
+  designed: { alts: ["architected", "crafted", "drafted", "modeled", "sketched", "shaped", "conceived", "prototyped"], before: "Designed a new logo.", after: "Crafted a new visual identity adopted across 12 department newsletters." },
+  increased: { alts: ["grew", "raised", "expanded", "doubled", "lifted", "boosted", "multiplied", "scaled"], before: "Increased membership.", after: "Doubled club membership from 60 to 120 by launching a peer-mentoring program." },
+  ensured: { alts: ["guaranteed", "secured", "verified", "maintained", "safeguarded", "upheld", "confirmed", "enforced"], before: "Ensured data was accurate.", after: "Verified 15K inventory records weekly, keeping error rates under 0.5%." }
+};
+
+const SKILLS = {
+  "software-engineer": { hard: ["Data structures and algorithms", "Python", "Java", "TypeScript", "REST APIs", "SQL", "Git", "Unit testing", "Linux"], tools: ["AWS or GCP", "Docker", "GitHub Actions", "PostgreSQL", "React"], soft: ["Code review etiquette", "Breaking down ambiguous tasks", "Written technical communication"] },
+  "data-analyst": { hard: ["SQL (joins, window functions)", "Excel (pivot tables, XLOOKUP)", "Python (pandas)", "A/B testing basics", "Descriptive statistics", "Data cleaning"], tools: ["Tableau", "Power BI", "Looker", "Google Sheets", "BigQuery"], soft: ["Storytelling with data", "Stakeholder questions", "Attention to detail"] },
+  "data-scientist": { hard: ["Python", "Statistics and probability", "Machine learning (scikit-learn)", "Experiment design", "SQL", "Feature engineering"], tools: ["Jupyter", "PyTorch", "Spark", "dbt", "MLflow"], soft: ["Explaining models to non-experts", "Scoping problems", "Prioritization"] },
+  "product-manager": { hard: ["User research", "Writing PRDs", "Prioritization frameworks", "Metrics and funnels", "SQL basics", "Wireframing"], tools: ["Figma", "Jira", "Amplitude", "Notion", "Linear"], soft: ["Cross-team communication", "Decision making with incomplete data", "Running meetings"] },
+  "quant-researcher": { hard: ["Probability", "Linear algebra", "Time-series analysis", "Statistical modeling", "Python or C++", "Backtesting"], tools: ["NumPy", "pandas", "kdb+/q", "Bloomberg"], soft: ["Mental math under pressure", "Clear reasoning out loud", "Intellectual honesty"] },
+  "mechanical-engineer": { hard: ["CAD (SolidWorks)", "GD&T", "FEA", "Thermodynamics", "Design for manufacturing", "Prototyping"], tools: ["SolidWorks", "ANSYS", "MATLAB", "3D printing"], soft: ["Hands-on troubleshooting", "Documentation", "Working with technicians"] },
+  "business-analyst": { hard: ["Excel modeling", "SQL", "Process mapping", "Requirements gathering", "Financial basics", "Presentation building"], tools: ["Excel", "PowerPoint", "Tableau", "Visio", "Salesforce"], soft: ["Structured thinking", "Client communication", "Synthesis"] },
+  "ux-designer": { hard: ["User research", "Interaction design", "Wireframing and prototyping", "Usability testing", "Accessibility (WCAG)", "Design systems"], tools: ["Figma", "FigJam", "Maze", "Adobe Illustrator"], soft: ["Presenting design rationale", "Taking critique", "Empathy interviews"] }
+};
+
+const GLOSSARY = [
+  { slug: "externship", term: "Externship", def: "A short, unpaid job-shadowing experience, usually 1 day to a few weeks, where a student observes professionals at work. Unlike an internship, an externship rarely includes real project work.", rel: ["internship", "return-offer"] },
+  { slug: "the-work-number", term: "The Work Number", def: "An employment and income verification database run by Equifax. Employers and lenders use it to confirm where you worked, your title and your pay dates. You can request your own report for free.", rel: ["e-verify"] },
+  { slug: "cum-laude", term: "Cum laude", def: "Latin for \"with honor\". The first of three Latin honors on a diploma, followed by magna cum laude (\"with great honor\") and summa cum laude (\"with highest honor\"). GPA cutoffs are set by each school.", rel: ["magna-cum-laude", "summa-cum-laude"] },
+  { slug: "magna-cum-laude", term: "Magna cum laude", def: "The middle Latin honor, \"with great honor\". Many schools set it around a 3.7–3.8 GPA or the top 10% of a class, but cutoffs vary.", rel: ["cum-laude", "summa-cum-laude"] },
+  { slug: "summa-cum-laude", term: "Summa cum laude", def: "The highest Latin honor, \"with highest honor\". Often reserved for roughly a 3.9+ GPA or the top 1–5% of graduates, depending on the school.", rel: ["cum-laude", "magna-cum-laude"] },
+  { slug: "ats", term: "ATS (applicant tracking system)", def: "Software such as Workday, Greenhouse or Lever that employers use to collect applications, parse resumes and move candidates through stages. Clear section headings and the job's own keywords help an ATS read your resume.", rel: ["internship"] },
+  { slug: "opt", term: "OPT (Optional Practical Training)", def: "Work authorization for F-1 students in a job related to their major, typically up to 12 months after graduation. You apply on Form I-765 after your school's DSO recommends it.", rel: ["stem-opt", "cpt", "h-1b-cap-gap"] },
+  { slug: "stem-opt", term: "STEM OPT extension", def: "A 24-month extension of OPT for graduates with an eligible STEM degree, working for an employer enrolled in E-Verify.", rel: ["opt", "e-verify"] },
+  { slug: "cpt", term: "CPT (Curricular Practical Training)", def: "Work authorization for F-1 students during their program, for an internship or co-op that is part of the curriculum. Your school's DSO authorizes it.", rel: ["opt"] },
+  { slug: "h-1b-cap-gap", term: "H-1B cap-gap", def: "Protection that extends an F-1 student's status and OPT work authorization between the end of OPT and the October 1 start of an H-1B, when the employer filed a timely cap petition.", rel: ["opt", "stem-opt"] },
+  { slug: "e-verify", term: "E-Verify", def: "A US government system employers use to confirm a new hire's eligibility to work. STEM OPT requires an E-Verify employer.", rel: ["stem-opt"] },
+  { slug: "return-offer", term: "Return offer", def: "A full-time job offer made to an intern at the end of the internship. At many large employers it is the main path into the new grad class.", rel: ["internship", "superday"] },
+  { slug: "superday", term: "Superday", def: "A final round of several back-to-back interviews in one day, common in banking, trading and consulting.", rel: ["return-offer"] },
+  { slug: "internship", term: "Internship", def: "A temporary, usually paid role where a student does real work for a company, most often over the summer. Large employers recruit summer interns up to a year ahead.", rel: ["externship", "return-offer"] },
+  { slug: "exploding-offer", term: "Exploding offer", def: "A job offer with a short deadline to accept, sometimes one to two weeks. Many university career centers publish guidelines on reasonable offer deadlines.", rel: ["return-offer"] }
+];
+
+const GUIDES = [
+  { slug: "new-grad-recruiting-timeline", title: "The 2027 new grad recruiting timeline", stage: "Junior summer to senior fall", mins: 8,
+    sum: "Most large tech, finance and consulting employers open new grad roles between July and October and fill them by December. Apply in the first 3–4 weeks a role is open.",
+    body: [
+      ["When each industry opens", "<p>Recruiting runs on industry calendars, not on your graduation date. Across the demo listings on Yapply, the earliest roles open in July (trading and banking), the bulk open in August and September (big tech, consulting), and smaller companies hire year-round.</p><table><tr><th>Industry</th><th>Opens</th><th>Mostly closed by</th></tr><tr><td>Trading and banking</td><td>July</td><td>September</td></tr><tr><td>Consulting</td><td>July–August</td><td>September–October</td></tr><tr><td>Big tech</td><td>August–September</td><td>November–December</td></tr><tr><td>Startups and mid-size</td><td>Year-round</td><td>Rolling</td></tr></table>"],
+      ["Your month-by-month plan", "<ol><li><b>June–July:</b> finish your resume, build a target list of 40–60 companies, ask for referrals.</li><li><b>August–September:</b> apply in the first week roles open. Track every application.</li><li><b>October–November:</b> interviews, superdays, offers. Ask for deadline extensions politely if you need to compare.</li><li><b>December–April:</b> keep applying to rolling and mid-size employers; this is when many startups hire.</li></ol>"],
+      ["What to do if you are behind", "<p>Companies with rolling hiring keep posting into spring. Filter for roles posted in the last 7 days and apply the same day.</p>"]
+    ] },
+  { slug: "opt-cpt-guide", title: "OPT and CPT for new grads: timeline and checklist", stage: "Before graduation (international students)", mins: 7,
+    sum: "You can file for post-completion OPT up to 90 days before your program end date and no later than 60 days after it. CPT is authorized by your school during your program.",
+    body: [
+      ["OPT vs CPT", "<p><b>CPT</b> is for internships or co-ops that are part of your curriculum, during your program, and is authorized by your school's DSO. <b>OPT</b> is work authorization related to your major, most often used for 12 months after graduation.</p>"],
+      ["Post-completion OPT timeline", "<ol><li>Ask your DSO to recommend OPT in SEVIS and issue an updated I-20.</li><li>File Form I-765 within the window: up to 90 days before your program end date and no later than 60 days after it, and within 30 days of the DSO recommendation.</li><li>Do not start work until you receive the EAD card and the start date on it has arrived.</li></ol>"],
+      ["STEM OPT extension", "<p>Graduates with an eligible STEM degree can apply for a 24-month extension, with an employer enrolled in E-Verify and a training plan (Form I-983).</p>"],
+      ["Check the source", "<p>Rules change. Confirm every date with your school's international office and <a href=\"https://www.uscis.gov/working-in-the-united-states/students-and-exchange-visitors/optional-practical-training-opt-for-f-1-students\">USCIS</a>. Last checked: " + "Nov 24, 2026" + ".</p>"]
+    ] },
+  { slug: "latin-honors", title: "Summa, magna, cum laude: what they mean and how to list them", stage: "Before graduation", mins: 5,
+    sum: "Cum laude, magna cum laude and summa cum laude are Latin honors, from lowest to highest. Each school sets its own GPA or class-rank cutoffs.",
+    body: [
+      ["The three honors", "<table><tr><th>Honor</th><th>Meaning</th><th>Common cutoff (varies)</th></tr><tr><td>Cum laude</td><td>With honor</td><td>About 3.5 GPA</td></tr><tr><td>Magna cum laude</td><td>With great honor</td><td>About 3.7–3.8 GPA</td></tr><tr><td>Summa cum laude</td><td>With highest honor</td><td>About 3.9+ GPA</td></tr></table><p class=\"small muted\">Cutoffs are examples. Your registrar publishes the real ones.</p>"],
+      ["How to write it on a resume", "<p>Put it on the degree line, in italics or plain text: <span class=\"mono\">B.S. Computer Science, magna cum laude, May 2027</span>. Do not list it before it is awarded; write <span class=\"mono\">On track for magna cum laude</span> only if your school's policy makes it likely.</p>"]
+    ] },
+  { slug: "first-offer-negotiation", title: "How to negotiate your first offer", stage: "Offer stage", mins: 6,
+    sum: "New grad offers are often negotiable on signing bonus and start date even when base salary is fixed. Ask once, in writing, with a specific number and a reason.",
+    body: [
+      ["What moves", "<ul><li><b>Signing bonus</b> and <b>relocation</b> move most often.</li><li><b>Start date</b> almost always moves.</li><li><b>Base salary</b> is often banded for new grad classes at large companies.</li></ul>"],
+      ["A script you can adapt", "<p class=\"out\">Thank you again for the offer. I'm excited about the team. I have a competing offer with a total first-year value of $X. Is there flexibility on the signing bonus to bring this closer? If so, I'm ready to sign this week.</p>"]
+    ] },
+  { slug: "h1b-for-new-grads", title: "H-1B for new grads: how the lottery works", stage: "Offer stage (international students)", mins: 6,
+    sum: "Employers register you in March; USCIS runs the selection; if selected, the petition is filed from April and work in H-1B status starts October 1. Cap-gap can bridge OPT to October.",
+    body: [
+      ["The yearly cycle", "<ol><li><b>March:</b> your employer submits an electronic registration.</li><li><b>End of March:</b> USCIS announces selections.</li><li><b>April–June:</b> selected registrations become full petitions.</li><li><b>October 1:</b> H-1B employment can start.</li></ol>"],
+      ["Numbers to know", "<p>The regular cap is 65,000, plus 20,000 for holders of a US master's degree or higher. Check <a href=\"https://www.uscis.gov/working-in-the-united-states/temporary-workers/h-1b-specialty-occupations\">USCIS</a> for the current year's rules and fees.</p>"],
+      ["Choose employers that sponsor", "<p>Use the <a href=\"#tool-h1b-sponsor-checker\">H-1B sponsor checker</a> and the <a href=\"#h1b-jobs\">H-1B jobs</a> pages to focus on companies with a record of sponsoring new grads.</p>"]
+    ] },
+  { slug: "externship-vs-internship", title: "Externship vs internship: which one you need", stage: "Freshman to junior year", mins: 4,
+    sum: "An externship is short shadowing, often unpaid; an internship is paid project work over weeks or months. Externships help you choose a field; internships get you return offers.",
+    body: [
+      ["Side by side", "<table><tr><th></th><th>Externship</th><th>Internship</th></tr><tr><td>Length</td><td>1 day to a few weeks</td><td>8–12 weeks, often summer</td></tr><tr><td>Paid</td><td>Usually not</td><td>Usually</td></tr><tr><td>Work</td><td>Observe</td><td>Own a project</td></tr><tr><td>Leads to</td><td>Clarity, contacts</td><td>Return offers</td></tr></table>"]
+    ] }
+];
+
+const BLOG = [
+  { slug: "why-voice-beats-forms", title: "Why a 10-minute conversation beats a resume form", date: "Nov 18, 2026", mins: 5, tag: "Product",
+    sum: "Students undersell themselves in forms. Talking through a project draws out the numbers, tools and decisions a recruiter looks for.",
+    html: "<p>Resume forms ask for a title, dates and three bullets. Most students fill them with what they did, not what changed because they did it. A spoken conversation works differently: a follow-up question like \"how many people used it?\" turns \"built a website\" into a line with scale and impact.</p><h2>What we ask in the first 10 minutes</h2><ol><li>Walk me through something you built or fixed that you're proud of.</li><li>Who used it, and how many?</li><li>What would have happened if you hadn't done it?</li><li>What kind of team do you want to join next?</li></ol><p>Two independent career-agent products, Jack & Jill and Pluto, also landed on a roughly 10-minute first conversation, short enough to finish and long enough to feel understood.</p>" },
+  { slug: "latin-honors-on-resume", title: "Latin honors on your resume, with examples", date: "Nov 10, 2026", mins: 4, tag: "Resume",
+    sum: "Where to put cum laude, magna cum laude and summa cum laude, and what to write before they are official.",
+    html: "<p>Put Latin honors on the same line as your degree. Read the full <a href=\"#guide-latin-honors\">Latin honors guide</a> for cutoffs and wording.</p>" },
+  { slug: "first-week-of-fall-recruiting", title: "The first week of fall recruiting: a checklist", date: "Aug 4, 2026", mins: 6, tag: "Recruiting",
+    sum: "Roles at trading firms and banks open first. Here is what to have ready before the first posting goes live.",
+    html: "<ul><li>One-page resume with numbers in every bullet</li><li>A target list of 40–60 companies with their usual opening month</li><li>Three stories ready: a project, a conflict, a failure</li><li>Alerts on for new postings</li></ul><p>See the full <a href=\"#guide-new-grad-recruiting-timeline\">recruiting timeline</a>.</p>" }
+];
+
+const IQ = {
+  "behavioral": { name: "Behavioral", qs: [
+    ["Tell me about yourself.", "Present, past, future in 60–90 seconds: what you study now, one proof point, why this role."],
+    ["Tell me about a time you worked through a conflict on a team.", "STAR: name the disagreement, what you did, the outcome, what you'd repeat."],
+    ["Describe a project you're proud of.", "Pick one with a number: users, time saved, accuracy. Explain a decision you made."],
+    ["Tell me about a time you failed.", "A real miss, what you changed after it, and evidence that the change worked."],
+    ["Why this company?", "One product detail, one team detail, one link to your own story."],
+    ["Tell me about a time you learned something quickly.", "Show your method: what you read, who you asked, how fast you shipped."]
+  ] },
+  "software-engineer": { name: "Software Engineer (new grad)", qs: [
+    ["Reverse a linked list, then explain the time and space complexity.", "Talk through the pointer swap before coding. O(n) time, O(1) space."],
+    ["Design a URL shortener at a high level.", "Clarify scale, then API, storage, ID generation, caching. Keep it to 15 minutes."],
+    ["Walk me through a bug you spent a long time on.", "How you narrowed it down, what tool helped, what you changed to prevent it."],
+    ["How would you test a function that parses dates?", "Edge cases: time zones, leap years, invalid input, empty strings."]
+  ] },
+  "data-analyst": { name: "Data Analyst", qs: [
+    ["Write SQL to find the top 3 products by revenue in each month.", "Aggregate by month and product, then ROW_NUMBER() over partition by month."],
+    ["Signups dropped 20% last week. How do you investigate?", "Check data quality first, then segment by channel, device, geography and funnel step."],
+    ["Explain an A/B test result to a non-technical manager.", "Lead with the decision, then effect size, confidence and what you'd do next."],
+    ["What's the difference between a LEFT JOIN and an INNER JOIN?", "Show it with a two-row example; mention NULLs from unmatched rows."]
+  ] },
+  "product-manager": { name: "Product Manager (APM)", qs: [
+    ["How would you improve a product you use every day?", "Pick a user, a pain point, 3 solutions, choose one and a metric."],
+    ["How would you prioritize these five feature requests?", "Name your framework (impact vs effort), state assumptions, decide."],
+    ["Tell me about a time you influenced without authority.", "Show how you used data or a prototype to move people."]
+  ] },
+  "quant-researcher": { name: "Quant Researcher", qs: [
+    ["You roll two dice. What's the expected value of the larger one?", "Enumerate 36 outcomes or use P(max ≤ k) = (k/6)². Answer: 161/36 ≈ 4.47."],
+    ["How would you test whether a trading signal is real?", "Out-of-sample tests, transaction costs, multiple-testing correction, stability across regimes."],
+    ["Explain overfitting to a portfolio manager.", "A model that memorizes noise; show how you'd guard against it."]
+  ] }
+};
+
+const COMPETITORS = [
+  { slug: "jobright", name: "Jobright", what: "AI job matching platform with an H-1B sponsorship filter and an Agent that applies for you on paid plans.", strong: ["Large, frequently updated job database", "H-1B filter based on sponsorship history", "Chrome extension for autofill"], diff: "Jobright matches on your existing resume. Yapply starts with a 10-minute voice conversation, so the resume it tailors includes experience that was never written down." },
+  { slug: "simplify", name: "Simplify", what: "Free Chrome extension that autofills job applications, plus job lists and a paid AI tier (Simplify+, $39.99/month per public pricing).", strong: ["Fast autofill across common ATS forms", "Popular open-source internship and new grad lists on GitHub", "Free core product"], diff: "Simplify saves time on forms. Yapply works on what goes into them: a resume and answers drawn from your own story, reviewed before anything is sent." },
+  { slug: "sprout", name: "Sprout", what: "Swipe-to-apply mobile app: swipe right and AI tailors a resume and applies. Paid plans start at $19.99/month for 80 applications per public pricing.", strong: ["Very fast, mobile-first", "Asks a few questions before applying"], diff: "Sprout optimizes for volume. Yapply optimizes for fit: fewer, better-matched applications built from a deeper profile." },
+  { slug: "teal", name: "Teal", what: "Job search CRM with a resume builder, keyword matching and a Chrome extension to save jobs.", strong: ["Strong job tracker", "Resume keyword matching"], diff: "Teal is built for organized job seekers at any career stage. Yapply is built for students with thin resumes who need help finding what to say." },
+  { slug: "jobcopilot", name: "JobCopilot", what: "Auto-apply service that submits applications on your behalf based on your preferences.", strong: ["Hands-off application volume"], diff: "Yapply keeps a review step before every application, because mass auto-applying can hurt response rates and get flagged by job boards." }
+];
+
+const FAQ = [
+  ["What is Yapply?", "A voice-first career agent for US college students and new grads. You talk with it for about 10 minutes, it builds a career profile from your real experiences, then tailors resumes, matches you to jobs and helps you apply."],
+  ["Do I need a finished resume to start?", "No. The voice conversation is designed for students with thin or empty resumes. You can also upload a resume and Yapply will ask about what's missing."],
+  ["Does Yapply apply to jobs without asking me?", "No. You review every tailored resume and application before it's sent."],
+  ["Can I filter for H-1B sponsorship?", "Yes. Every job shows a sponsorship label based on the job description and the employer's public filing history."],
+  ["Is my voice recording stored?", "This prototype does not record anything. The production policy will be published in the Privacy Policy before launch."],
+  ["Which schools and majors is Yapply for?", "Any US college student or recent grad. The job database covers tech, data, finance, consulting, engineering and design roles."],
+  ["How is Yapply different from Simplify or Jobright?", "See the side-by-side comparisons in Compare."],
+  ["Is there a mobile app?", "iOS and Android apps are in development. Join the waitlist on the Mobile App page."]
+];
+
+const FEATURES = [
+  { slug: "voice-career-profile", name: "Voice Career Profile", one: "Talk for 10 minutes. Yapply builds a profile from your real story.", kw: "ai career coach", bullets: ["Follow-up questions draw out numbers, tools and decisions", "Works for thin resumes: class projects, clubs, part-time jobs", "You review and edit everything it learned"] },
+  { slug: "ai-resume-tailor", name: "AI Resume Tailor", one: "A resume rewritten for each job, using only what you said is true.", kw: "ai resume builder", bullets: ["Matches the job's keywords without inventing experience", "Shows a before and after diff for every change", "Exports clean, ATS-readable PDF and DOCX"] },
+  { slug: "job-match", name: "Job Match", one: "New grad and internship roles ranked by fit, sponsorship and deadline.", kw: "ai job search", bullets: ["Only entry-level and intern roles", "H-1B sponsorship label on every job", "Deadline alerts so you apply in the first week"] },
+  { slug: "auto-apply", name: "Auto Apply (with review)", one: "One click to apply, after you approve the tailored application.", kw: "auto apply jobs", bullets: ["Fills common ATS forms", "Drafts answers to application questions from your profile", "Nothing is sent without your approval"] },
+  { slug: "ai-mock-interview", name: "AI Mock Interview", one: "Practice out loud with an interviewer that interrupts and follows up.", kw: "mock interview", bullets: ["Full-duplex voice: it can interrupt like a real interviewer", "Questions based on the job and your own stories", "Feedback on structure, specifics and pace"] }
+];
+
+// ---------- HELPERS ----------
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const company = slug => COMPANIES.find(c => c.slug === slug);
+const role = slug => ROLES.find(r => r.slug === slug);
+const city = slug => CITIES.find(c => c.slug === slug);
+const toast = msg => { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2200); };
+async function copyText(text) { try { await navigator.clipboard.writeText(text); toast("Copied"); } catch (e) { toast("Select the text and copy it manually"); } }
+const fmtDate = iso => new Date(iso + "T12:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+
+function sponsorTag(s) { const [t, k] = SPONSOR_LABEL[s]; return `<span class="tag ${k}">${t}</span>`; }
+function logoSq(c) { return `<span class="logo-sq" style="background:${c.color}" aria-hidden="true">${c.name[0]}</span>`; }
+const DEMO = `<span class="demo-note" title="Fictional companies and illustrative numbers">Demo data · fictional companies</span>`;
+
+function jobRow(j) {
+  const c = company(j.company);
+  return `<article class="job">${logoSq(c)}<div><h4><a href="#job-${j.id}">${esc(j.title)}</a></h4>
+    <div class="meta"><a href="#company-${c.slug}">${c.name}</a><span>${city(j.city).name}</span><span>${j.model}</span><span class="num">${j.salary}</span><span>Posted ${j.posted}d ago</span></div></div>
+    <div class="side">${sponsorTag(j.sponsor)}<span class="small muted num">Apply by ${fmtDate(j.deadline)}</span></div></article>`;
+}
+
+function urlbar(path, crumbs) {
+  const c = crumbs ? `<nav class="crumbs" aria-label="Breadcrumb">${crumbs.map(([t, h]) => h ? `<a href="#${h}">${t}</a>` : `<span>${t}</span>`).join(" / ")}</nav>` : "";
+  return `<div class="wrap"><div class="urlbar">${c}<span class="spacer" style="flex:1"></span><span>Production URL</span><span class="path">${esc(path)}</span></div></div>`;
+}
+
+function pageHead({ eyebrow, title, lead, answer, extra = "" }) {
+  return `<section class="phead"><div class="wrap">${eyebrow ? `<span class="eyebrow">${eyebrow}</span>` : ""}<h1>${title}</h1>${lead ? `<p class="lead">${lead}</p>` : ""}${answer ? `<p class="answer">${answer}</p>` : ""}${extra}</div></section>`;
+}
+
+function ctaBand(title = "Talk for 10 minutes. Leave with a resume that sounds like you.", sub = "Free during beta. No resume needed to start.") {
+  return `<section class="section"><div class="wrap"><div class="cta-band"><h2>${title}</h2><p>${sub}</p><a class="btn" href="#signup">Start my voice profile</a></div></div></section>`;
+}
+
+function faqBlock(items) {
+  return `<div>${items.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</div>`;
+}
+
+// ---------- NAV + FOOTER ----------
+const NAV = [
+  { label: "Features", items: [["how-it-works", "How it works", "The 10-minute flow, end to end"], ...FEATURES.map(f => ["feature-" + f.slug, f.name, f.one])] },
+  { label: "Resources", items: [["blog", "Blog", "Product notes and recruiting advice"], ["help", "Help Center", "Answers about your account"], ["guides", "Guides", "Recruiting timeline, OPT, offers"], ["interview-questions", "Interview Questions", "By role and by company"]] },
+  { label: "Mobile App", href: "app" },
+  { label: "Pricing", href: "pricing" }
+];
+
+const FOOTER = [
+  ["Features", [["how-it-works", "How it works"], ...FEATURES.map(f => ["feature-" + f.slug, f.name])]],
+  ["Tools", [["tool-ats-resume-checker", "ATS Resume Checker"], ["tool-resume-synonyms", "Resume Synonyms"], ["tool-resume-skills", "Resume Skills"], ["tool-cover-letter-generator", "Cover Letter Generator"], ["tool-elevator-pitch-generator", "Elevator Pitch Generator"], ["tool-h1b-sponsor-checker", "H-1B Sponsor Checker"], ["tools", "All tools"]]],
+  ["Opportunities", [["jobs", "Search all jobs"], ["jobs-internships", "Internships"], ["jobs-new-grad", "Entry level & new grads"], ["international-students", "International students"], ["h1b-jobs", "H1B jobs"], ["jobs-remote", "Remote work"], ["companies", "Discover companies"]]],
+  ["Resources", [["blog", "Blog"], ["help", "Help Center"], ["guides", "Guides"], ["glossary", "Glossary"], ["reports", "Reports"], ["methodology", "Methodology"], ["interview-questions", "Interview questions"], ["faq", "FAQ"], ["compare", "Compare"]]],
+  ["Company", [["about", "About us"], ["privacy", "Privacy policy"], ["terms", "Terms of service"], ["sitemap", "Sitemap"]]]
+];
+
+function renderChrome() {
+  $("#nav").innerHTML = NAV.map((n, i) => n.items
+    ? `<div class="has-dd"><button class="nl" aria-expanded="false" aria-controls="dd${i}" data-dd>${n.label} ▾</button><div class="dd" id="dd${i}">${n.items.map(([h, t, s]) => `<a href="#${h}"><b>${t}</b><span>${esc(s)}</span></a>`).join("")}</div></div>`
+    : `<a class="nl" href="#${n.href}">${n.label}</a>`).join("");
+  $("#footer").innerHTML = `<div class="fgrid"><div class="fbrand"><a class="logo" href="#home"><span class="dot" aria-hidden="true"><i style="height:8px"></i><i style="height:13px"></i><i style="height:6px"></i></span>yapply</a><p class="small muted" style="margin-top:12px;max-width:30ch">The voice-first career agent for US new grads and interns.</p><a class="btn sm" href="#app">Get the app</a></div>
+  ${FOOTER.map(([h, links]) => `<div><h5>${h}</h5><ul>${links.map(([u, t]) => `<li><a href="#${u}">${t}</a></li>`).join("")}</ul></div>`).join("")}</div>
+  <div class="fbottom"><span>© 2026 Yapply. Prototype for design and SEO review. Company and job data on this site is fictional.</span><span>Made for the class of 2027</span></div>`;
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-dd]");
+    document.querySelectorAll(".has-dd.open").forEach(x => { if (!b || x !== b.parentElement) { x.classList.remove("open"); x.firstElementChild.setAttribute("aria-expanded", "false"); } });
+    if (b) { const p = b.parentElement; const o = p.classList.toggle("open"); b.setAttribute("aria-expanded", String(o)); }
+    if (e.target.closest(".dd a")) { document.querySelectorAll(".has-dd.open").forEach(x => x.classList.remove("open")); $("#nav").classList.remove("show"); }
+  });
+  $("#menuBtn").addEventListener("click", () => { const s = $("#nav").classList.toggle("show"); $("#menuBtn").setAttribute("aria-expanded", String(s)); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") document.querySelectorAll(".has-dd.open").forEach(x => x.classList.remove("open")); });
+}
+
+// ---------- ROUTER ----------
+const ROUTES = {};      // exact name -> fn
+const PATTERNS = [];    // [regex, fn]
+const route = (name, fn) => { ROUTES[name] = fn; };
+const pattern = (re, fn) => PATTERNS.push([re, fn]);
+
+function notFound(name) {
+  return { title: "Page not found", path: "/404", html: pageHead({ title: "We couldn't find that page", lead: `There is no page called “${esc(name)}”.` }) + `<div class="wrap section"><a class="btn primary" href="#home">Go home</a> <a class="btn" href="#sitemap">See every page</a></div>` };
+}
+
+function resolve(name) {
+  if (ROUTES[name]) return ROUTES[name]();
+  for (const [re, fn] of PATTERNS) { const m = name.match(re); if (m) { const r = fn(...m.slice(1)); if (r) return r; } }
+  return notFound(name);
+}
+
+let afterRender = [];
+const onRender = fn => afterRender.push(fn);
+
+function render() {
+  const name = (location.hash || "#home").slice(1) || "home";
+  afterRender = [];
+  const page = resolve(name);
+  document.title = page.title === "Yapply" ? "Yapply — talk for 10 minutes, get hired" : `${page.title} | Yapply`;
+  $("#app").innerHTML = (page.path ? urlbar(page.path, page.crumbs) : "") + page.html;
+  window.scrollTo(0, 0);
+  afterRender.forEach(f => { try { f(); } catch (e) { console.error(e); } });
+}
+
+// ---------- FREE TOOLS ----------
+const TOOLS = [
+  { id: "tool-ats-resume-checker", name: "ATS Resume Checker", one: "Score your resume against a job description and see missing keywords." },
+  { id: "tool-resume-synonyms", name: "Resume Synonyms", one: "Stronger action verbs for created, developed, managed and more." },
+  { id: "tool-resume-skills", name: "Resume Skills by Role", one: "The hard skills, tools and soft skills each role expects." },
+  { id: "tool-cover-letter-generator", name: "Cover Letter Generator", one: "A specific, one-page cover letter from five inputs." },
+  { id: "tool-elevator-pitch-generator", name: "Elevator Pitch Generator", one: "A 30-second pitch you can say out loud at a career fair." },
+  { id: "tool-h1b-sponsor-checker", name: "H-1B Sponsor Checker", one: "Look up a company's H-1B filing history and new grad share." }
+];
+const toolCrumbs = name => [["Home", "home"], ["Tools", "tools"], [name]];
+const toolPath = id => "/tools/" + id.replace("tool-", "");
+const toolFoot = (others = 3) => `<section class="section"><div class="wrap"><h2>More free tools</h2><div class="grid" style="margin-top:14px">${TOOLS.slice(0, others + 3).map(t => `<a class="card" href="#${t.id}"><h3>${t.name}</h3><p class="small muted">${t.one}</p></a>`).join("")}</div></div></section>`;
+
+route("tools", () => ({
+  title: "Free job search tools", path: "/tools", crumbs: [["Home", "home"], ["Tools"]],
+  html: pageHead({ eyebrow: "Tools", title: "Free job search tools for students", lead: "No sign-up. Each tool runs in your browser." }) +
+  `<section class="section"><div class="wrap grid">${TOOLS.map(t => `<a class="card" href="#${t.id}"><h3>${t.name}</h3><p class="muted">${t.one}</p></a>`).join("")}</div></section>${ctaBand("Tools fix one thing. Yapply fixes the whole search.")}`
+}));
+
+// ATS checker
+const STOP = new Set("a an the and or of to in for on with at by from as is are be will you your our we this that it its their they them who what when where how able ability strong excellent including include work working team teams role job using use experience years year plus preferred required requirements responsibilities about across new grad within into per more other such than well".split(" "));
+function keywords(text) {
+  const words = text.toLowerCase().replace(/[^a-z0-9+#./ -]/g, " ").split(/\s+/).map(w => w.replace(/^[./-]+|[./-]+$/g, "")).filter(w => w.length > 1 && !STOP.has(w) && !/^\d+$/.test(w));
+  const freq = {}; words.forEach(w => freq[w] = (freq[w] || 0) + 1);
+  return Object.entries(freq).sort((a, b) => b[1] - a[1]).map(x => x[0]);
+}
+const EX_JD = "We are hiring a Data Analyst, New Grad to join our analytics team. You will write SQL to analyze product data, build dashboards in Tableau, run A/B test analysis and present findings to stakeholders. Requirements: SQL, Python (pandas), Excel, Tableau, statistics, A/B testing, data cleaning, communication.";
+const EX_CV = "Jordan Lee | B.S. Statistics, May 2027\nEXPERIENCE\nResearch Assistant, Campus Lab: Cleaned survey data in Python (pandas) and built charts in Excel for 3 professors.\nTreasurer, Investment Club: Tracked a $5K portfolio in Excel.\nPROJECTS\nCourse project: analyzed 2,400 survey responses to find drivers of student churn.\nSKILLS\nPython, Excel, R, statistics";
+route("tool-ats-resume-checker", () => {
+  onRender(() => {
+    const run = () => {
+      const jd = $("#ats-jd").value, cv = $("#ats-cv").value; const cvl = cv.toLowerCase();
+      const kws = keywords(jd).slice(0, 25); const hit = kws.filter(k => cvl.includes(k)); const miss = kws.filter(k => !cvl.includes(k));
+      const score = kws.length ? Math.round(hit.length / kws.length * 100) : 0;
+      const wc = cv.split(/\s+/).filter(Boolean).length, nums = (cv.match(/\d[\d,.%$K]*/g) || []).length;
+      const secs = ["experience", "education", "skills", "projects"].filter(s => cvl.includes(s));
+      const checks = [[nums >= 3, `${nums} numbers found. Aim for a number in most bullets.`], [secs.length >= 3, `Sections found: ${secs.join(", ") || "none"}. Use standard headings so the ATS can parse them.`], [wc >= 250 && wc <= 700, `${wc} words. One page is usually 350–650 words.`], [!/\b(helped|worked on|responsible for)\b/i.test(cv), "Weak verbs like “helped” or “worked on” " + (/\b(helped|worked on|responsible for)\b/i.test(cv) ? "found: see Resume Synonyms." : "not found.")]];
+      $("#ats-out").innerHTML = `<div class="stats"><div class="stat"><b>${score}%</b><span>keyword match (${hit.length} of ${kws.length})</span></div></div>
+        <div class="meter" style="margin:14px 0"><i style="width:${score}%"></i></div>
+        <h4>Missing keywords</h4><div class="row">${miss.map(m => `<span class="tag warn">${esc(m)}</span>`).join("") || "<span class='tag good'>None</span>"}</div>
+        <h4 style="margin-top:16px">Matched</h4><div class="row">${hit.map(m => `<span class="tag good">${esc(m)}</span>`).join("")}</div>
+        <h4 style="margin-top:16px">Checks</h4><ul>${checks.map(([ok, t]) => `<li>${ok ? "✓" : "✗"} ${t}</li>`).join("")}</ul>
+        <p class="small muted">Only add a missing keyword if it's true. <a href="#signup">Yapply's voice session</a> finds experience you can honestly add.</p>`;
+    };
+    $("#ats-run").addEventListener("click", run); run();
+  });
+  return { title: "Free ATS resume checker", path: toolPath("tool-ats-resume-checker"), crumbs: toolCrumbs("ATS Resume Checker"),
+    html: pageHead({ eyebrow: "Free tool", title: "ATS resume checker", answer: "Paste a job description and your resume. The checker pulls the job's top 25 keywords, shows which ones your resume is missing and checks numbers, sections and length. Example text is pre-filled." }) + `
+    <section class="section"><div class="wrap grid-2"><div class="form"><label for="ats-jd">Job description<textarea id="ats-jd">${EX_JD}</textarea></label><label for="ats-cv">Your resume (plain text)<textarea id="ats-cv" style="min-height:220px">${EX_CV}</textarea></label><button class="btn primary" id="ats-run">Check my resume</button></div><div class="out" id="ats-out" aria-live="polite" style="white-space:normal"></div></div></section>
+    <section class="section"><div class="wrap prose"><h2>How ATS systems read resumes</h2><p>Applicant tracking systems such as Workday, Greenhouse and Lever parse your resume into fields and let recruiters search by keyword. Standard section headings, plain formatting and the job's own words make that parsing reliable. See <a href="#glossary-ats">ATS in the glossary</a>.</p>${faqBlock([["Is a higher score always better?", "No. Aim to cover the skills you really have. Stuffing keywords you can't back up hurts in interviews."], ["Does it store my resume?", "No. Everything runs in your browser."]])}</div></section>${toolFoot()}${ctaBand()}` };
+});
+
+// Synonyms
+function synTable(v) { const d = VERBS[v]; return `<div class="card"><h3>Instead of “${v}”</h3><div class="row" style="margin:10px 0">${d.alts.map(a => `<span class="tag">${a}</span>`).join("")}</div><p class="small"><b>Before:</b> ${d.before}</p><p class="small"><b>After:</b> ${d.after}</p><a class="small" href="#tool-resume-synonyms-${v}">${v} synonyms page</a></div>`; }
+route("tool-resume-synonyms", () => {
+  onRender(() => { const go = () => { const w = $("#syn-in").value.toLowerCase().trim(); const found = Object.keys(VERBS).filter(v => !w || w.includes(v) || v.startsWith(w)); $("#syn-out").innerHTML = found.length ? found.map(synTable).join("") : `<p class="card">No match. Try one of: ${Object.keys(VERBS).join(", ")}.</p>`; }; $("#syn-in").addEventListener("input", go); go(); });
+  return { title: "Resume synonyms: stronger action verbs", path: toolPath("tool-resume-synonyms"), crumbs: toolCrumbs("Resume Synonyms"),
+    html: pageHead({ eyebrow: "Free tool", title: "Resume synonyms for weak verbs", answer: "Type a verb or paste a bullet. You'll get 8 stronger alternatives and a before-and-after example with a number in it." }) + `
+    <section class="section"><div class="wrap"><label for="syn-in" style="max-width:520px">Verb or bullet<input id="syn-in" placeholder="e.g. helped, created, managed"></label><div class="grid" id="syn-out" style="margin-top:18px"></div></div></section>${toolFoot()}` };
+});
+pattern(/^tool-resume-synonyms-([a-z]+)$/, v => {
+  const d = VERBS[v]; if (!d) return null;
+  return { title: `${v[0].toUpperCase() + v.slice(1)} synonyms for your resume`, path: `/tools/resume-synonyms/${v}`, crumbs: [["Home", "home"], ["Tools", "tools"], ["Resume Synonyms", "tool-resume-synonyms"], [v]],
+    html: pageHead({ eyebrow: "Resume synonyms", title: `${v[0].toUpperCase() + v.slice(1)} synonyms for a resume`, answer: `Better words than “${v}” on a resume: <b>${d.alts.join(", ")}</b>. Pick the one that says what you actually did, then add a number.` }) + `
+    <section class="section"><div class="wrap grid-2">${synTable(v)}<div class="prose"><h3>When to use which</h3><ul>${d.alts.slice(0, 4).map(a => `<li><b>${a}</b>: use when your bullet is about ${a === d.alts[0] ? "the main thing you made happen" : "a specific part of the work"}.</li>`).join("")}</ul><p>See all verbs in the <a href="#tool-resume-synonyms">synonyms tool</a>.</p></div></div></section>
+    <section class="section"><div class="wrap"><h2>Other verbs</h2><div class="row" style="margin-top:12px">${Object.keys(VERBS).filter(x => x !== v).map(x => `<a class="btn sm" href="#tool-resume-synonyms-${x}">${x}</a>`).join("")}</div></div></section>${ctaBand("Yapply writes bullets with the right verb and a real number, from your own words.")}` };
+});
+
+// Skills
+function skillsBlock(r) { const s = SKILLS[r]; return `<div class="grid"><div class="card"><h4>Hard skills</h4><ul>${s.hard.map(x => `<li>${x}</li>`).join("")}</ul></div><div class="card"><h4>Tools</h4><ul>${s.tools.map(x => `<li>${x}</li>`).join("")}</ul></div><div class="card"><h4>Soft skills to show in bullets</h4><ul>${s.soft.map(x => `<li>${x}</li>`).join("")}</ul></div></div>`; }
+route("tool-resume-skills", () => {
+  onRender(() => { const go = () => { $("#sk-out").innerHTML = skillsBlock($("#sk-role").value); }; $("#sk-role").addEventListener("change", go); go(); $("#sk-copy").addEventListener("click", () => { const s = SKILLS[$("#sk-role").value]; copyText("Skills: " + [...s.hard, ...s.tools].join(", ")); }); });
+  return { title: "Skills for your resume, by role", path: toolPath("tool-resume-skills"), crumbs: toolCrumbs("Resume Skills"),
+    html: pageHead({ eyebrow: "Free tool", title: "Skills to put on your resume", answer: "Pick a role to see the hard skills, tools and soft skills entry-level job descriptions ask for most. Only list skills you can talk about in an interview." }) + `
+    <section class="section"><div class="wrap"><div class="row" style="align-items:end"><label for="sk-role">Role<select id="sk-role">${ROLES.map(r => opt(r.slug, r.name)).join("")}</select></label><button class="btn" id="sk-copy">Copy skills line</button></div><div id="sk-out" style="margin-top:18px"></div>
+    <h3 style="margin-top:28px">Skills pages by role</h3><div class="row">${ROLES.map(r => `<a class="btn sm" href="#tool-resume-skills-${r.slug}">${r.name}</a>`).join("")}</div></div></section>${toolFoot()}` };
+});
+pattern(/^tool-resume-skills-([a-z-]+)$/, r => {
+  if (!SKILLS[r]) return null; const R = role(r);
+  return { title: `${R.name} skills for a resume`, path: `/tools/resume-skills/${r}`, crumbs: [["Home", "home"], ["Tools", "tools"], ["Resume Skills", "tool-resume-skills"], [R.name]],
+    html: pageHead({ eyebrow: "Resume skills", title: `${R.name} skills for your resume`, answer: `Top ${R.name.toLowerCase()} skills for entry-level resumes: <b>${SKILLS[r].hard.slice(0, 4).join(", ")}</b>, plus tools like ${SKILLS[r].tools.slice(0, 3).join(", ")}.` }) +
+    `<section class="section"><div class="wrap">${skillsBlock(r)}<p style="margin-top:16px"><a href="#jobs-${r}-new-grad">See ${R.name} new grad jobs</a> · <a href="#interview-questions-${IQ[r] ? r : "behavioral"}">Interview questions</a></p></div></section>${ctaBand()}` };
+});
+
+// Cover letter
+route("tool-cover-letter-generator", () => {
+  onRender(() => {
+    const go = () => {
+      const v = id => $("#" + id).value.trim();
+      $("#cl-out").textContent = `Dear ${v("cl-co")} hiring team,\n\nI'm ${v("cl-name")}, a ${v("cl-major")} student at ${v("cl-school")}, and I'm applying for the ${v("cl-role")} role. ${v("cl-why")}\n\nIn my most relevant experience, I ${v("cl-ex1")}. That taught me how to turn a vague problem into something people use, which is what I'd bring to your team from week one.\n\nI'd welcome the chance to talk about how I can contribute to ${v("cl-co")}. Thank you for your time.\n\nSincerely,\n${v("cl-name")}`;
+    };
+    document.querySelectorAll("#cl-form input, #cl-form textarea").forEach(i => i.addEventListener("input", go)); go();
+    $("#cl-copy").addEventListener("click", () => copyText($("#cl-out").textContent));
+  });
+  const f = (id, l, val, ta) => `<label for="${id}">${l}${ta ? `<textarea id="${id}" style="min-height:80px">${val}</textarea>` : `<input id="${id}" value="${val}">`}</label>`;
+  return { title: "Free cover letter generator", path: toolPath("tool-cover-letter-generator"), crumbs: toolCrumbs("Cover Letter Generator"),
+    html: pageHead({ eyebrow: "Free tool", title: "Cover letter generator for students", answer: "Fill in five fields and get a one-page cover letter that names the company, the role and one concrete result. Example inputs are pre-filled; edit them and the letter updates." }) + `
+    <section class="section"><div class="wrap grid-2"><form id="cl-form" class="form" onsubmit="return false"><div class="two">${f("cl-name", "Your name", "Jordan Lee")}${f("cl-school", "School", "University of Michigan")}</div><div class="two">${f("cl-major", "Major", "statistics")}${f("cl-role", "Role", "Data Analyst, New Grad")}</div>${f("cl-co", "Company", "Quill Analytics")}${f("cl-why", "Why this company (one sentence)", "Your alternative-data research is the kind of work I've wanted to do since my first econometrics class.", true)}${f("cl-ex1", "Your best result (start with a verb)", "modeled 2,400 survey responses in Python to find the three drivers of student churn, which the dean's office now uses to plan advising", true)}</form>
+    <div><div class="out" id="cl-out" aria-live="polite"></div><button class="btn" id="cl-copy" style="margin-top:10px">Copy letter</button></div></div></section>${toolFoot()}${ctaBand("Yapply drafts cover letters from your voice profile, tailored to every job.")}` };
+});
+
+// Elevator pitch
+route("tool-elevator-pitch-generator", () => {
+  onRender(() => {
+    const go = () => {
+      const v = id => $("#" + id).value.trim();
+      const t = `Hi, I'm ${v("ep-name")}. I'm a ${v("ep-year")} studying ${v("ep-major")}. Most recently I ${v("ep-proof")}. I'm looking for ${v("ep-goal")}, and I'd love to hear how your team ${v("ep-ask")}.`;
+      const words = t.split(/\s+/).length; const secs = Math.round(words / 150 * 60);
+      $("#ep-out").textContent = t; $("#ep-time").textContent = `${words} words · about ${secs} seconds out loud`;
+      $("#ep-time").className = "tag " + (secs <= 35 ? "good" : "warn");
+    };
+    document.querySelectorAll("#ep-form input").forEach(i => i.addEventListener("input", go)); go();
+    $("#ep-copy").addEventListener("click", () => copyText($("#ep-out").textContent));
+  });
+  const f = (id, l, val) => `<label for="${id}">${l}<input id="${id}" value="${val}"></label>`;
+  return { title: "Elevator pitch generator", path: toolPath("tool-elevator-pitch-generator"), crumbs: toolCrumbs("Elevator Pitch Generator"),
+    html: pageHead({ eyebrow: "Free tool", title: "Elevator pitch generator", answer: "A good career-fair pitch is 20–35 seconds: who you are, one proof point, what you want, one question. The timer assumes 150 words per minute." }) + `
+    <section class="section"><div class="wrap grid-2"><form id="ep-form" class="form" onsubmit="return false"><div class="two">${f("ep-name", "Name", "Jordan")}${f("ep-year", "Year", "senior")}</div>${f("ep-major", "Major", "statistics at Michigan")}${f("ep-proof", "One proof point", "built a churn model from 2,400 survey responses that our advising office now uses")}${f("ep-goal", "What you want", "a new grad data analyst role")}${f("ep-ask", "Your question", "decides which analyses to run each quarter")}</form>
+    <div class="stack"><div class="out" id="ep-out" aria-live="polite"></div><div class="row"><span id="ep-time" class="tag"></span><button class="btn sm" id="ep-copy">Copy</button></div><p class="small muted">Practice it out loud with <a href="#feature-ai-mock-interview">AI Mock Interview</a>.</p></div></div></section>${toolFoot()}` };
+});
+
+// H-1B checker
+route("tool-h1b-sponsor-checker", () => {
+  onRender(() => {
+    const go = () => {
+      const q = $("#h1-q").value.toLowerCase().trim();
+      const list = COMPANIES.filter(c => !q || c.name.toLowerCase().includes(q) || c.industry.toLowerCase().includes(q));
+      $("#h1-out").innerHTML = list.map(c => { const t = c.h1b.reduce((a, b) => a + b, 0); const max = Math.max(...COMPANIES.map(x => Math.max(...x.h1b))); return `<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0"><a href="#company-${c.slug}">${c.name}</a></h3>${sponsorTag(c.slug === "orbit-aerospace" ? "no" : t > 40 ? "yes" : t > 12 ? "likely" : "unknown")}</div><p class="small muted">${c.industry} · ${c.hq}</p><div class="bars">${c.h1b.map((n, i) => `<div class="b ${i === 2 ? "on" : ""}"><span class="num">FY${2024 + i} filings</span><div class="t"><i style="width:${n / max * 100}%"></i></div><b class="num">${n}</b></div>`).join("")}</div><p class="small">New grad share: <b>${Math.round(c.ng * 100)}%</b> · <a href="#h1b-jobs">Sponsoring jobs</a></p></div>`; }).join("") || `<p class="card">No company found.</p>`;
+    };
+    $("#h1-q").addEventListener("input", go); go();
+  });
+  return { title: "H-1B sponsor checker", path: toolPath("tool-h1b-sponsor-checker"), crumbs: toolCrumbs("H-1B Sponsor Checker"),
+    html: pageHead({ eyebrow: "Free tool", title: "H-1B sponsor checker", answer: "Search a company to see its H-1B filings for the last three fiscal years and the share that went to new grad roles. In production this uses public USCIS and Department of Labor data.", extra: `<p style="margin-top:12px">${DEMO}</p>` }) + `
+    <section class="section"><div class="wrap"><label for="h1-q" style="max-width:480px">Company or industry<input id="h1-q" placeholder="e.g. Juniper, banking"></label><div class="grid" id="h1-out" style="margin-top:18px"></div></div></section>${toolFoot()}${ctaBand("See only jobs at employers that sponsor.", "Yapply labels sponsorship on every role.")}` };
+});
+
+// ---------- PRODUCT PAGES ----------
+function callCard() {
+  return `<div class="call" aria-label="Example voice session">
+    <div class="bar"><span>● LIVE · Voice profile</span><span class="num">04:12 / ~10:00</span></div>
+    <div class="wave" aria-hidden="true">${Array.from({ length: 34 }, (_, i) => `<i style="animation-delay:${(i * 0.07).toFixed(2)}s"></i>`).join("")}</div>
+    <div class="bubble ai"><small>YAPPLY</small>You mentioned the study-room app. How many people actually used it?</div>
+    <div class="bubble me"><small>YOU</small>Oh, like 300 people in the CS club. We stopped double-bookings, that was the whole point.</div>
+    <div class="bubble ai"><small>YAPPLY</small>What did you build it with, and what did you own?</div>
+    <div class="resume-line"><span class="eyebrow" style="margin:0 0 4px">Resume line, drafted from your answer</span><mark>Shipped</mark> a React + Firebase booking app used by <mark>300 CS club members</mark>, eliminating double-bookings across 6 study rooms.</div>
+  </div>`;
+}
+
+route("home", () => ({
+  title: "Yapply", html: `
+  <section class="hero"><div class="wrap grid-2">
+    <div>
+      <span class="eyebrow">For the class of 2027 · New grad & internship search</span>
+      <h1>Talk for 10 minutes. Get a resume that <mark>sounds like you</mark>.</h1>
+      <p class="lead" style="font-size:1.2rem;color:var(--muted);max-width:46ch">Yapply interviews you by voice, finds the experience you forgot to write down, then tailors your resume and applies to matched new grad roles, with your approval on every one.</p>
+      <div class="row" style="margin-top:22px"><a class="btn primary" href="#signup">Start my voice profile</a><a class="btn" href="#how-it-works">See how it works</a></div>
+      <p class="small muted" style="margin-top:14px">Free during beta · Works with no resume · You approve every application</p>
+    </div>
+    ${callCard()}
+  </div></section>
+  <section class="section"><div class="wrap">
+    <span class="eyebrow">One flow, five steps</span><h2>From a conversation to an offer</h2>
+    <div class="steps" style="margin-top:24px">
+      ${[["Talk", "A 10-minute voice session about your classes, projects, jobs and goals.", "feature-voice-career-profile"], ["Review", "See your career profile and fix anything it got wrong.", "feature-voice-career-profile"], ["Match", "New grad and intern roles ranked by fit, sponsorship and deadline.", "feature-job-match"], ["Tailor & apply", "A tailored resume per job. You approve, it applies.", "feature-ai-resume-tailor"], ["Practice", "Mock interviews by voice, built from your own stories.", "feature-ai-mock-interview"]].map(([t, d, h]) => `<div class="step"><h3><a href="#${h}" style="color:inherit">${t}</a></h3><p class="muted">${d}</p></div>`).join("")}
+    </div></div></section>
+  <section class="section"><div class="wrap grid-2">
+    <div><span class="eyebrow">Opportunities</span><h2>Only roles you can actually get</h2><p class="muted">Every job on Yapply is an internship or an entry-level role, labelled with H-1B sponsorship likelihood and the application deadline.</p>
+      <div class="row"><a class="btn" href="#jobs-new-grad">New grad jobs</a><a class="btn" href="#jobs-internships">Internships</a><a class="btn" href="#h1b-jobs">H1B jobs</a></div></div>
+    <div class="jobs">${JOBS.filter(j => j.sponsor === "yes").slice(0, 4).map(jobRow).join("")}<div>${DEMO}</div></div>
+  </div></section>
+  <section class="section"><div class="wrap">
+    <span class="eyebrow">Free tools</span><h2>Start with a tool, no sign-up</h2>
+    <div class="grid" style="margin-top:20px">${TOOLS.map(t => `<a class="card" href="#${t.id}"><h3>${t.name}</h3><p class="muted small">${t.one}</p></a>`).join("")}</div>
+  </div></section>
+  <section class="section"><div class="wrap grid-2">
+    <div><span class="eyebrow">For international students</span><h2>Built with OPT and H-1B in mind</h2><p class="muted">Filter for employers that sponsor, see when roles open, and follow the OPT timeline without guessing.</p><a class="btn" href="#international-students">International students</a></div>
+    <div class="stack">${GUIDES.filter(g => ["opt-cpt-guide", "h1b-for-new-grads", "new-grad-recruiting-timeline"].includes(g.slug)).map(g => `<a class="card" href="#guide-${g.slug}"><span class="eyebrow">${g.stage}</span><h3>${g.title}</h3></a>`).join("")}</div>
+  </div></section>
+  <section class="section"><div class="wrap"><h2>Questions</h2>${faqBlock(FAQ.slice(0, 5))}<a href="#faq">All FAQ</a></div></section>
+  ${ctaBand()}`
+}));
+
+route("how-it-works", () => ({
+  title: "How it works", path: "/how-it-works", crumbs: [["Home", "home"], ["How it works"]],
+  html: pageHead({ eyebrow: "Features", title: "How Yapply works", lead: "A voice conversation replaces the resume form. Everything after it, from tailoring to applying to practice, uses what you said.", answer: "Yapply asks about your experience for about 10 minutes, turns it into a career profile you can edit, then uses that profile to tailor a resume for each matched job and apply after you approve." }) + `
+  <section class="section"><div class="wrap">
+    ${[["1. A 10-minute voice session", "Yapply asks open questions, then follows up on the details recruiters look for: how many people, which tools, what changed. You can stop and continue later.", "feature-voice-career-profile"],
+      ["2. Your career profile", "Everything it heard becomes a structured profile: projects, skills, numbers, preferences and work authorization. You review it before anything else happens.", "feature-voice-career-profile"],
+      ["3. Matched roles", "Entry-level and intern roles, refreshed daily, ranked by fit and labelled with sponsorship and deadline.", "feature-job-match"],
+      ["4. A tailored resume per job", "Yapply rewrites your resume for the job's keywords using only facts from your profile, and shows you each change.", "feature-ai-resume-tailor"],
+      ["5. Apply with review", "Approve and Yapply fills the application. Nothing is sent without your OK.", "feature-auto-apply"],
+      ["6. Practice the interview", "When you land an interview, practice by voice with an interviewer that follows up and interrupts.", "feature-ai-mock-interview"]].map(([t, d, h]) => `<div class="grid-2" style="padding:22px 0;border-bottom:1px solid var(--line)"><h3>${t}</h3><div><p>${d}</p><a href="#${h}">Learn more</a></div></div>`).join("")}
+  </div></section>${ctaBand()}`
+}));
+
+route("features", () => ({
+  title: "Features", path: "/features", crumbs: [["Home", "home"], ["Features"]],
+  html: pageHead({ eyebrow: "Features", title: "Everything Yapply does", lead: "Five features, one profile. Each one uses the career profile built from your voice session." }) +
+  `<section class="section"><div class="wrap grid">${FEATURES.map(f => `<a class="card" href="#feature-${f.slug}"><h3>${f.name}</h3><p class="muted">${f.one}</p></a>`).join("")}<a class="card" href="#how-it-works"><h3>How it works</h3><p class="muted">The full flow from conversation to offer.</p></a></div></section>${ctaBand()}`
+}));
+
+function mockInterviewDemo() {
+  onRender(() => {
+    const qs = IQ.behavioral.qs.map(q => q[0]); let i = 0;
+    const log = $("#mi-log"), form = $("#mi-form"), inp = $("#mi-in");
+    const add = (cls, t) => { const d = document.createElement("div"); d.className = "msg " + cls; d.textContent = t; log.appendChild(d); log.scrollTop = log.scrollHeight; };
+    form.addEventListener("submit", e => {
+      e.preventDefault(); const a = inp.value.trim(); if (!a) return; add("me", a); inp.value = "";
+      const words = a.split(/\s+/).length, hasNum = /\d/.test(a), hasI = /\bI\b/.test(a);
+      let fb = words < 25 ? "That's short. Can you walk me through what you did step by step?" : !hasNum ? "Good story. What was the result, in numbers? Users, hours saved, a grade, anything." : !hasI ? "You said \"we\" a lot. What did you personally do?" : "Clear and specific. Interviewers like that you quantified the result.";
+      setTimeout(() => { add("ai", fb); i = (i + 1) % qs.length; setTimeout(() => add("ai", "Next question: " + qs[i]), 500); }, 400);
+    });
+  });
+  return `<div class="chat" style="max-height:440px;overflow:auto" id="mi-log" aria-live="polite"><div class="msg ai">${esc(IQ.behavioral.qs[0][0])}</div></div>
+  <form id="mi-form" class="row" style="margin-top:10px"><label for="mi-in" class="hidden">Your answer</label><input id="mi-in" style="flex:1" placeholder="Type your answer (the real product listens by voice)"><button class="btn primary">Answer</button></form>
+  <p class="small muted">Demo of the follow-up logic. In the product this is a live voice conversation.</p>`;
+}
+
+pattern(/^feature-(.+)$/, slug => {
+  const f = FEATURES.find(x => x.slug === slug); if (!f) return null;
+  const demo = slug === "ai-mock-interview" ? mockInterviewDemo()
+    : slug === "voice-career-profile" ? callCard()
+    : slug === "ai-resume-tailor" ? `<div class="card"><span class="eyebrow">Before</span><p>Worked on a website for a student club.</p><span class="eyebrow">After, tailored for a Software Engineer, New Grad role</span><p><mark>Shipped</mark> a <mark>React</mark> + Firebase booking app used by <mark>300 members</mark>, eliminating double-bookings across 6 rooms.</p><p class="small muted">Highlighted words came from your voice session or match the job description. Nothing is added that you didn't say.</p></div>`
+    : slug === "job-match" ? `<div class="jobs">${JOBS.slice(0, 4).map(jobRow).join("")}</div><p>${DEMO}</p>`
+    : `<div class="card"><span class="eyebrow">Review before sending</span><h3>${esc(JOBS[0].title)}</h3><p class="small muted">${company(JOBS[0].company).name} · ${city(JOBS[0].city).name}</p><ul><li>Resume: tailored version 3 ✓</li><li>“Why this company?” answer drafted from your profile ✓</li><li>Work authorization: answered from your profile ✓</li></ul><div class="row"><button class="btn primary" onclick="toast('Demo: application approved')">Approve & apply</button><button class="btn" onclick="toast('Demo: opened for editing')">Edit first</button></div></div>`;
+  return { title: f.name, path: "/features/" + slug, crumbs: [["Home", "home"], ["Features", "features"], [f.name]],
+    html: pageHead({ eyebrow: "Features", title: f.name, lead: f.one }) + `
+    <section class="section"><div class="wrap grid-2"><div><h2>What you get</h2><ul class="prose">${f.bullets.map(b => `<li>${b}</li>`).join("")}</ul><a class="btn primary" href="#signup">Try it free</a></div><div>${demo}</div></div></section>
+    <section class="section"><div class="wrap"><h2>Other features</h2><div class="grid" style="margin-top:16px">${FEATURES.filter(x => x.slug !== slug).map(x => `<a class="card" href="#feature-${x.slug}"><h3>${x.name}</h3><p class="muted small">${x.one}</p></a>`).join("")}</div></div></section>${ctaBand()}` };
+});
+
+route("pricing", () => ({
+  title: "Pricing", path: "/pricing", crumbs: [["Home", "home"], ["Pricing"]],
+  html: pageHead({ eyebrow: "Pricing", title: "Free to start. Pay when you're applying hard.", lead: "Prices below are placeholders for design review and are not final." }) + `
+  <section class="section"><div class="wrap plans">
+    <div class="plan"><h3>Free</h3><div class="price">$0</div><ul><li>Voice career profile</li><li>Unlimited job search with sponsorship labels</li><li>5 tailored resumes per month</li><li>All free tools</li></ul><a class="btn" href="#signup">Start free</a></div>
+    <div class="plan featured"><span class="tag hi">Most students</span><h3>Pro</h3><div class="price">$TBD<span class="small muted" style="font-size:1rem">/month</span></div><ul><li>Unlimited tailored resumes</li><li>Auto apply with review</li><li>Unlimited voice mock interviews</li><li>Deadline alerts</li></ul><a class="btn primary" href="#signup">Start Pro trial</a></div>
+    <div class="plan"><h3>Universities</h3><div class="price">Talk to us</div><ul><li>Accounts for your students</li><li>Workshops for career centers</li><li>Anonymous outcome reports</li></ul><a class="btn" href="#about">Contact</a></div>
+  </div></section>
+  <section class="section"><div class="wrap"><h2>Pricing FAQ</h2>${faqBlock([["Can I cancel anytime?", "Yes, from your account settings in two clicks."], ["Is there a student discount?", "Pricing is designed for students; final prices will be set before launch."], ["What happens to my profile if I downgrade?", "You keep your profile and all resumes you created."]])}</div></section>`
+}));
+
+route("app", () => {
+  onRender(() => $("#wl").addEventListener("submit", e => { e.preventDefault(); $("#wl-ok").classList.remove("hidden"); e.target.classList.add("hidden"); }));
+  return { title: "Mobile App", path: "/app", crumbs: [["Home", "home"], ["Mobile App"]],
+    html: pageHead({ eyebrow: "Mobile App", title: "Yapply for iOS and Android", lead: "Do your voice session on a walk. Get deadline alerts on your lock screen. Approve applications with one tap." }) + `
+    <section class="section"><div class="wrap grid-2"><div class="stack">
+      <div class="row"><span class="tag">iOS · in development</span><span class="tag">Android · in development</span></div>
+      <form id="wl" class="form card"><label for="wl-email">Email for the waitlist<input id="wl-email" type="email" required placeholder="you@school.edu"></label><button class="btn primary">Join the waitlist</button></form>
+      <p id="wl-ok" class="answer hidden">You're on the list. (Prototype: nothing was sent.)</p>
+    </div>${callCard()}</div></section>` };
+});
+
+route("signup", () => {
+  onRender(() => $("#su").addEventListener("submit", e => { e.preventDefault(); $("#su-next").classList.remove("hidden"); e.target.classList.add("hidden"); }));
+  return { title: "Join now", path: "/signup", crumbs: [["Home", "home"], ["Sign up"]],
+    html: pageHead({ eyebrow: "Join now", title: "Create your Yapply account", lead: "Three questions, then your 10-minute voice session." }) + `
+    <section class="section"><div class="wrap grid-2">
+      <form id="su" class="form card">
+        <label for="su-email">School email<input id="su-email" type="email" required placeholder="you@school.edu"></label>
+        <div class="two"><label for="su-year">Graduation<select id="su-year"><option>Dec 2026</option><option selected>May 2027</option><option>Dec 2027</option><option>2028</option></select></label>
+        <label for="su-look">Looking for<select id="su-look"><option>Full-time new grad</option><option>Summer internship</option><option>Both</option></select></label></div>
+        <label for="su-auth">Work authorization<select id="su-auth"><option>US citizen or green card</option><option>F-1 student (will need OPT / H-1B)</option><option>Other visa</option></select></label>
+        <button class="btn primary">Continue to voice session</button>
+        <p class="small muted">Prototype: this form doesn't create an account.</p>
+      </form>
+      <div id="su-next" class="hidden stack"><h3>Your voice session is ready</h3><p class="muted">In the product, Yapply would start a 10-minute conversation now. Here's what it sounds like:</p>${callCard()}</div>
+      <div class="stack"><h3>What happens next</h3><ol class="prose"><li>Talk for about 10 minutes</li><li>Review your career profile</li><li>See matched roles and tailored resumes</li></ol></div>
+    </div></section>` };
+});
+
+// ---------- OPPORTUNITY PAGES (programmatic templates) ----------
+const opt = (v, t, sel) => `<option value="${v}"${sel ? " selected" : ""}>${t}</option>`;
+
+function jobBoard(preset = {}) {
+  const id = "jb" + Math.random().toString(36).slice(2, 7);
+  onRender(() => {
+    const root = $("#" + id);
+    const draw = () => {
+      const f = Object.fromEntries(["q", "role", "city", "level", "sponsor"].map(k => [k, root.querySelector(`[name=${k}]`).value]));
+      const list = JOBS.filter(j => (!f.role || j.role === f.role) && (!f.city || j.city === f.city) && (!f.level || j.level === f.level)
+        && (!f.sponsor || (f.sponsor === "yes" ? ["yes", "likely"].includes(j.sponsor) : j.sponsor === f.sponsor))
+        && (!f.q || (j.title + company(j.company).name).toLowerCase().includes(f.q.toLowerCase())))
+        .sort((a, b) => a.posted - b.posted);
+      root.querySelector(".count").textContent = plural(list.length, "role");
+      root.querySelector(".jobs").innerHTML = list.length ? list.map(jobRow).join("") : `<p class="card">No roles match. Try removing a filter.</p>`;
+    };
+    root.addEventListener("input", draw); draw();
+  });
+  return `<div id="${id}"><form class="filters" onsubmit="return false">
+    <label for="${id}q">Search<input id="${id}q" name="q" placeholder="Title or company" value=""></label>
+    <label for="${id}r">Role<select id="${id}r" name="role">${opt("", "All roles")}${ROLES.map(r => opt(r.slug, r.name, preset.role === r.slug)).join("")}</select></label>
+    <label for="${id}c">Location<select id="${id}c" name="city">${opt("", "All locations")}${CITIES.map(c => opt(c.slug, c.name, preset.city === c.slug)).join("")}</select></label>
+    <label for="${id}l">Level<select id="${id}l" name="level">${opt("", "Intern + new grad")}${opt("New Grad", "New grad", preset.level === "New Grad")}${opt("Internship", "Internship", preset.level === "Internship")}</select></label>
+    <label for="${id}s">Sponsorship<select id="${id}s" name="sponsor">${opt("", "Any")}${opt("yes", "Sponsors or likely", preset.sponsor === "yes")}${opt("unknown", "Unclear")}${opt("no", "No sponsorship")}</select></label>
+    <span class="count small muted" style="margin-left:auto"></span></form><div class="jobs"></div></div>`;
+}
+
+function summarize(list) {
+  const sp = list.filter(j => ["yes", "likely"].includes(j.sponsor)).length;
+  const cos = new Set(list.map(j => j.company)).size;
+  return { n: list.length, sp, cos };
+}
+
+function listPage({ name, title, path, lead, preset, crumbLabel }) {
+  route(name, () => {
+    const list = JOBS.filter(j => (!preset.level || j.level === preset.level) && (!preset.city || j.city === preset.city) && (!preset.sponsor || ["yes", "likely"].includes(j.sponsor)));
+    const s = summarize(list);
+    return { title, path, crumbs: [["Home", "home"], ["Jobs", "jobs"], [crumbLabel]],
+      html: pageHead({ eyebrow: "Opportunities", title, lead, answer: `As of ${AS_OF}, Yapply lists <b>${s.n}</b> ${title.toLowerCase()} roles at <b>${s.cos}</b> companies; <b>${s.sp}</b> sponsor or are likely to sponsor H-1B.`, extra: `<p style="margin-top:12px">${DEMO}</p>` }) +
+        `<section class="section"><div class="wrap">${jobBoard(preset)}</div></section>
+        <section class="section"><div class="wrap"><h2>Browse by role</h2><div class="row" style="margin-top:12px">${ROLES.map(r => `<a class="btn sm" href="#jobs-${r.slug}-new-grad">${r.name}</a>`).join("")}</div></div></section>${ctaBand("Found roles you like? Get a resume tailored to each one.")}` };
+  });
+}
+listPage({ name: "jobs", title: "Entry-level jobs and internships", path: "/jobs", lead: "Every role on Yapply is an internship or an entry-level job. Updated daily.", preset: {}, crumbLabel: "All" });
+listPage({ name: "jobs-internships", title: "Internships", path: "/jobs/internships", lead: "Summer 2027 internships across tech, data, finance, consulting and engineering.", preset: { level: "Internship" }, crumbLabel: "Internships" });
+listPage({ name: "jobs-new-grad", title: "New grad jobs", path: "/jobs/new-grad", lead: "Entry-level roles for the class of 2027 and recent grads.", preset: { level: "New Grad" }, crumbLabel: "New grad" });
+listPage({ name: "jobs-remote", title: "Remote entry-level jobs", path: "/jobs/remote", lead: "Fully remote internships and new grad roles in the US.", preset: { city: "remote" }, crumbLabel: "Remote" });
+listPage({ name: "h1b-jobs", title: "H-1B sponsoring new grad jobs", path: "/h1b-jobs", lead: "Roles at employers that sponsor H-1B or have a history of sponsoring similar roles.", preset: { sponsor: "yes" }, crumbLabel: "H1B jobs" });
+
+// /jobs/[role]-new-grad(-in-[city]) and /h1b-jobs/[role](-in-[city])
+function categoryPage(rslug, cslug, h1b) {
+  const r = role(rslug); if (!r) return null; const c = cslug ? city(cslug) : null; if (cslug && !c) return null;
+  const list = JOBS.filter(j => j.role === rslug && (!cslug || j.city === cslug) && (!h1b || ["yes", "likely"].includes(j.sponsor)));
+  const s = summarize(list);
+  const where = c ? ` in ${c.name}` : "";
+  const title = h1b ? `H-1B sponsoring ${r.name} jobs${where}` : `${r.name} new grad jobs${where}`;
+  const path = (h1b ? `/h1b-jobs/${rslug}` : `/jobs/${rslug}-new-grad`) + (cslug ? `-in-${cslug}` : "");
+  const base = h1b ? `h1b-jobs-${rslug}` : `jobs-${rslug}-new-grad`;
+  const months = [...new Set(list.map(j => company(j.company).opens))];
+  const cityLinks = CITIES.filter(x => x.slug !== cslug && JOBS.some(j => j.role === rslug && j.city === x.slug)).map(x => `<a class="btn sm" href="#${base}-in-${x.slug}">${x.name}</a>`).join("");
+  const roleLinks = ROLES.filter(x => x.slug !== rslug).slice(0, 6).map(x => `<a class="btn sm" href="#${h1b ? "h1b-jobs-" : "jobs-"}${x.slug}${h1b ? "" : "-new-grad"}${cslug ? "-in-" + cslug : ""}">${x.name}</a>`).join("");
+  return { title, path, crumbs: [["Home", "home"], [h1b ? "H1B jobs" : "Jobs", h1b ? "h1b-jobs" : "jobs"], [title]],
+    html: pageHead({ eyebrow: h1b ? "H1B jobs" : "New grad jobs", title,
+      answer: `As of ${AS_OF}, Yapply lists <b>${s.n}</b> ${r.name} roles${where} at <b>${s.cos}</b> companies${h1b ? "" : `; <b>${s.sp}</b> sponsor or are likely to sponsor H-1B`}. Typical new grad base salary: <b>$${r.salary[0]}K–$${r.salary[1]}K</b>.`, extra: `<p style="margin-top:12px">${DEMO}</p>` }) + `
+    <section class="section"><div class="wrap layout-side"><div>${jobBoard({ role: rslug, city: cslug || "", sponsor: h1b ? "yes" : "" })}</div>
+      <aside class="stack"><div class="card"><h4>When these roles open</h4><p class="small">${months.length ? `Employers here usually open applications in <b>${months.join(", ")}</b>.` : "No pattern yet."}</p><a class="small" href="#guide-new-grad-recruiting-timeline">Recruiting timeline</a></div>
+      <div class="card"><h4>Skills to show</h4><p class="small">${(SKILLS[rslug] || SKILLS["software-engineer"]).hard.slice(0, 5).join(", ")}</p><a class="small" href="#tool-resume-skills-${rslug}">Full ${r.name} skills list</a></div>
+      <div class="card"><h4>If you're an international student</h4><p class="small">Apply to sponsoring employers first and confirm sponsorship with the recruiter early.</p><a class="small" href="#guide-h1b-for-new-grads">H-1B guide</a></div></aside></div></section>
+    <section class="section"><div class="wrap stack"><h2>Nearby searches</h2>${cityLinks ? `<div class="row">${cityLinks}</div>` : ""}<div class="row">${roleLinks}</div></div></section>
+    <section class="section"><div class="wrap"><h2>FAQ</h2>${faqBlock([[`When should I apply for ${r.name} new grad roles?`, `Within the first 1–3 weeks a role opens. ${months.length ? `Here, most open in ${months.join(", ")}.` : ""}`], [`Do ${r.name} new grad roles sponsor H-1B?`, `${s.sp} of ${s.n} listed roles${where} are at employers that sponsor or are likely to.`], ["How do I stand out?", `Use numbers in every bullet and mirror the job's keywords. Try the <a href="#tool-ats-resume-checker">ATS resume checker</a>.`]])}</div></section>
+    ${ctaBand(`Get a ${r.name} resume tailored to each of these roles.`)}` };
+}
+pattern(/^jobs-([a-z-]+?)-new-grad(?:-in-([a-z-]+))?$/, (r, c) => categoryPage(r, c, false));
+pattern(/^h1b-jobs-([a-z-]+?)(?:-in-([a-z-]+))?$/, (r, c) => categoryPage(r, c, true));
+
+route("international-students", () => {
+  const list = JOBS.filter(j => ["yes", "likely"].includes(j.sponsor));
+  return { title: "Jobs and guides for international students", path: "/international-students", crumbs: [["Home", "home"], ["International students"]],
+    html: pageHead({ eyebrow: "Opportunities", title: "For international students", lead: "Find employers that sponsor, plan OPT around recruiting season, and tell recruiters about your status with confidence.", answer: `As of ${AS_OF}, ${list.length} of ${JOBS.length} roles on Yapply are at employers that sponsor or are likely to sponsor H-1B.`, extra: `<p style="margin-top:12px">${DEMO}</p>` }) + `
+    <section class="section"><div class="wrap grid">${["opt-cpt-guide", "h1b-for-new-grads", "new-grad-recruiting-timeline"].map(s => { const g = GUIDES.find(x => x.slug === s); return `<a class="card" href="#guide-${s}"><span class="eyebrow">Guide</span><h3>${g.title}</h3><p class="small muted">${g.sum}</p></a>`; }).join("")}
+    <a class="card" href="#tool-h1b-sponsor-checker"><span class="eyebrow">Tool</span><h3>H-1B sponsor checker</h3><p class="small muted">Look up any company's sponsorship history.</p></a></div></section>
+    <section class="section"><div class="wrap"><h2>Sponsoring employers hiring now</h2>${jobBoard({ sponsor: "yes" })}</div></section>
+    <section class="section"><div class="wrap"><h2>H-1B jobs by role</h2><div class="row" style="margin-top:12px">${ROLES.map(r => `<a class="btn sm" href="#h1b-jobs-${r.slug}">${r.name}</a>`).join("")}</div></div></section>${ctaBand()}` };
+});
+
+route("companies", () => ({
+  title: "Discover companies", path: "/companies", crumbs: [["Home", "home"], ["Companies"]],
+  html: pageHead({ eyebrow: "Opportunities", title: "Discover companies hiring new grads", lead: "Hiring calendars, sponsorship history and open roles for each employer.", extra: `<p style="margin-top:12px">${DEMO}</p>` }) +
+  `<section class="section"><div class="wrap"><div class="tbl-wrap"><table><thead><tr><th>Company</th><th>Industry</th><th>HQ</th><th class="num">Open roles</th><th>Usually opens</th><th class="num">H-1B filings, 3 yrs</th></tr></thead><tbody>
+  ${COMPANIES.map(c => `<tr><td><a href="#company-${c.slug}"><b>${c.name}</b></a></td><td>${c.industry}</td><td>${c.hq}</td><td class="num">${JOBS.filter(j => j.company === c.slug).length}</td><td>${c.opens}–${c.closes}</td><td class="num">${c.h1b.reduce((a, b) => a + b, 0)}</td></tr>`).join("")}
+  </tbody></table></div></div></section>`
+}));
+
+function companyPage(slug, tab) {
+  const c = company(slug); if (!c) return null;
+  const list = JOBS.filter(j => j.company === slug);
+  const total = c.h1b.reduce((a, b) => a + b, 0);
+  const tabs = [["", "Overview"], ["new-grad", "New grad"], ["internships", "Internships"], ["interview", "Interview"]];
+  const tabNav = `<div class="row" role="tablist" style="margin-top:18px">${tabs.map(([t, l]) => `<a class="btn sm ${t === (tab || "") ? "primary" : ""}" href="#company-${slug}${t ? "-" + t : ""}">${l}</a>`).join("")}</div>`;
+  const shown = tab === "new-grad" ? list.filter(j => j.level === "New Grad") : tab === "internships" ? list.filter(j => j.level === "Internship") : list;
+  const ttl = tab === "interview" ? `${c.name} interview questions and process` : tab === "internships" ? `${c.name} internships` : tab === "new-grad" ? `${c.name} new grad jobs` : `${c.name} careers for new grads and interns`;
+  const body = tab === "interview"
+    ? `<section class="section"><div class="wrap grid-2"><div><h2>Interview process</h2><ol class="prose">${c.interview.map(x => `<li>${x}</li>`).join("")}</ol><h2>Questions to prepare</h2>${faqBlock(IQ.behavioral.qs.slice(0, 4).map(([q, a]) => [q, a]))}</div><div class="card"><h3>Practice ${c.name} questions out loud</h3><p class="muted">Yapply's mock interviewer asks these questions and follows up on your answers.</p><a class="btn primary" href="#feature-ai-mock-interview">Practice by voice</a></div></div></section>`
+    : `<section class="section"><div class="wrap layout-side"><div><h2>${plural(shown.length, "open role")}</h2><div class="jobs" style="margin-top:12px">${shown.map(jobRow).join("") || `<p class="card">No open roles right now. ${c.name} usually opens in ${c.opens}.</p>`}</div></div>
+      <aside class="stack"><div class="card"><h4>Hiring calendar</h4><p class="small">Usually opens <b>${c.opens}</b>, mostly closed by <b>${c.closes}</b>.</p></div>
+      <div class="card"><h4>H-1B sponsorship</h4><p class="small num">Filings 2024 / 2025 / 2026: <b>${c.h1b.join(" / ")}</b><br>Share for new grad roles: <b>${Math.round(c.ng * 100)}%</b></p>${sponsorTag(c.slug === "orbit-aerospace" ? "no" : total > 40 ? "yes" : total > 12 ? "likely" : "unknown")}</div>
+      <div class="card"><h4>About</h4><p class="small">${c.about}</p><p class="small muted">${c.industry} · ${c.hq} · ${c.size}</p></div></aside></div></section>`;
+  return { title: ttl, path: `/companies/${slug}${tab ? "/" + tab : ""}`, crumbs: [["Home", "home"], ["Companies", "companies"], [c.name, tab ? "company-" + slug : null], ...(tab ? [[tabs.find(t => t[0] === tab)[1]]] : [])],
+    html: pageHead({ eyebrow: c.industry, title: ttl, answer: `${c.name} has <b>${plural(list.length, "open entry-level role")}</b> on Yapply as of ${AS_OF}. It usually opens new grad hiring in ${c.opens} and has filed <b>${total}</b> H-1B petitions over the last 3 years.`, extra: `<p style="margin-top:12px">${DEMO}</p>${tabNav}` }) + body + ctaBand(`Apply to ${c.name} with a resume tailored to the role.`) };
+}
+pattern(/^company-([a-z0-9-]+?)-(new-grad|internships|interview)$/, (s, t) => companyPage(s, t));
+pattern(/^company-([a-z0-9-]+)$/, s => companyPage(s));
+
+pattern(/^job-(\d+)$/, id => {
+  const j = JOBS.find(x => x.id === +id); if (!j) return null;
+  const c = company(j.company), r = role(j.role);
+  const sk = SKILLS[j.role];
+  const similar = JOBS.filter(x => x.role === j.role && x.id !== j.id).slice(0, 4);
+  return { title: `${j.title} at ${c.name}`, path: `/job/${j.id}-${c.slug}-${j.role}`, crumbs: [["Home", "home"], ["Jobs", "jobs"], [c.name, "company-" + c.slug], [j.title]],
+    html: pageHead({ eyebrow: j.level, title: esc(j.title), lead: `${c.name} · ${city(j.city).name} · ${j.model}`, extra: `<div class="row" style="margin-top:12px">${sponsorTag(j.sponsor)}<span class="tag num">${j.salary}</span><span class="tag">Apply by ${fmtDate(j.deadline)}</span>${DEMO}</div>` }) + `
+    <section class="section"><div class="wrap layout-side"><div class="prose">
+      <h2>About the role</h2><p>${c.name} (${c.about.toLowerCase().replace(/\.$/, "")}) is hiring a ${j.level === "Internship" ? "summer intern" : "new grad"} ${r.name.toLowerCase()} to join its ${city(j.city).name} team.</p>
+      <h3>What you'll do</h3><ul><li>Own a scoped project with a mentor from day one</li><li>Work with ${sk.tools.slice(0, 3).join(", ")}</li><li>Present your results to the team</li></ul>
+      <h3>What they look for</h3><ul>${sk.hard.slice(0, 5).map(x => `<li>${x}</li>`).join("")}</ul>
+      <p class="small muted">Job description is illustrative demo content.</p></div>
+      <aside class="stack"><div class="card"><h4>Apply with Yapply</h4><p class="small">Get a resume tailored to this role, review it, then apply in one click.</p><a class="btn primary" href="#signup">Tailor & apply</a><a class="btn" style="margin-top:8px" href="#tool-ats-resume-checker">Check my resume first</a></div>
+      <div class="card"><h4>${c.name}</h4><p class="small">Usually opens in ${c.opens}. ${c.h1b.reduce((a, b) => a + b, 0)} H-1B filings in 3 years.</p><a class="small" href="#company-${c.slug}">Company page</a> · <a class="small" href="#company-${c.slug}-interview">Interview process</a></div></aside></div></section>
+    <section class="section"><div class="wrap"><h2>Similar roles</h2><div class="jobs" style="margin-top:12px">${similar.map(jobRow).join("")}</div></div></section>` };
+});
+
+function ghList(level, slug, title) {
+  route(slug, () => {
+    const list = JOBS.filter(j => j.level === level).sort((a, b) => a.deadline.localeCompare(b.deadline));
+    return { title, path: "/" + slug.replace("lists-", "lists/"), crumbs: [["Home", "home"], ["Jobs", "jobs"], [title]],
+      html: pageHead({ eyebrow: "Open-source list", title, lead: "The site version of our GitHub list. Community members submit roles; Yapply's crawler adds the rest every day.", extra: `<div class="row" style="margin-top:12px"><a class="btn sm" href="https://github.com/jacque-yu/yapply-site">View on GitHub</a><span class="tag">${plural(list.length, "role")}</span>${DEMO}</div>` }) + `
+      <section class="section"><div class="wrap"><div class="tbl-wrap"><table><thead><tr><th>Company</th><th>Role</th><th>Location</th><th>Sponsorship</th><th>Deadline</th><th>Apply</th><th>Tailor</th></tr></thead><tbody>
+      ${list.map(j => `<tr><td><a href="#company-${j.company}"><b>${company(j.company).name}</b></a></td><td>${esc(j.title)}</td><td>${city(j.city).name}</td><td>${sponsorTag(j.sponsor)}</td><td class="num">${fmtDate(j.deadline)}</td><td><a href="#job-${j.id}">Apply</a></td><td><a href="#signup">Tailor resume</a></td></tr>`).join("")}
+      </tbody></table></div></div></section>` };
+  });
+}
+ghList("New Grad", "lists-new-grad-2027", "New Grad 2027 list");
+ghList("Internship", "lists-summer-2027-internships", "Summer 2027 Internships list");
+
+// ---------- RESOURCES ----------
+const resCrumbs = (t, h, name) => [["Home", "home"], [t, h], ...(name ? [[name]] : [])];
+
+route("blog", () => ({ title: "Blog", path: "/blog", crumbs: [["Home", "home"], ["Blog"]],
+  html: pageHead({ eyebrow: "Resources", title: "The Yapply blog", lead: "Product notes and practical recruiting advice for new grads." }) +
+  `<section class="section"><div class="wrap grid">${BLOG.map(b => `<a class="card" href="#blog-${b.slug}"><span class="eyebrow">${b.tag} · ${b.date}</span><h3>${b.title}</h3><p class="small muted">${b.sum}</p></a>`).join("")}</div></section>` }));
+pattern(/^blog-([a-z0-9-]+)$/, s => { const b = BLOG.find(x => x.slug === s); if (!b) return null;
+  return { title: b.title, path: "/blog/" + s, crumbs: resCrumbs("Blog", "blog", b.title),
+    html: pageHead({ eyebrow: `${b.tag} · ${b.date} · ${b.mins} min read`, title: b.title, lead: b.sum }) + `<section class="section"><div class="wrap prose">${b.html}</div></section>${ctaBand()}` }; });
+
+route("help", () => ({ title: "Help Center", path: "/help", crumbs: [["Home", "home"], ["Help Center"]],
+  html: pageHead({ eyebrow: "Resources", title: "Help Center", lead: "How Yapply works, your account and your data." }) + `<section class="section"><div class="wrap grid-2">
+  ${[["Getting started", [["How long is the voice session?", "About 10 minutes. You can pause and continue later."], ["Can I upload my existing resume?", "Yes. Yapply reads it and asks about what's missing."], ["Can I redo my voice session?", "Yes, from your profile page. Your earlier answers stay until you replace them."]]],
+     ["Resumes and applications", [["Will Yapply invent experience?", "No. Tailored resumes only use facts from your profile, and every change is shown to you."], ["Which file formats can I export?", "PDF and DOCX."], ["Can I stop an application?", "Applications are only sent after you approve them."]]],
+     ["Jobs", [["How often are jobs updated?", "Daily. Closed roles are marked and removed after 30 days."], ["What does “H-1B likely” mean?", "The job description doesn't say, but the employer has sponsored similar roles in the last three years."]]],
+     ["Account and privacy", [["How do I delete my account?", "Settings → Delete account. Your profile and resumes are deleted."], ["Who can see my profile?", "Only you, until you apply to a job."]]]]
+    .map(([h, qs]) => `<div><h2>${h}</h2>${faqBlock(qs)}</div>`).join("")}</div></section>` }));
+
+route("guides", () => ({ title: "Job search guides for students", path: "/guides", crumbs: [["Home", "home"], ["Guides"]],
+  html: pageHead({ eyebrow: "Resources", title: "Guides for every stage of the search", lead: "Organized by when you'll need them, from freshman year to your first offer." }) +
+  `<section class="section"><div class="wrap grid">${GUIDES.map(g => `<a class="card" href="#guide-${g.slug}"><span class="eyebrow">${g.stage}</span><h3>${g.title}</h3><p class="small muted">${g.sum}</p></a>`).join("")}</div></section>` }));
+pattern(/^guide-([a-z0-9-]+)$/, s => { const g = GUIDES.find(x => x.slug === s); if (!g) return null;
+  const others = GUIDES.filter(x => x.slug !== s).slice(0, 3);
+  return { title: g.title, path: "/guides/" + s, crumbs: resCrumbs("Guides", "guides", g.title),
+    html: pageHead({ eyebrow: `${g.stage} · ${g.mins} min read · Updated ${AS_OF}`, title: g.title, answer: g.sum }) + `
+    <section class="section"><div class="wrap layout-side"><article class="prose">${g.body.map(([h, b], i) => `<h2 id="s${i}">${h}</h2>${b}`).join("").replace(/<table>/g, '<div class="tbl-wrap"><table>').replace(/<\/table>/g, "</table></div>")}</article>
+    <aside class="toc"><b>On this page</b>${g.body.map(([h], i) => `<a href="#guide-${s}" onclick="document.getElementById('s${i}').scrollIntoView({behavior:'smooth'});return false">${h}</a>`).join("")}<hr style="border:0;border-top:1px solid var(--line);margin:14px 0"><b>Related</b>${others.map(o => `<a href="#guide-${o.slug}">${o.title}</a>`).join("")}</aside></div></section>${ctaBand()}` }; });
+
+route("glossary", () => ({ title: "Job search glossary", path: "/glossary", crumbs: [["Home", "home"], ["Glossary"]],
+  html: pageHead({ eyebrow: "Resources", title: "Job search glossary", lead: "Plain-English definitions of recruiting, resume and work-visa terms." }) +
+  `<section class="section"><div class="wrap grid">${[...GLOSSARY].sort((a, b) => a.term.localeCompare(b.term)).map(g => `<a class="card" href="#glossary-${g.slug}"><h3>${g.term}</h3><p class="small muted">${g.def.split(". ")[0]}.</p></a>`).join("")}</div></section>` }));
+pattern(/^glossary-([a-z0-9-]+)$/, s => { const g = GLOSSARY.find(x => x.slug === s); if (!g) return null;
+  return { title: `What is ${g.term.replace(/ \(.+\)/, "")}?`, path: "/glossary/" + s, crumbs: resCrumbs("Glossary", "glossary", g.term),
+    html: pageHead({ eyebrow: "Glossary", title: `What is ${g.term}?`, answer: g.def }) + `<section class="section"><div class="wrap"><h2>Related terms</h2><div class="row" style="margin-top:12px">${g.rel.map(r => { const t = GLOSSARY.find(x => x.slug === r); return t ? `<a class="btn sm" href="#glossary-${r}">${t.term}</a>` : ""; }).join("")}</div>
+    <h2 style="margin-top:32px">Related guides</h2><div class="grid" style="margin-top:12px">${GUIDES.slice(0, 3).map(x => `<a class="card" href="#guide-${x.slug}"><h3>${x.title}</h3></a>`).join("")}</div></div></section>` }; });
+
+route("interview-questions", () => ({ title: "Interview questions by role and company", path: "/interview-questions", crumbs: [["Home", "home"], ["Interview questions"]],
+  html: pageHead({ eyebrow: "Resources", title: "Interview questions for new grads", lead: "Common questions with answer frameworks, by role and by company. Practice any of them out loud with AI Mock Interview." }) +
+  `<section class="section"><div class="wrap"><h2>By role</h2><div class="grid" style="margin-top:12px">${Object.entries(IQ).map(([k, v]) => `<a class="card" href="#interview-questions-${k}"><h3>${v.name}</h3><p class="small muted">${v.qs.length} questions with frameworks</p></a>`).join("")}</div>
+  <h2 style="margin-top:36px">By company</h2><div class="row" style="margin-top:12px">${COMPANIES.map(c => `<a class="btn sm" href="#company-${c.slug}-interview">${c.name}</a>`).join("")}</div><p style="margin-top:10px">${DEMO}</p></div></section>` }));
+pattern(/^interview-questions-([a-z-]+)$/, s => { const v = IQ[s]; if (!v) return null;
+  return { title: `${v.name} interview questions`, path: "/interview-questions/" + s, crumbs: resCrumbs("Interview questions", "interview-questions", v.name),
+    html: pageHead({ eyebrow: "Interview questions", title: `${v.name} interview questions and how to answer`, answer: `The ${v.qs.length} ${v.name.toLowerCase()} questions below come up most often for entry-level candidates. Each has a short framework; practice them out loud before your interview.` }) + `
+    <section class="section"><div class="wrap grid-2"><div>${faqBlock(v.qs)}</div><div class="card"><h3>Practice these out loud</h3><p class="muted">Yapply's voice interviewer asks these questions, follows up on vague answers and gives feedback on structure and specifics.</p><a class="btn primary" href="#feature-ai-mock-interview">Start a mock interview</a></div></div></section>${ctaBand()}` }; });
+
+route("reports", () => ({ title: "Reports", path: "/reports", crumbs: [["Home", "home"], ["Reports"]],
+  html: pageHead({ eyebrow: "Resources", title: "New grad hiring reports", lead: "A monthly snapshot of entry-level hiring from Yapply's job data." }) +
+  `<section class="section"><div class="wrap grid"><a class="card" href="#report-2026-11"><span class="eyebrow">November 2026</span><h3>New grad hiring report: November 2026</h3><p class="small muted">Open roles by industry, sponsorship share and deadlines.</p></a></div></section>` }));
+route("report-2026-11", () => {
+  const byRole = ROLES.map(r => [r.name, JOBS.filter(j => j.role === r.slug).length]).sort((a, b) => b[1] - a[1]);
+  const max = Math.max(...byRole.map(x => x[1])); const sp = JOBS.filter(j => ["yes", "likely"].includes(j.sponsor)).length;
+  const soon = JOBS.filter(j => j.deadline <= "2026-12-08").length;
+  return { title: "New grad hiring report: November 2026", path: "/reports/2026-11-new-grad-hiring", crumbs: resCrumbs("Reports", "reports", "November 2026"),
+    html: pageHead({ eyebrow: "Report · Data as of " + AS_OF, title: "New grad hiring report: November 2026", answer: `As of ${AS_OF}, Yapply tracked <b>${JOBS.length}</b> entry-level and intern roles at <b>${COMPANIES.length}</b> companies. <b>${Math.round(sp / JOBS.length * 100)}%</b> sponsor or are likely to sponsor H-1B, and <b>${soon}</b> close within two weeks.`, extra: `<p style="margin-top:12px">${DEMO} — the report format is real, the numbers are not.</p>` }) + `
+    <section class="section"><div class="wrap grid-2"><div><h2>Open roles by role type</h2><p class="small muted">${byRole[0][0]} has the most open roles.</p><div class="bars" style="margin-top:12px">${byRole.map(([n, c], i) => `<div class="b ${i === 0 ? "on" : ""}"><span>${n}</span><div class="t"><i style="width:${c / max * 100}%"></i></div><b class="num">${c}</b></div>`).join("")}</div></div>
+    <div class="stats"><div class="stat"><b>${JOBS.length}</b><span>open roles</span></div><div class="stat"><b>${sp}</b><span>sponsor or likely</span></div><div class="stat"><b>${soon}</b><span>close by Dec 8</span></div><div class="stat"><b>${JOBS.filter(j => j.level === "Internship").length}</b><span>internships</span></div></div></div></section>
+    <section class="section"><div class="wrap prose"><h2>Methodology</h2><p>Counts include roles open on the snapshot date. See <a href="#methodology">how we collect job data</a>.</p></div></section>` };
+});
+
+route("methodology", () => ({ title: "Methodology", path: "/methodology", crumbs: [["Home", "home"], ["Methodology"]],
+  html: pageHead({ eyebrow: "Resources", title: "How Yapply collects and labels job data", lead: "Where our numbers come from, how often they update and what each label means." }) + `
+  <section class="section"><div class="wrap prose">
+  <h2>Sources</h2><ul><li><b>Jobs:</b> employer career pages and public applicant tracking system feeds, checked every day.</li><li><b>Sponsorship history:</b> public H-1B data from USCIS and the US Department of Labor (LCA disclosures).</li><li><b>Hiring calendars:</b> the dates each employer opened and closed entry-level roles in previous seasons, from our own crawl history.</li></ul>
+  <h2>Labels</h2><div class="tbl-wrap"><table><tr><th>Label</th><th>Meaning</th></tr><tr><td>${sponsorTag("yes")}</td><td>The job description says the employer sponsors, or it filed 40+ H-1B petitions in 3 years.</td></tr><tr><td>${sponsorTag("likely")}</td><td>The description is silent, but the employer sponsored similar roles in the last 3 years.</td></tr><tr><td>${sponsorTag("unknown")}</td><td>Little or no filing history.</td></tr><tr><td>${sponsorTag("no")}</td><td>The description says no sponsorship, or the role requires US person status.</td></tr></table></div>
+  <h2>Entry-level only</h2><p>A role is included if its title or description says intern, new grad, entry level, university graduate or 0–2 years of experience.</p>
+  <h2>Updates</h2><p>Jobs refresh daily. Closed roles are marked closed and removed after 30 days. Reports are published monthly.</p>
+  <p class="small muted">This prototype uses fictional demo data in place of the sources above.</p></div></section>` }));
+
+route("faq", () => ({ title: "FAQ", path: "/faq", crumbs: [["Home", "home"], ["FAQ"]],
+  html: pageHead({ eyebrow: "Resources", title: "Frequently asked questions" }) + `<section class="section"><div class="wrap prose">${faqBlock(FAQ.map(([q, a]) => [q, a.replace("Compare.", '<a href="#compare">Compare</a>.')]))}</div></section>${ctaBand()}` }));
+
+route("compare", () => ({ title: "Compare Yapply", path: "/compare", crumbs: [["Home", "home"], ["Compare"]],
+  html: pageHead({ eyebrow: "Resources", title: "How Yapply compares", lead: "Honest side-by-side comparisons with other AI job search tools, based on public information." }) +
+  `<section class="section"><div class="wrap grid">${COMPETITORS.map(c => `<a class="card" href="#compare-yapply-vs-${c.slug}"><h3>Yapply vs ${c.name}</h3><p class="small muted">${c.what}</p></a>`).join("")}</div></section>` }));
+pattern(/^compare-yapply-vs-([a-z0-9-]+)$/, s => { const c = COMPETITORS.find(x => x.slug === s); if (!c) return null;
+  const rows = [["Starts with", "10-minute voice conversation", "Your existing resume or preferences"], ["Built for", "US college students and new grads", "See their site"], ["Sponsorship labels", "On every job", s === "jobright" ? "Yes, H-1B filter" : "Check their site"], ["Applies for you", "Yes, after you review each one", s === "simplify" ? "Autofills forms you submit" : s === "teal" ? "No, it tracks applications" : "Yes"], ["Mock interviews", "Full-duplex voice", "Check their site"]];
+  return { title: `Yapply vs ${c.name}`, path: `/compare/yapply-vs-${s}`, crumbs: resCrumbs("Compare", "compare", `Yapply vs ${c.name}`),
+    html: pageHead({ eyebrow: "Compare", title: `Yapply vs ${c.name}`, answer: `<b>Choose ${c.name}</b> if you want ${c.strong[0].toLowerCase()}. <b>Choose Yapply</b> if you're a student with a thin resume and want it rebuilt from your real experience before you apply. ${c.diff}` }) + `
+    <section class="section"><div class="wrap"><div class="tbl-wrap"><table><thead><tr><th></th><th>Yapply</th><th>${c.name}</th></tr></thead><tbody>${rows.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div>
+    <p class="small muted" style="margin-top:10px">Based on public information as of ${AS_OF}. Features and prices change; check <b>${c.name}</b>'s own site.</p></div></section>
+    <section class="section"><div class="wrap grid-2"><div><h2>Where ${c.name} is strong</h2><ul class="prose">${c.strong.map(x => `<li>${x}</li>`).join("")}</ul><p class="muted">${c.what}</p></div><div><h2>Where Yapply is different</h2><p>${c.diff}</p><a class="btn primary" href="#signup">Try Yapply free</a></div></div></section>
+    <section class="section"><div class="wrap"><h2>Other comparisons</h2><div class="row" style="margin-top:12px">${COMPETITORS.filter(x => x.slug !== s).map(x => `<a class="btn sm" href="#compare-yapply-vs-${x.slug}">Yapply vs ${x.name}</a>`).join("")}<a class="btn sm" href="#compare-${s}-alternatives">${c.name} alternatives</a></div></div></section>` }; });
+pattern(/^compare-([a-z0-9-]+)-alternatives$/, s => { const c = COMPETITORS.find(x => x.slug === s); if (!c) return null;
+  return { title: `${c.name} alternatives for students`, path: `/alternatives/${s}-alternatives`, crumbs: resCrumbs("Compare", "compare", `${c.name} alternatives`),
+    html: pageHead({ eyebrow: "Alternatives", title: `${c.name} alternatives for new grads`, answer: `Popular alternatives to ${c.name}: ${COMPETITORS.filter(x => x.slug !== s).map(x => x.name).join(", ")} and Yapply. Pick based on whether you need help with what to say (Yapply), speed of applying, or organizing your search.` }) +
+    `<section class="section"><div class="wrap grid"><a class="card" href="#home"><span class="tag hi">Yapply</span><h3>Yapply</h3><p class="small muted">Voice-first profile, tailored resumes, review before apply.</p></a>${COMPETITORS.filter(x => x.slug !== s).map(x => `<a class="card" href="#compare-yapply-vs-${x.slug}"><h3>${x.name}</h3><p class="small muted">${x.what}</p></a>`).join("")}</div></section>` }; });
+
+// ---------- COMPANY ----------
+route("about", () => ({ title: "About us", path: "/about", crumbs: [["Home", "home"], ["About"]],
+  html: pageHead({ eyebrow: "Company", title: "We help students say what they've actually done", lead: "Most new grads have more experience than their resume shows. Yapply asks the questions a good career coach would, then does the busywork of applying." }) + `
+  <section class="section"><div class="wrap grid-2 prose"><div><h2>Why voice</h2><p>Students write thin resumes because forms don't ask follow-up questions. A conversation does.</p><h2>What we won't do</h2><ul><li>Invent experience</li><li>Apply without your approval</li><li>Sell your data</li></ul></div><div><h2>Contact</h2><p>Press and partnerships: <span class="mono">hello@yapply.example</span></p><p class="small muted">Placeholder address for the prototype.</p></div></div></section>` }));
+const legal = (name, path, items) => route(name, () => ({ title: items.title, path, crumbs: [["Home", "home"], [items.title]],
+  html: pageHead({ eyebrow: "Company · Draft", title: items.title, lead: "Draft placeholder for the prototype. Final text will be written with counsel before launch." }) + `<section class="section"><div class="wrap prose">${items.body.map(([h, p]) => `<h2>${h}</h2><p>${p}</p>`).join("")}</div></section>` }));
+legal("privacy", "/privacy", { title: "Privacy policy", body: [["What we collect", "Account details, your career profile, and the resumes and applications you create."], ["Voice sessions", "How recordings and transcripts are stored and for how long will be stated here before launch."], ["Your choices", "You can export or delete your data from Settings at any time."]] });
+legal("terms", "/terms", { title: "Terms of service", body: [["Using Yapply", "You're responsible for the accuracy of what you submit to employers."], ["Applications", "Yapply submits applications only after you approve them."], ["Changes", "We'll notify you before material changes to these terms."]] });
+
+// ---------- HTML SITEMAP ----------
+route("sitemap", () => {
+  const groups = [
+    ["Product", [["home", "Home"], ["how-it-works", "How it works"], ["features", "Features"], ...FEATURES.map(f => ["feature-" + f.slug, f.name]), ["pricing", "Pricing"], ["app", "Mobile App"], ["signup", "Sign up"]]],
+    ["Opportunities", [["jobs", "All jobs"], ["jobs-internships", "Internships"], ["jobs-new-grad", "New grad"], ["jobs-remote", "Remote"], ["international-students", "International students"], ["h1b-jobs", "H1B jobs"], ...ROLES.map(r => ["jobs-" + r.slug + "-new-grad", r.name + " new grad"]), ...ROLES.map(r => ["h1b-jobs-" + r.slug, "H1B " + r.name]), ["jobs-software-engineer-new-grad-in-seattle", "SWE new grad in Seattle (example)"], ["companies", "Companies"], ...COMPANIES.map(c => ["company-" + c.slug, c.name]), ["company-juniper-cloud-interview", "Juniper Cloud interview (example)"], ["job-" + JOBS[0].id, "Job detail (example)"], ["lists-new-grad-2027", "New Grad 2027 list"], ["lists-summer-2027-internships", "Summer 2027 internships list"]]],
+    ["Tools", [["tools", "All tools"], ...TOOLS.map(t => [t.id, t.name]), ...Object.keys(VERBS).map(v => ["tool-resume-synonyms-" + v, v + " synonyms"]), ...ROLES.map(r => ["tool-resume-skills-" + r.slug, r.name + " skills"])]],
+    ["Resources", [["blog", "Blog"], ...BLOG.map(b => ["blog-" + b.slug, b.title]), ["help", "Help Center"], ["guides", "Guides"], ...GUIDES.map(g => ["guide-" + g.slug, g.title]), ["glossary", "Glossary"], ...GLOSSARY.map(g => ["glossary-" + g.slug, g.term]), ["interview-questions", "Interview questions"], ...Object.keys(IQ).map(k => ["interview-questions-" + k, IQ[k].name]), ["reports", "Reports"], ["report-2026-11", "November 2026 report"], ["methodology", "Methodology"], ["faq", "FAQ"], ["compare", "Compare"], ...COMPETITORS.map(c => ["compare-yapply-vs-" + c.slug, "Yapply vs " + c.name]), ...COMPETITORS.map(c => ["compare-" + c.slug + "-alternatives", c.name + " alternatives"])]],
+    ["Company", [["about", "About us"], ["privacy", "Privacy policy"], ["terms", "Terms of service"]]]
+  ];
+  const total = groups.reduce((a, g) => a + g[1].length, 0);
+  return { title: "Sitemap", path: "/sitemap", crumbs: [["Home", "home"], ["Sitemap"]],
+    html: pageHead({ eyebrow: "Company", title: "Sitemap", lead: `All ${total} pages in this prototype. Template pages (jobs, companies, tools, glossary) generate one page per item.` }) +
+    `<section class="section"><div class="wrap grid">${groups.map(([h, l]) => `<div class="card"><h3>${h}</h3><ul class="small" style="padding-left:18px;columns:1">${l.map(([u, t]) => `<li><a href="#${u}">${esc(t)}</a></li>`).join("")}</ul></div>`).join("")}</div></section>` };
+});
+
+// ---------- BOOT ----------
+renderChrome();
+window.addEventListener("hashchange", render);
+render();
+
+</script>
+</body>
+</html>

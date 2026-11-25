@@ -29,11 +29,13 @@ function pageHead({ eyebrow, title, lead, answer, extra = "" }) {
   return `<section class="phead"><div class="wrap">${eyebrow ? `<span class="eyebrow">${eyebrow}</span>` : ""}<h1>${title}</h1>${lead ? `<p class="lead">${lead}</p>` : ""}${answer ? `<p class="answer">${answer}</p>` : ""}${extra}</div></section>`;
 }
 
-function ctaBand(title = "Talk for 10 minutes. Leave with a resume that sounds like you.", sub = "Free during beta. No resume needed to start.") {
-  return `<section class="section"><div class="wrap"><div class="cta-band"><h2>${title}</h2><p>${sub}</p><a class="btn" href="#signup">Start my voice profile</a></div></div></section>`;
+function ctaBand(title = "Talk for 10 minutes. Leave with a resume that shows what you can do.", sub = "Free during beta. No resume needed to start.") {
+  return `<section class="section"><div class="wrap"><div class="cta-band"><h2>${title}</h2><p>${sub}</p><a class="btn" href="#call">Start a free call</a></div></div></section>`;
 }
 
+let FAQ_LD = [];
 function faqBlock(items) {
+  items.forEach(([q, a]) => FAQ_LD.push([q, String(a).replace(/<[^>]+>/g, "")]));
   return `<div>${items.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${a}</p></details>`).join("")}</div>`;
 }
 
@@ -57,7 +59,7 @@ function renderChrome() {
   $("#nav").innerHTML = NAV.map((n, i) => n.items
     ? `<div class="has-dd"><button class="nl" aria-expanded="false" aria-controls="dd${i}" data-dd>${n.label} ▾</button><div class="dd" id="dd${i}">${n.items.map(([h, t, s]) => `<a href="#${h}"><b>${t}</b><span>${esc(s)}</span></a>`).join("")}</div></div>`
     : `<a class="nl" href="#${n.href}">${n.label}</a>`).join("");
-  $("#footer").innerHTML = `<div class="fgrid"><div class="fbrand"><a class="logo" href="#home"><span class="dot" aria-hidden="true"><i style="height:8px"></i><i style="height:13px"></i><i style="height:6px"></i></span>yapply</a><p class="small muted" style="margin-top:12px;max-width:30ch">The voice AI resume builder for US new grads and interns. Talk, and your resume writes itself.</p><a class="btn sm" href="#app">Get the app</a></div>
+  $("#footer").innerHTML = `<div class="fgrid"><div class="fbrand"><a class="logo" href="#home"><span class="dot" aria-hidden="true"><i style="height:8px"></i><i style="height:13px"></i><i style="height:6px"></i></span>yapply</a><p class="small muted" style="margin-top:12px;max-width:30ch">The AI career coach you talk to. It finds your best work and writes it into your resume while you speak.</p><a class="btn sm" href="#app">Get the app</a></div>
   ${FOOTER.map(([h, links]) => `<div><h5>${h}</h5><ul>${links.map(([u, t]) => `<li><a href="#${u}">${t}</a></li>`).join("")}</ul></div>`).join("")}</div>
   <div class="fbottom"><span>© 2026 HOLOGROW INC. Yapply prototype for design and SEO review. Job listings, salaries and sponsorship labels are examples, not real postings.</span><span>Made for the class of 2027</span></div>`;
   document.addEventListener("click", e => {
@@ -92,9 +94,19 @@ const onRender = fn => afterRender.push(fn);
 function render() {
   const name = (location.hash || "#home").slice(1) || "home";
   afterRender = [];
+  FAQ_LD = [];
   const page = resolve(name);
-  document.title = page.title === "Yapply" ? "Yapply — talk for 10 minutes, get hired" : `${page.title} | Yapply`;
+  document.title = page.seoTitle || (page.title === "Yapply" ? "AI Career Coach That Writes Your Resume Live | Yapply" : `${page.title} | Yapply`);
+  const plain = s => String(s || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  const clip = t => t.length <= 160 ? t : t.slice(0, 157).replace(/\s+\S*$/, "") + "…";
+  const desc = clip(plain(page.desc || (page.html.match(/class="answer">([\s\S]*?)<\/p>/) || [])[1] || (page.html.match(/class="lead"[^>]*>([\s\S]*?)<\/p>/) || [])[1]));
+  $("#meta-desc").setAttribute("content", desc || "Yapply is an AI career coach you talk to. It finds strengths you missed and polishes your resume live while you talk.");
+  $("#canonical").setAttribute("href", "https://yapply.ai" + (page.path || "/"));
   $("#app").innerHTML = (page.path ? urlbar(page.path, page.crumbs) : "") + page.html;
   window.scrollTo(0, 0);
+  const ld = [{ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: (page.crumbs || [["Home"]]).map(([n], i) => ({ "@type": "ListItem", position: i + 1, name: n })) }];
+  if (FAQ_LD.length) ld.push({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ_LD.slice(0, 10).map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) });
+  if (page.ld) ld.push(page.ld);
+  $("#ld").textContent = JSON.stringify(ld);
   afterRender.forEach(f => { try { f(); } catch (e) { console.error(e); } });
 }

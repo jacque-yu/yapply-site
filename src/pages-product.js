@@ -40,40 +40,85 @@ function liveDemo(id = "live") {
     </div></div>`;
 }
 
+function whoCard(k) {
+  const c = ICP[k], p = PERSONAS[k.toLowerCase()], r = personaReport(p), last = p.sections[0][2][0];
+  return `<article class="who-card">
+    <div class="wc-img" style="background-image:url(${p.img()})"><div class="wc-shade"></div>
+      <span class="wc-tag"><b>${k}</b>${c.tag}</span>
+      <blockquote class="serif">${c.pain}</blockquote><p class="wc-who">${c.who}</p></div>
+    <div class="wc-body"><p>${c.fix}</p>
+      <div class="wc-ba"><p class="b"><small>Before</small>${esc(p.before[0][1])}</p><p class="a"><small>After one call</small>${r.lines[last]}</p></div>
+      <a class="wc-link" href="#report-${k.toLowerCase()}">See ${p.first}'s call report →</a></div>
+  </article>`;
+}
+function statBand() {
+  return `<div class="stat-band">${STATS.map(([n, t, u, s]) => `<div><b class="serif">${n}</b><p>${t}</p><a class="small muted" href="${u}">Source: ${s} ↗</a></div>`).join("")}</div>`;
+}
+const HOME_FAQ = [
+  ["What is an AI career coach?", "An AI career coach talks with you about your goals and experience and helps you act on them. Yapply's coach focuses on one thing most people get stuck on: finding what you've actually done well and turning it into a resume, live, while you talk."],
+  ["How is Yapply different from an AI resume builder?", "A resume builder starts from what you type. Yapply starts with a conversation: it asks follow-up questions until it finds the numbers and results, and writes them onto your resume during the call."],
+  ["How do I write a resume with no internship experience?", "Use class projects, research, clubs and part-time jobs, and write each as a result with a number. Yapply's coach asks the questions that pull those numbers out of you."],
+  ["I'm an international student. Can I talk in imperfect English?", "Yes. Speak naturally; Yapply writes clear, recruiter-ready English from what you mean, and you approve every line."],
+  ["My first job isn't in my field. Can Yapply help me switch?", "Yes. Tell the coach the role you want; it finds the transferable results in your current job and rewrites them for that role."],
+  ["What's in the report after a call?", "A before-and-after view of your resume, a timeline of every line written live during the call, and the strengths the coach found, each backed by what you said."],
+  ["Will the AI make things up?", "No. Every line comes from what you said or uploaded, and you can see and edit everything."]
+];
 route("home", () => ({
-  title: "Yapply", html: `
-  <section class="hero"><div class="wrap">
-    <div style="max-width:860px">
-      <span class="eyebrow">Voice AI resume builder · For the class of 2027</span>
-      <h1>Just talk. Your resume <mark>writes itself</mark> while you speak.</h1>
-      <p class="lead" style="font-size:1.2rem;color:var(--muted);max-width:60ch">Tell Yapply about your classes, projects and jobs. Every answer appears on your resume in real time, rewritten as a strong bullet with real numbers. Correct it out loud. When the 10-minute conversation ends, your resume is done.</p>
-      <div class="row" style="margin-top:22px"><a class="btn primary" href="#signup">Start talking, it's free</a><a class="btn" href="#feature-ai-resume-builder">How the AI resume builder works</a></div>
-      <p class="small muted" style="margin-top:14px">No resume needed · Interrupt and correct any time · PDF and DOCX export</p>
+  title: "Yapply", seoTitle: "AI Career Coach That Writes Your Resume Live | Yapply",
+  desc: "Talk with Yapply's AI career coach for 10 minutes. It digs into what you've done, finds strengths you missed, and polishes your resume live while you talk.",
+  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "AI career coach you talk to: it finds your strengths and writes your resume live during the call.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
+  html: `
+  <section class="hero2"><div class="wrap h2-grid">
+    <div class="h2-left">
+      <p class="proof"><span class="pulse"></span>Free 10-minute call · No resume needed</p>
+      <h1 class="serif">The AI career coach that finds your best work.</h1>
+      <div class="h2-bottom">
+        <p class="h2-lead">Yapply talks with you like a great coach. It digs into your classes, projects and jobs, finds the strengths you didn't know were worth writing, and polishes your resume <b>live, while you're still talking</b>. Hang up with a finished resume and a report on what you're good at.</p>
+        <div class="row"><a class="btn primary lg" href="#call">Start a free call</a><a class="btn lg" href="#report-a">See a sample report</a></div>
+      </div>
     </div>
-    <div style="margin-top:32px">${liveDemo("live-home")}</div>
+    ${heroStage()}
   </div></section>
-  <section class="section"><div class="wrap">
-    <span class="eyebrow">Why it's different</span><h2>Other tools apply faster. Yapply writes the resume worth sending.</h2>
-    <div class="grid" style="margin-top:20px">
-      <div class="card"><h3>Forms and templates</h3><p class="muted small">You type, you guess what recruiters want, your bullets stay vague.</p></div>
-      <div class="card"><h3>Swipe-to-apply apps</h3><p class="muted small">Sprout and Sorce send more applications with the resume you already have.</p></div>
-      <div class="card" style="border-color:var(--ink);box-shadow:6px 6px 0 var(--hi)"><h3>Yapply</h3><p class="small">You talk. It asks the follow-up a recruiter would ask, and writes the answer onto your resume while you speak.</p></div>
-    </div></div></section>
-  <section class="section"><div class="wrap">
-    <span class="eyebrow">Everything after the conversation</span><h2>One conversation powers every feature</h2>
-    <div class="grid" style="margin-top:20px">${FEATURES.map(f => `<a class="card" href="#feature-${f.slug}">${f.flag ? '<span class="tag hi">Core</span>' : ""}<h3 style="margin-top:6px">${f.name}</h3><p class="muted small">${f.short}</p></a>`).join("")}</div>
+
+  <section class="section roomy"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">How a call works</span><h2 class="serif">Most tools wait for you to write. Yapply asks.</h2><p class="muted">Two things happen at once on every call: the coach digs, and your resume gets written.</p></div>
+    <div class="how3">
+      <div><span class="n serif">1</span><h3>It digs</h3><p class="muted">“How many people used it? What changed after?” The coach keeps asking until it finds the result and the number behind each thing you did.</p></div>
+      <div><span class="n serif">2</span><h3>It writes while you talk</h3><p class="muted">Full duplex: each answer lands on your resume within seconds. Correct it out loud (“no, closer to 300”) and the line updates.</p></div>
+      <div><span class="n serif">3</span><h3>You get a report</h3><p class="muted">Before and after, every live edit on a timeline, and the strengths it found, each backed by what you said.</p></div>
+    </div>
+    <div style="margin-top:56px">${liveDemo("live-home")}</div>
   </div></section>
-  <section class="section"><div class="wrap grid-2">
-    <div><span class="eyebrow">Opportunities</span><h2>Then apply to roles you can actually get</h2><p class="muted">Internships and entry-level roles only, with H-1B sponsorship labels and deadlines.</p>
-      <div class="row"><a class="btn" href="#jobs">Search all jobs</a><a class="btn" href="#companies">Discover companies</a></div></div>
+
+  <section class="section roomy dark-sec"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">The articulation gap</span><h2 class="serif">The problem isn't your experience. It's how it's written.</h2><p>Employers want proof in concrete examples. Most people have the examples, but write them as duties, or don't count them at all.</p></div>
+    ${statBand()}
+  </div></section>
+
+  <section class="section roomy"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Who Yapply is for</span><h2 class="serif">Your experience is worth more than your resume shows.</h2><p class="muted">Four people we built Yapply for. If one sounds like you, the bottleneck isn't you. It's the page.</p></div>
+    <div class="who-grid">${["A", "B", "C", "D"].map(whoCard).join("")}</div>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap grid-2 signals-wrap">
+    <div><span class="eyebrow">Quick check</span><h2 class="serif">Two or more of these? Talk to the coach.</h2><p class="muted">These five signals mean your resume is underselling you.</p><a class="btn primary lg" href="#call" style="margin-top:12px">Start a free call</a></div>
+    <ol class="signals">${SIGNALS.map(([t, d]) => `<li><b>${t}</b><span class="small muted">${d}</span></li>`).join("")}</ol>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">After the call</span><h2 class="serif">One conversation powers everything else</h2><p class="muted">Your call becomes a profile the coach reuses: tailored resumes, cover letters in your voice, interview practice and job matches.</p></div>
+    <div class="feat-grid">${FEATURES.map(f => `<a class="feat" href="#feature-${f.slug}">${f.flag ? '<span class="tag hi">Core</span>' : ""}<h3>${f.name}</h3><p class="muted">${f.short}</p><span class="go">→</span></a>`).join("")}</div>
+    <div class="vs-line"><p><b>Swipe-to-apply apps send more applications. Yapply makes each one worth sending.</b> <span class="muted">Sprout and Sorce send the resume you already have; Yapply rewrites it with you first.</span></p><a href="#compare">Compare →</a></div>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap grid-2">
+    <div><span class="eyebrow">Then apply</span><h2 class="serif">Entry-level roles you can actually get</h2><p class="muted">Internships and entry-level jobs only, with H-1B sponsorship labels and deadlines.</p>
+      <div class="row"><a class="btn" href="#jobs">Search all jobs</a><a class="btn" href="#jobs-internships">Internships for college students</a><a class="btn" href="#international-students">International students</a></div></div>
     <div class="jobs">${JOBS.filter(j => j.sponsor === "yes").slice(0, 4).map(jobRow).join("")}<div>${DEMO}</div></div>
   </div></section>
-  <section class="section"><div class="wrap">
-    <span class="eyebrow">Free tools</span><h2>Start with a tool, no sign-up</h2>
-    <div class="grid" style="margin-top:20px">${TOOLS.map(t => `<a class="card" href="#${t.id}"><h3>${t.name}</h3><p class="muted small">${t.one}</p></a>`).join("")}</div>
-  </div></section>
-  <section class="section"><div class="wrap"><h2>Questions</h2>${faqBlock(FAQ.slice(0, 5))}<a href="#faq">All FAQ</a></div></section>
-  ${ctaBand("Talk for 10 minutes. Hang up with a finished resume.")}`
+
+  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions about the AI career coach</h2>${faqBlock(HOME_FAQ)}</div></section>
+  ${ctaBand("You've done more than your resume says.", "Ten minutes with the coach. Leave with a resume that shows it, and a report on what you're good at.")}`
 }));
 
 route("how-it-works", () => ({
@@ -90,8 +135,8 @@ route("how-it-works", () => ({
 }));
 
 route("features", () => ({
-  title: "Features", path: "/features", crumbs: [["Home", "home"], ["Features"]],
-  html: pageHead({ eyebrow: "Features", title: "Everything starts with a conversation", lead: "The AI Resume Builder writes your resume while you talk. Every other feature reuses that conversation." }) +
+  title: "Features", seoTitle: "AI Resume Tools: Builder, Review, Tailor & Interview | Yapply", desc: "Every Yapply feature starts with a 10-minute conversation: an AI resume builder that writes while you talk, plus resume review, tailoring, cover letters, mock interviews and job matching.", path: "/features", crumbs: [["Home", "home"], ["Features"]],
+  html: pageHead({ eyebrow: "Features", title: "AI resume tools that start by listening", lead: "The AI Resume Builder writes your resume while you talk. Every other feature reuses that conversation, so nothing you said goes to waste." }) +
   `<section class="section"><div class="wrap grid"><a class="card" href="#how-it-works"><h3>How it works</h3><p class="muted">Talk for 10 minutes, finish with a resume.</p></a>${FEATURES.map(f => `<a class="card" href="#feature-${f.slug}">${f.flag ? '<span class="tag hi">Core</span>' : ""}<h3 style="margin-top:6px">${f.name}</h3><p class="muted">${f.one}</p></a>`).join("")}</div></section>${ctaBand()}`
 }));
 
@@ -131,12 +176,14 @@ function featureDemo(slug) {
 
 pattern(/^feature-(.+)$/, slug => {
   const f = FEATURES.find(x => x.slug === slug); if (!f) return null;
-  return { title: f.h1, path: "/features/" + slug, crumbs: [["Home", "home"], ["Features", "features"], [f.name]],
-    html: pageHead({ eyebrow: f.flag ? "Core feature" : "Features", title: f.h1, lead: f.one, answer: f.answer, extra: `<div class="row" style="margin-top:16px"><a class="btn primary" href="#signup">Try it free</a><a class="btn" href="#how-it-works">How it works</a></div>` }) + `
+  const faq = [[`Is Yapply's ${f.name.toLowerCase()} free?`, "Free during beta, with paid plans for heavy use. See Pricing."], ["Will it make things up?", "No. Everything it writes comes from what you said or uploaded, and you approve every line."], ["Do I need a resume to start?", "No. Start talking; the resume is written as you go."], ["Who is it for?", "New grads without a relevant internship, international students, grads whose first job is outside their field, and early-career people changing direction."]];
+  return { title: f.h1, seoTitle: f.title + " | Yapply", desc: f.desc, path: "/features/" + slug, crumbs: [["Home", "home"], ["Features", "features"], [f.name]],
+    html: pageHead({ eyebrow: f.flag ? "Core feature · " + f.name : "Features · " + f.name, title: f.h1, lead: `<b style="color:var(--ink)">${f.pain}</b> ${f.one}`, answer: f.answer, extra: `<div class="row" style="margin-top:16px"><a class="btn primary" href="#signup">Try it free</a><a class="btn" href="#how-it-works">How it works</a></div>` }) + `
     <section class="section"><div class="wrap">${featureDemo(slug)}</div></section>
-    <section class="section"><div class="wrap"><h2>What you get</h2><div class="grid" style="margin-top:16px">${f.bullets.map(([t, d]) => `<div class="card"><h3>${t}</h3><p class="muted small">${d}</p></div>`).join("")}</div></div></section>
+    <section class="section"><div class="wrap"><h2>Who ${f.name} is for</h2><div class="icp-grid" style="margin-top:16px">${Object.entries(f.for).map(([k, line]) => `<div class="icp small-icp"><span class="icp-k">${k}</span><span class="eyebrow" style="margin:0">${ICP[k].tag}</span><p class="icp-pain">${ICP[k].pain}</p><p class="small"><b>${line}</b></p></div>`).join("")}</div></div></section>
+    <section class="section"><div class="wrap"><h2>What you get with ${f.name}</h2><div class="grid" style="margin-top:16px">${f.bullets.map(([t, d]) => `<div class="card"><h3>${t}</h3><p class="muted small">${d}</p></div>`).join("")}</div></div></section>
     <section class="section"><div class="wrap grid-2"><div><h2>How it compares</h2><p>${f.vs}</p><a href="#compare">See all comparisons</a></div>
-      <div><h2>FAQ</h2>${faqBlock([[`Is Yapply's ${f.name.toLowerCase()} free?`, "Free during beta, with paid plans for heavy use. See Pricing."], ["Will it make things up?", "No. Everything it writes comes from what you said or uploaded, and you approve every line."], ["Do I need a resume to start?", "No. Start talking; the resume is written as you go."]])}</div></div></section>
+      <div><h2>FAQ</h2>${faqBlock(faq)}</div></div></section>
     <section class="section"><div class="wrap"><h2>Other features</h2><div class="grid" style="margin-top:16px">${FEATURES.filter(x => x.slug !== slug).map(x => `<a class="card" href="#feature-${x.slug}"><h3>${x.name}</h3><p class="muted small">${x.short}</p></a>`).join("")}</div></div></section>${ctaBand()}` };
 });
 

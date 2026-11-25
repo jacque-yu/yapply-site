@@ -121,13 +121,13 @@ const COMPETITORS = [
 ];
 
 const FAQ = [
-  ["What is Yapply?", "A voice AI resume builder for US college students and new grads. You talk with it for about 10 minutes and your resume is written live on screen while you speak. When the conversation ends, the resume is done. Yapply then tailors it to matched jobs and helps you apply."],
-  ["Do I need a finished resume to start?", "No. The voice conversation is designed for students with thin or empty resumes. You can also upload a resume and Yapply will ask about what's missing."],
+  ["What is Yapply?", "Yapply is an AI career coach you talk to. In a 10-minute call it digs into what you have done, finds strengths you did not know were worth writing, and polishes your resume live while you speak. After the call you get a report, then tailored resumes, interview practice and job matches."],
+  ["How do I write a resume with no internship experience?", "Count class projects, research, clubs and part-time jobs, and write each as a result with a number. Yapply asks the questions that surface those numbers and writes the bullets for you."],
+  ["Can international students use Yapply?", "Yes. Speak in your own words; Yapply writes fluent, recruiter-ready English, and every job shows H-1B sponsorship likelihood."],
+  ["My first job isn't in my field. Can Yapply help?", "Yes. Tell it the role you want; it rewrites your current experience as transferable results for that role."],
   ["Does Yapply apply to jobs without asking me?", "No. You review every tailored resume and application before it's sent."],
-  ["Can I filter for H-1B sponsorship?", "Yes. Every job shows a sponsorship label based on the job description and the employer's public filing history."],
-  ["Is my voice recording stored?", "This prototype does not record anything. The production policy will be published in the Privacy Policy before launch."],
-  ["Which schools and majors is Yapply for?", "Any US college student or recent grad. The job database covers tech, data, finance, consulting, engineering and design roles."],
-  ["How is Yapply different from Simplify or Jobright?", "See the side-by-side comparisons in Compare."],
+  ["Will the AI make things up?", "No. Everything it writes comes from what you said or uploaded, and you approve every line."],
+  ["How is Yapply different from Sprout, Simplify or Jobright?", "Those tools help you apply faster with the resume you have. Yapply writes the resume with you first, from a conversation. See Compare."],
   ["Is there a mobile app?", "iOS and Android apps are in development. Join the waitlist on the Mobile App page."]
 ];
 

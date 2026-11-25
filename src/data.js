@@ -52,20 +52,6 @@ const JOBS = (() => {
 
 const SPONSOR_LABEL = { yes: ["Sponsors H-1B", "good"], likely: ["H-1B likely", "good"], unknown: ["Sponsorship unclear", "warn"], no: ["No sponsorship", "bad"] };
 
-const VERBS = {
-  created: { alts: ["built", "launched", "designed", "established", "developed", "authored", "introduced", "founded"], before: "Created a dashboard for the marketing team.", after: "Built a Tableau dashboard that cut the marketing team's weekly reporting from 6 hours to 1." },
-  developed: { alts: ["engineered", "built", "implemented", "prototyped", "shipped", "programmed", "designed", "formulated"], before: "Developed a web app for the club.", after: "Shipped a React web app that 300 club members use to book study rooms." },
-  managed: { alts: ["led", "ran", "oversaw", "coordinated", "directed", "owned", "supervised", "administered"], before: "Managed social media accounts.", after: "Ran 3 social accounts and grew followers from 1.2K to 4.5K in one semester." },
-  led: { alts: ["headed", "spearheaded", "directed", "guided", "steered", "chaired", "orchestrated", "captained"], before: "Led a team project.", after: "Headed a 5-person capstone team that delivered a demand-forecasting model to a local grocer." },
-  collaborated: { alts: ["partnered", "co-led", "worked with", "teamed up", "joined forces", "liaised", "contributed", "cooperated"], before: "Collaborated with other interns.", after: "Partnered with 4 interns across design and engineering to ship an onboarding flow in 6 weeks." },
-  improved: { alts: ["increased", "boosted", "streamlined", "optimized", "upgraded", "refined", "strengthened", "accelerated"], before: "Improved the checkout process.", after: "Streamlined checkout from 5 steps to 3, lifting conversion by 8% in an A/B test." },
-  analyzed: { alts: ["evaluated", "assessed", "examined", "modeled", "investigated", "measured", "audited", "forecasted"], before: "Analyzed survey data.", after: "Modeled 2,400 survey responses in Python to find the 3 drivers of student churn." },
-  helped: { alts: ["supported", "enabled", "assisted", "facilitated", "contributed to", "advised", "coached", "equipped"], before: "Helped customers with questions.", after: "Resolved 40+ customer tickets a week with a 96% satisfaction score." },
-  organized: { alts: ["planned", "coordinated", "arranged", "hosted", "structured", "scheduled", "mobilized", "produced"], before: "Organized events for the society.", after: "Planned 6 recruiting events that brought 22 employers and 500 students to campus." },
-  designed: { alts: ["architected", "crafted", "drafted", "modeled", "sketched", "shaped", "conceived", "prototyped"], before: "Designed a new logo.", after: "Crafted a new visual identity adopted across 12 department newsletters." },
-  increased: { alts: ["grew", "raised", "expanded", "doubled", "lifted", "boosted", "multiplied", "scaled"], before: "Increased membership.", after: "Doubled club membership from 60 to 120 by launching a peer-mentoring program." },
-  ensured: { alts: ["guaranteed", "secured", "verified", "maintained", "safeguarded", "upheld", "confirmed", "enforced"], before: "Ensured data was accurate.", after: "Verified 15K inventory records weekly, keeping error rates under 0.5%." }
-};
 
 const SKILLS = {
   "software-engineer": { hard: ["Data structures and algorithms", "Python", "Java", "TypeScript", "REST APIs", "SQL", "Git", "Unit testing", "Linux"], tools: ["AWS or GCP", "Docker", "GitHub Actions", "PostgreSQL", "React"], soft: ["Code review etiquette", "Breaking down ambiguous tasks", "Written technical communication"] },

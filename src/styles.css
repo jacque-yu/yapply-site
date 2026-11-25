@@ -320,3 +320,14 @@ footer.site { border-top: 1px solid var(--line); margin-top: 40px; padding: 48px
 .stack { align-content: start; }
 .layout-side > aside { align-self: start; }
 .stats.two { grid-template-columns: repeat(2, minmax(0, 1fr)); align-self: center; }
+/* synonym pages */
+.intent-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+.intent { text-align: left; display: grid; gap: 4px; background: var(--panel); border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px; cursor: pointer; font: inherit; color: var(--ink); }
+.intent:hover { border-color: var(--ink); }
+.intent span { font-size: .82rem; color: var(--accent); font-weight: 600; }
+.best-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); margin-top: 14px; }
+.best { display: grid; grid-template-columns: 30px 1fr; column-gap: 10px; align-items: baseline; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.best > *:not(.best-n) { grid-column: 2; }
+.best-n { grid-row: span 2; font: 800 1.3rem var(--display); color: var(--accent); }
+.best b { font: 700 1.15rem var(--display); }
+.syn-sec { scroll-margin-top: 80px; }

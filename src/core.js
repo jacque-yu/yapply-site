@@ -11,7 +11,7 @@ const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
 function sponsorTag(s) { const [t, k] = SPONSOR_LABEL[s]; return `<span class="tag ${k}">${t}</span>`; }
 function logoSq(c) { return `<span class="logo-sq" style="background:${c.color}" aria-hidden="true">${c.name[0]}</span>`; }
-const DEMO = `<span class="demo-note" title="Fictional companies and illustrative numbers">Demo data · fictional companies</span>`;
+const DEMO = `<span class="demo-note" title="Example listings for the prototype">Example listings · not real postings</span>`;
 
 function jobRow(j) {
   const c = company(j.company);
@@ -39,27 +39,27 @@ function faqBlock(items) {
 
 // ---------- NAV + FOOTER ----------
 const NAV = [
-  { label: "Features", items: [["how-it-works", "How it works", "The 10-minute flow, end to end"], ...FEATURES.map(f => ["feature-" + f.slug, f.name, f.one])] },
-  { label: "Resources", items: [["blog", "Blog", "Product notes and recruiting advice"], ["help", "Help Center", "Answers about your account"], ["guides", "Guides", "Recruiting timeline, OPT, offers"], ["interview-questions", "Interview Questions", "By role and by company"]] },
+  { label: "Features", items: [["how-it-works", "How it works", "Talk for 10 minutes, finish with a resume"], ...FEATURES.map(f => ["feature-" + f.slug, f.name + (f.flag ? " ★" : ""), f.short])] },
+  { label: "Resources", items: [["blog", "Blog", "Product notes and recruiting advice"], ["help", "Help Center", "Answers about your account"], ["guides", "Guides", "Recruiting timeline, OPT, offers"], ["interview-questions", "Interview Questions", "By role and by company"], ["creator-program", "Creator Program", "Get paid to make videos about Yapply"], ["affiliate-program", "Affiliate Program", "Earn commission on every paid signup"]] },
   { label: "Mobile App", href: "app" },
   { label: "Pricing", href: "pricing" }
 ];
 
 const FOOTER = [
   ["Features", [["how-it-works", "How it works"], ...FEATURES.map(f => ["feature-" + f.slug, f.name])]],
-  ["Tools", [["tool-ats-resume-checker", "ATS Resume Checker"], ["tool-resume-synonyms", "Resume Synonyms"], ["tool-resume-skills", "Resume Skills"], ["tool-cover-letter-generator", "Cover Letter Generator"], ["tool-elevator-pitch-generator", "Elevator Pitch Generator"], ["tool-h1b-sponsor-checker", "H-1B Sponsor Checker"], ["tools", "All tools"]]],
   ["Opportunities", [["jobs", "Search all jobs"], ["jobs-internships", "Internships"], ["jobs-new-grad", "Entry level & new grads"], ["international-students", "International students"], ["h1b-jobs", "H1B jobs"], ["jobs-remote", "Remote work"], ["companies", "Discover companies"]]],
-  ["Resources", [["blog", "Blog"], ["help", "Help Center"], ["guides", "Guides"], ["glossary", "Glossary"], ["reports", "Reports"], ["methodology", "Methodology"], ["interview-questions", "Interview questions"], ["faq", "FAQ"], ["compare", "Compare"]]],
-  ["Company", [["about", "About us"], ["privacy", "Privacy policy"], ["terms", "Terms of service"], ["sitemap", "Sitemap"]]]
+  ["Tools", [["tool-ats-resume-checker", "ATS Resume Checker"], ["tool-resume-synonyms", "Resume Synonyms"], ["tool-resume-skills", "Resume Skills"], ["tool-cover-letter-generator", "Cover Letter Generator"], ["tool-elevator-pitch-generator", "Elevator Pitch Generator"], ["tool-h1b-sponsor-checker", "H-1B Sponsor Checker"], ["tools", "All tools"]]],
+  ["Resources", [["blog", "Blog"], ["help", "Help Center"], ["guides", "Guides"], ["glossary", "Glossary"], ["reports", "Reports"], ["interview-questions", "Interview questions"], ["faq", "FAQ"], ["compare", "Compare"], ["creator-program", "Creator program"], ["affiliate-program", "Affiliate program"]]],
+  ["Company", [["about", "About us"], ["privacy", "Privacy policy"], ["terms", "Terms of service"]]]
 ];
 
 function renderChrome() {
   $("#nav").innerHTML = NAV.map((n, i) => n.items
     ? `<div class="has-dd"><button class="nl" aria-expanded="false" aria-controls="dd${i}" data-dd>${n.label} ▾</button><div class="dd" id="dd${i}">${n.items.map(([h, t, s]) => `<a href="#${h}"><b>${t}</b><span>${esc(s)}</span></a>`).join("")}</div></div>`
     : `<a class="nl" href="#${n.href}">${n.label}</a>`).join("");
-  $("#footer").innerHTML = `<div class="fgrid"><div class="fbrand"><a class="logo" href="#home"><span class="dot" aria-hidden="true"><i style="height:8px"></i><i style="height:13px"></i><i style="height:6px"></i></span>yapply</a><p class="small muted" style="margin-top:12px;max-width:30ch">The voice-first career agent for US new grads and interns.</p><a class="btn sm" href="#app">Get the app</a></div>
+  $("#footer").innerHTML = `<div class="fgrid"><div class="fbrand"><a class="logo" href="#home"><span class="dot" aria-hidden="true"><i style="height:8px"></i><i style="height:13px"></i><i style="height:6px"></i></span>yapply</a><p class="small muted" style="margin-top:12px;max-width:30ch">The voice AI resume builder for US new grads and interns. Talk, and your resume writes itself.</p><a class="btn sm" href="#app">Get the app</a></div>
   ${FOOTER.map(([h, links]) => `<div><h5>${h}</h5><ul>${links.map(([u, t]) => `<li><a href="#${u}">${t}</a></li>`).join("")}</ul></div>`).join("")}</div>
-  <div class="fbottom"><span>© 2026 Yapply. Prototype for design and SEO review. Company and job data on this site is fictional.</span><span>Made for the class of 2027</span></div>`;
+  <div class="fbottom"><span>© 2026 HOLOGROW INC. Yapply prototype for design and SEO review. Job listings, salaries and sponsorship labels are examples, not real postings.</span><span>Made for the class of 2027</span></div>`;
   document.addEventListener("click", e => {
     const b = e.target.closest("[data-dd]");
     document.querySelectorAll(".has-dd.open").forEach(x => { if (!b || x !== b.parentElement) { x.classList.remove("open"); x.firstElementChild.setAttribute("aria-expanded", "false"); } });

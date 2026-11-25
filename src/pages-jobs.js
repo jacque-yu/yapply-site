@@ -41,7 +41,6 @@ function listPage({ name, title, path, lead, preset, crumbLabel }) {
         <section class="section"><div class="wrap"><h2>Browse by role</h2><div class="row" style="margin-top:12px">${ROLES.map(r => `<a class="btn sm" href="#jobs-${r.slug}-new-grad">${r.name}</a>`).join("")}</div></div></section>${ctaBand("Found roles you like? Get a resume tailored to each one.")}` };
   });
 }
-listPage({ name: "jobs", title: "Entry-level jobs and internships", path: "/jobs", lead: "Every role on Yapply is an internship or an entry-level job. Updated daily.", preset: {}, crumbLabel: "All" });
 listPage({ name: "jobs-internships", title: "Internships", path: "/jobs/internships", lead: "Summer 2027 internships across tech, data, finance, consulting and engineering.", preset: { level: "Internship" }, crumbLabel: "Internships" });
 listPage({ name: "jobs-new-grad", title: "New grad jobs", path: "/jobs/new-grad", lead: "Entry-level roles for the class of 2027 and recent grads.", preset: { level: "New Grad" }, crumbLabel: "New grad" });
 listPage({ name: "jobs-remote", title: "Remote entry-level jobs", path: "/jobs/remote", lead: "Fully remote internships and new grad roles in the US.", preset: { city: "remote" }, crumbLabel: "Remote" });
@@ -83,34 +82,7 @@ route("international-students", () => {
     <section class="section"><div class="wrap"><h2>H-1B jobs by role</h2><div class="row" style="margin-top:12px">${ROLES.map(r => `<a class="btn sm" href="#h1b-jobs-${r.slug}">${r.name}</a>`).join("")}</div></div></section>${ctaBand()}` };
 });
 
-route("companies", () => ({
-  title: "Discover companies", path: "/companies", crumbs: [["Home", "home"], ["Companies"]],
-  html: pageHead({ eyebrow: "Opportunities", title: "Discover companies hiring new grads", lead: "Hiring calendars, sponsorship history and open roles for each employer.", extra: `<p style="margin-top:12px">${DEMO}</p>` }) +
-  `<section class="section"><div class="wrap"><div class="tbl-wrap"><table><thead><tr><th>Company</th><th>Industry</th><th>HQ</th><th class="num">Open roles</th><th>Usually opens</th><th class="num">H-1B filings, 3 yrs</th></tr></thead><tbody>
-  ${COMPANIES.map(c => `<tr><td><a href="#company-${c.slug}"><b>${c.name}</b></a></td><td>${c.industry}</td><td>${c.hq}</td><td class="num">${JOBS.filter(j => j.company === c.slug).length}</td><td>${c.opens}–${c.closes}</td><td class="num">${c.h1b.reduce((a, b) => a + b, 0)}</td></tr>`).join("")}
-  </tbody></table></div></div></section>`
-}));
-
-function companyPage(slug, tab) {
-  const c = company(slug); if (!c) return null;
-  const list = JOBS.filter(j => j.company === slug);
-  const total = c.h1b.reduce((a, b) => a + b, 0);
-  const tabs = [["", "Overview"], ["new-grad", "New grad"], ["internships", "Internships"], ["interview", "Interview"]];
-  const tabNav = `<div class="row" role="tablist" style="margin-top:18px">${tabs.map(([t, l]) => `<a class="btn sm ${t === (tab || "") ? "primary" : ""}" href="#company-${slug}${t ? "-" + t : ""}">${l}</a>`).join("")}</div>`;
-  const shown = tab === "new-grad" ? list.filter(j => j.level === "New Grad") : tab === "internships" ? list.filter(j => j.level === "Internship") : list;
-  const ttl = tab === "interview" ? `${c.name} interview questions and process` : tab === "internships" ? `${c.name} internships` : tab === "new-grad" ? `${c.name} new grad jobs` : `${c.name} careers for new grads and interns`;
-  const body = tab === "interview"
-    ? `<section class="section"><div class="wrap grid-2"><div><h2>Interview process</h2><ol class="prose">${c.interview.map(x => `<li>${x}</li>`).join("")}</ol><h2>Questions to prepare</h2>${faqBlock(IQ.behavioral.qs.slice(0, 4).map(([q, a]) => [q, a]))}</div><div class="card"><h3>Practice ${c.name} questions out loud</h3><p class="muted">Yapply's mock interviewer asks these questions and follows up on your answers.</p><a class="btn primary" href="#feature-ai-mock-interview">Practice by voice</a></div></div></section>`
-    : `<section class="section"><div class="wrap layout-side"><div><h2>${plural(shown.length, "open role")}</h2><div class="jobs" style="margin-top:12px">${shown.map(jobRow).join("") || `<p class="card">No open roles right now. ${c.name} usually opens in ${c.opens}.</p>`}</div></div>
-      <aside class="stack"><div class="card"><h4>Hiring calendar</h4><p class="small">Usually opens <b>${c.opens}</b>, mostly closed by <b>${c.closes}</b>.</p></div>
-      <div class="card"><h4>H-1B sponsorship</h4><p class="small num">Filings 2024 / 2025 / 2026: <b>${c.h1b.join(" / ")}</b><br>Share for new grad roles: <b>${Math.round(c.ng * 100)}%</b></p>${sponsorTag(c.slug === "orbit-aerospace" ? "no" : total > 40 ? "yes" : total > 12 ? "likely" : "unknown")}</div>
-      <div class="card"><h4>About</h4><p class="small">${c.about}</p><p class="small muted">${c.industry} · ${c.hq} · ${c.size}</p></div></aside></div></section>`;
-  return { title: ttl, path: `/companies/${slug}${tab ? "/" + tab : ""}`, crumbs: [["Home", "home"], ["Companies", "companies"], [c.name, tab ? "company-" + slug : null], ...(tab ? [[tabs.find(t => t[0] === tab)[1]]] : [])],
-    html: pageHead({ eyebrow: c.industry, title: ttl, answer: `${c.name} has <b>${plural(list.length, "open entry-level role")}</b> on Yapply as of ${AS_OF}. It usually opens new grad hiring in ${c.opens} and has filed <b>${total}</b> H-1B petitions over the last 3 years.`, extra: `<p style="margin-top:12px">${DEMO}</p>${tabNav}` }) + body + ctaBand(`Apply to ${c.name} with a resume tailored to the role.`) };
-}
-pattern(/^company-([a-z0-9-]+?)-(new-grad|internships|interview)$/, (s, t) => companyPage(s, t));
-pattern(/^company-([a-z0-9-]+)$/, s => companyPage(s));
-
+/*__COMPANY_PAGES__*/
 pattern(/^job-(\d+)$/, id => {
   const j = JOBS.find(x => x.id === +id); if (!j) return null;
   const c = company(j.company), r = role(j.role);
@@ -119,12 +91,12 @@ pattern(/^job-(\d+)$/, id => {
   return { title: `${j.title} at ${c.name}`, path: `/job/${j.id}-${c.slug}-${j.role}`, crumbs: [["Home", "home"], ["Jobs", "jobs"], [c.name, "company-" + c.slug], [j.title]],
     html: pageHead({ eyebrow: j.level, title: esc(j.title), lead: `${c.name} · ${city(j.city).name} · ${j.model}`, extra: `<div class="row" style="margin-top:12px">${sponsorTag(j.sponsor)}<span class="tag num">${j.salary}</span><span class="tag">Apply by ${fmtDate(j.deadline)}</span>${DEMO}</div>` }) + `
     <section class="section"><div class="wrap layout-side"><div class="prose">
-      <h2>About the role</h2><p>${c.name} (${c.about.toLowerCase().replace(/\.$/, "")}) is hiring a ${j.level === "Internship" ? "summer intern" : "new grad"} ${r.name.toLowerCase()} to join its ${city(j.city).name} team.</p>
+      <h2>About the role</h2><p class="demo-note" style="margin-bottom:12px">Example listing for the prototype, not a real ${c.name} posting</p><p>${c.name} (${c.tagline.toLowerCase()}) is hiring a ${j.level === "Internship" ? "summer intern" : "new grad"} ${r.name.toLowerCase()} to join its ${city(j.city).name} team.</p>
       <h3>What you'll do</h3><ul><li>Own a scoped project with a mentor from day one</li><li>Work with ${sk.tools.slice(0, 3).join(", ")}</li><li>Present your results to the team</li></ul>
       <h3>What they look for</h3><ul>${sk.hard.slice(0, 5).map(x => `<li>${x}</li>`).join("")}</ul>
-      <p class="small muted">Job description is illustrative demo content.</p></div>
+      </div>
       <aside class="stack"><div class="card"><h4>Apply with Yapply</h4><p class="small">Get a resume tailored to this role, review it, then apply in one click.</p><a class="btn primary" href="#signup">Tailor & apply</a><a class="btn" style="margin-top:8px" href="#tool-ats-resume-checker">Check my resume first</a></div>
-      <div class="card"><h4>${c.name}</h4><p class="small">Usually opens in ${c.opens}. ${c.h1b.reduce((a, b) => a + b, 0)} H-1B filings in 3 years.</p><a class="small" href="#company-${c.slug}">Company page</a> · <a class="small" href="#company-${c.slug}-interview">Interview process</a></div></aside></div></section>
+      <div class="card"><h4>${c.name}</h4><p class="small">${c.tagline}. ${c.hq} · ${c.size} employees.</p><a class="small" href="#company-${c.slug}">Company page</a> · <a class="small" href="#company-${c.slug}-interview">Interview process</a></div></aside></div></section>
     <section class="section"><div class="wrap"><h2>Similar roles</h2><div class="jobs" style="margin-top:12px">${similar.map(jobRow).join("")}</div></div></section>` };
 });
 

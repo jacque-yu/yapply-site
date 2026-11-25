@@ -5,7 +5,7 @@ const TOOLS = [
   { id: "tool-resume-skills", name: "Resume Skills by Role", one: "The hard skills, tools and soft skills each role expects." },
   { id: "tool-cover-letter-generator", name: "Cover Letter Generator", one: "A specific, one-page cover letter from five inputs." },
   { id: "tool-elevator-pitch-generator", name: "Elevator Pitch Generator", one: "A 30-second pitch you can say out loud at a career fair." },
-  { id: "tool-h1b-sponsor-checker", name: "H-1B Sponsor Checker", one: "Look up a company's H-1B filing history and new grad share." }
+  { id: "tool-h1b-sponsor-checker", name: "H-1B Sponsor Checker", one: "Check whether a company sponsors H-1B for new grads." }
 ];
 const toolCrumbs = name => [["Home", "home"], ["Tools", "tools"], [name]];
 const toolPath = id => "/tools/" + id.replace("tool-", "");
@@ -124,12 +124,15 @@ route("tool-h1b-sponsor-checker", () => {
   onRender(() => {
     const go = () => {
       const q = $("#h1-q").value.toLowerCase().trim();
-      const list = COMPANIES.filter(c => !q || c.name.toLowerCase().includes(q) || c.industry.toLowerCase().includes(q));
-      $("#h1-out").innerHTML = list.map(c => { const t = c.h1b.reduce((a, b) => a + b, 0); const max = Math.max(...COMPANIES.map(x => Math.max(...x.h1b))); return `<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0"><a href="#company-${c.slug}">${c.name}</a></h3>${sponsorTag(c.slug === "orbit-aerospace" ? "no" : t > 40 ? "yes" : t > 12 ? "likely" : "unknown")}</div><p class="small muted">${c.industry} · ${c.hq}</p><div class="bars">${c.h1b.map((n, i) => `<div class="b ${i === 2 ? "on" : ""}"><span class="num">FY${2024 + i} filings</span><div class="t"><i style="width:${n / max * 100}%"></i></div><b class="num">${n}</b></div>`).join("")}</div><p class="small">New grad share: <b>${Math.round(c.ng * 100)}%</b> · <a href="#h1b-jobs">Sponsoring jobs</a></p></div>`; }).join("") || `<p class="card">No company found.</p>`;
+      const list = COMPANIES.filter(c => !q || c.name.toLowerCase().includes(q) || c.tags.join(" ").toLowerCase().includes(q));
+      $("#h1-out").innerHTML = list.map(c => { const js = JOBS.filter(j => j.company === c.slug); const sp = js.filter(j => ["yes", "likely"].includes(j.sponsor)).length;
+        return `<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0"><a href="#company-${c.slug}">${c.name}</a></h3>${c.slug === "booz-allen" ? sponsorTag("no") : sponsorTag(sp ? "likely" : "unknown")}</div><p class="small muted">${c.tags.join(", ")} · ${c.hq}</p>
+        ${slot("H-1B filings FY2024–FY2026, approvals, new grad share", "the USCIS H-1B Employer Data Hub")}
+        <p class="small" style="margin-top:10px">${sp} of ${js.length} example listings labelled sponsoring · <a href="${USCIS_HUB}">Check ${c.name} on USCIS ↗</a></p></div>`; }).join("") || `<p class="card">Not in our list yet. Search any employer on the <a href="${USCIS_HUB}">USCIS H-1B Employer Data Hub ↗</a>.</p>`;
     };
     $("#h1-q").addEventListener("input", go); go();
   });
   return { title: "H-1B sponsor checker", path: toolPath("tool-h1b-sponsor-checker"), crumbs: toolCrumbs("H-1B Sponsor Checker"),
-    html: pageHead({ eyebrow: "Free tool", title: "H-1B sponsor checker", answer: "Search a company to see its H-1B filings for the last three fiscal years and the share that went to new grad roles. In production this uses public USCIS and Department of Labor data.", extra: `<p style="margin-top:12px">${DEMO}</p>` }) + `
-    <section class="section"><div class="wrap"><label for="h1-q" style="max-width:480px">Company or industry<input id="h1-q" placeholder="e.g. Juniper, banking"></label><div class="grid" id="h1-out" style="margin-top:18px"></div></div></section>${toolFoot()}${ctaBand("See only jobs at employers that sponsor.", "Yapply labels sponsorship on every role.")}` };
+    html: pageHead({ eyebrow: "Free tool", title: "H-1B sponsor checker", answer: "Search a company to see whether it sponsors H-1B for new grads. In production each card shows the employer's filings and approvals for the last three fiscal years from the USCIS H-1B Employer Data Hub and Department of Labor LCA data.", extra: `<p style="margin-top:12px">${DEMO}</p>` }) + `
+    <section class="section"><div class="wrap"><label for="h1-q" style="max-width:480px">Company or industry<input id="h1-q" placeholder="e.g. Capital One, trading"></label><div class="grid" id="h1-out" style="margin-top:18px"></div></div></section>${toolFoot()}${ctaBand("See only jobs at employers that sponsor.", "Yapply labels sponsorship on every role.")}` };
 });

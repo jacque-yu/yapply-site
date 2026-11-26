@@ -564,3 +564,5 @@ h2.serif { font-size: clamp(2.2rem, 4.2vw, 3.4rem); line-height: 1.04; margin: 0
   .tl2::before { left: 40px; } .tl2 li { grid-template-columns: 40px minmax(0,1fr); gap: 20px; } .tl2 li::after { left: 35px; }
 }
 @media (prefers-reduced-motion: reduce) { .bub.in, .ended-card { animation: none; opacity: 1; transform: none; } .orb, .pulse { animation: none; } }
+
+.h2-left h1 .h1-kicker { font-family: var(--mono); font-size: .8rem; letter-spacing: .1em; margin-bottom: 18px; }

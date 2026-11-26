@@ -1,7 +1,7 @@
 // ---------- FEATURE PAGES (visuals + template) ----------
 const FP_OK = '<span class="ck" aria-hidden="true">✓</span>';
 function fvCoach() {
-  return `<div class="fv-phone"><div class="fv-top"><span class="rec"></span>Coach · live <span class="muted">3:12</span></div>
+  return `<div class="fv-phone"><div class="fv-top"><span class="rec"></span>Yapply · live <span class="muted">3:12</span></div>
     <div class="fv-b ai">You're aiming for operations. What do you track every week?</div>
     <div class="fv-b me">Sales, waste, labor hours. A spreadsheet for my district manager.</div>
     <div class="fv-card folded"><small>Assistant Store Manager → Operations</small><span>Updated below ↓</span></div>
@@ -9,6 +9,15 @@ function fvCoach() {
     <div class="fv-card pop"><small>Assistant Store Manager → Operations</small><p><del>Handled scheduling and closing.</del> <mark>Own weekly sales, waste and labor tracking in Excel</mark>; flagged 3 slow-moving products.</p><span class="src">From your words · 3:12 · matches “inventory analysis”</span></div>
     <div class="fv-b ai">How much did ordering less save?</div>
     <div class="fv-foot"><span>View draft</span><span class="wave mini" aria-hidden="true">${"<i></i>".repeat(14)}</span></div></div>`;
+}
+function roastPaper() {
+  const n = (t, k) => `<span class="rn rn-${k}">${t}</span>`;
+  return `<div class="roast-paper"><div class="rp-h"><b>Diego Ramirez</b><span>Assistant Store Manager → applying to Operations Analyst</span></div>
+    <p><span class="circ">Results-driven, hard-working team player</span> passionate about leveraging synergies.</p>${n("Reads like ChatGPT. Recruiters skim right past it.", 1)}
+    <h5>Experience</h5><p>Assistant Store Manager, Riverside Market</p>
+    <ul><li><span class="circ">Responsible for</span> opening and closing the store</li><li><span class="circ">Handled</span> customers and scheduling</li></ul>${n("Duty, not result. What did you actually run?", 2)}
+    <h5>Skills</h5><p>Customer service, teamwork, <span class="circ">Microsoft Office</span></p>${n("The filter wants Excel, forecasting, inventory. It finds none.", 3)}
+    <span class="stamp">Likely auto-rejected</span></div>`;
 }
 function fvMatch() {
   return `<div class="fv-stack"><div class="chips">${["Data analyst", "From IT support", "NYC or remote", "$70K+", "0–3 years"].map(c => `<span class="chip on">${c}</span>`).join("")}</div>
@@ -48,7 +57,7 @@ function fvInterview() {
       <div class="li-s"><span class="eyebrow" style="margin:0">Private suggestion · only you see this</span><p>Bridge it with your ticket report: <b>what you did</b> (weekly SQL report), <b>what changed</b> (password resets cut in half), <b>why data</b> (you liked finding the cause more than closing tickets).</p></div></div>
     <div class="jcard deb"><span class="eyebrow" style="margin:0">Debrief</span>${[["Structure", 80], ["Specifics", 64], ["Pace", 88]].map(([k, v]) => `<div class="tm-row"><span>${k}</span><div class="tm-bar"><i style="width:${v}%"></i></div></div>`).join("")}<p class="small"><b>Fix next:</b> say the number earlier. Next practice starts here.</p></div></div>`;
 }
-const FV = { "ai-career-coach": fvCoach, "job-match": fvMatch, "tailored-applications": fvTailor, "verified-jobs": fvVerified, "application-tracker": fvTracker, "ai-mock-interview": fvInterview };
+const FV = { "resume-roast": () => `<div class="fv-stack">${roastPaper()}</div>`, "talk-to-resume": fvCoach, "job-match": fvMatch, "tailored-applications": fvTailor, "verified-jobs": fvVerified, "application-tracker": fvTracker, "ai-mock-interview": fvInterview };
 
 function proofBlock(f) {
   return `<div class="proofs-band">${f.proof.map(([n, t, u, s]) => `<div><b class="serif">${n}</b><p>${t}</p><span class="small">${u ? `<a href="${u}">Source: ${s} ↗</a>` : `Source: ${s}`}</span></div>`).join("")}</div>`;
@@ -63,7 +72,7 @@ pattern(/^feature-(.+)$/, raw => {
     <section class="fhero"><div class="wrap fh-grid">
       <div class="fh-left"><span class="eyebrow">${f.group} · ${f.name}${f.flag ? " · Core" : ""}</span>
         <h1 class="serif">${f.h1}</h1><p class="fh-pain">${f.pain}</p><p class="fh-sub">${f.sub}</p>
-        <div class="row"><a class="btn primary lg" href="#${f.cta[0]}">${f.cta[1]}</a><a class="btn lg" href="#report-a">See a sample report</a></div></div>
+        <div class="row"><a class="btn primary lg" href="#${f.cta[0]}">${f.cta[1]}</a><a class="btn lg" href="#call-c">Hear a sample roast</a></div></div>
       <div class="fv">${FV[slug]()}</div>
     </div></section>
 
@@ -74,7 +83,7 @@ pattern(/^feature-(.+)$/, raw => {
 
     <section class="section roomy"><div class="wrap"><div class="sec-head"><span class="eyebrow">How it works</span><h2 class="serif">How ${f.name} works</h2></div>
       <div class="steps-n" style="--n:${f.steps.length}">${f.steps.map(([t, d], j) => `<div><span class="n serif">${j + 1}</span><h3>${t}</h3><p class="muted">${d}</p></div>`).join("")}</div>
-      ${slug === "ai-career-coach" ? `<div style="margin-top:56px">${liveDemo("live-feat")}</div>` : ""}
+      ${slug === "talk-to-resume" ? `<div style="margin-top:56px">${liveDemo("live-feat")}</div>` : ""}
       ${slug === "ai-mock-interview" ? `<div class="try-mi"><h3>Try the follow-up logic</h3>${mockInterviewDemo()}</div>` : ""}
     </div></section>
 
@@ -99,8 +108,8 @@ pattern(/^feature-(.+)$/, raw => {
 });
 
 route("features", () => ({
-  title: "Features", seoTitle: "Features: AI Career Coach, Job Match, Verified Jobs & Mock Interviews | Yapply", desc: "Yapply's features follow your job search: an AI career coach that writes your resume live, verified job matches, tailored and verifiable applications, and interview practice.", path: "/features", crumbs: [["Home", "home"], ["Features"]],
-  html: `<section class="fhero"><div class="wrap narrow" style="text-align:left"><span class="eyebrow">Features</span><h1 class="serif" style="font-size:clamp(2.8rem,6vw,5rem);line-height:1">From one conversation to a verified offer pipeline.</h1><p class="fh-sub">Every feature runs on the profile your coaching call builds, so nothing you said goes to waste and nothing on your resume is invented.</p></div></section>
+  title: "Features", seoTitle: "Features: Resume Roast, Talk-to-Resume, Swipe to Apply & Interview Prep | Yapply", desc: "Yapply's features follow your job search: a free resume roast, a resume rewritten from what you say, swipe-to-apply on verified jobs with proof, and interview prep.", path: "/features", crumbs: [["Home", "home"], ["Features"]],
+  html: `<section class="fhero"><div class="wrap narrow" style="text-align:left"><span class="eyebrow">Features</span><h1 class="serif" style="font-size:clamp(2.8rem,6vw,5rem);line-height:1">From “why am I getting rejected?” to an interview.</h1><p class="fh-sub">Every feature runs on what you said on one call, so nothing you said goes to waste and nothing on your resume is invented.</p></div></section>
   ${FEATURE_GROUPS.map(([g, sub]) => `<section class="section roomy-s"><div class="wrap"><div class="fg-head"><span class="eyebrow" style="margin:0">${g}</span><h2 class="serif">${sub}</h2></div>
     <div class="feat-grid">${FEATURES.filter(f => f.group === g).map(f => `<a class="feat" href="#feature-${f.slug}">${f.flag ? '<span class="tag hi">Core</span>' : ""}<h3>${f.name}</h3><p class="muted">${f.short}</p><span class="go">→</span></a>`).join("")}</div></div></section>`).join("")}
   ${ctaBand()}`

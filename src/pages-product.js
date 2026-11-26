@@ -55,82 +55,89 @@ function statBand() {
   return `<div class="stat-band">${STATS.map(([n, t, u, s]) => `<div><b class="serif">${n}</b><p>${t}</p><a class="small muted" href="${u}">Source: ${s} ↗</a></div>`).join("")}</div>`;
 }
 const HOME_FAQ = [
-  ["How do I write a resume for a career change?", "Keep your real job titles, but rewrite each bullet as evidence for the new role: the result, the number, and the skill the new field asks for. Yapply's coach finds those results by asking follow-up questions, then rewrites them live while you talk."],
-  ["What transferable skills do I have?", "More than your title suggests. Reporting, scheduling, presenting, budgeting, user interviews: the coach finds them in your current job and shows which roles they fit."],
-  ["Can I change careers without going back to school?", "Often, yes. Many switches in your first three years (support to data, teaching to sales, retail to operations, consulting to product) are won on evidence you already have, written in the new field's language."],
-  ["I'm not sure which direction to switch to. Can Yapply help?", "Yes. Start with what you've done; the coach shows which roles your experience already points to, with the evidence for each."],
-  ["Does Yapply apply to jobs for me?", "Yes. Swipe right on a matched job and Yapply applies with a resume tailored to it, and you get a receipt and screenshot for every application."],
+  ["Why am I getting rejected so fast?", "Often software rejects the application before a person reads it, filtering on keywords and requirements. Career changers get hit hardest, because their resume uses the old field's words. A free roast call shows you exactly which lines are doing it."],
+  ["Is the resume roast really free?", "Yes. The call and your rewritten resume are free, with no sign-up. You pay only when you start applying through Yapply."],
+  ["Can employers tell I used AI?", "What gives resumes away is generic, inflated wording. Yapply writes from your own words and real examples, which is also what holds up when an interviewer asks follow-up questions."],
+  ["Why not just use ChatGPT or Claude?", "They're great writers, but you have to prompt them, paste everything in, catch any details they fill in, and still apply to every job yourself. Yapply asks the questions, only writes what you said, and applies for you with proof."],
+  ["How do I write a resume for a career change?", "Keep your real job titles, but rewrite each bullet as evidence for the new role: the result, the number, and the skill the new field searches for."],
+  ["Does Yapply apply to jobs for me?", "Yes. Swipe right on a matched job and Yapply fills out and submits the application with a tailored resume. It works with Greenhouse and a dozen more application systems, with more added all the time."],
   ["Will it make up experience to fit the new role?", "No. Yapply only rewrites what you said. Skills the new role wants that you don't have are shown as gaps, not added."]
 ];
+function heroRoast() {
+  return `<div class="hr-stage">${roastPaper()}
+    <div class="hr-phone" aria-label="Sample roast call">
+      <div class="fv-top"><span class="rec"></span>Free roast · live <span class="muted">2:41</span></div>
+      <div class="fv-b ai hb1">Be honest. “Handled scheduling.” What does that actually mean?</div>
+      <div class="fv-b me hb2">I schedule twelve people around the busy hours, and I track sales and waste in Excel for my district—</div>
+      <div class="fv-b ai cut hb3"><em>Yapply cut in</em>Stop. That's operations. How much waste did you cut?</div>
+      <div class="fv-b me hb4">About twelve hundred a month.</div>
+      <div class="fv-card pop hb5"><small>Rewritten for operations</small><p><mark>Own weekly sales, waste and labor tracking in Excel</mark>; flagged 3 slow-moving products, cutting waste by <mark>$1.2K a month</mark>.</p></div>
+    </div></div>`;
+}
 route("home", () => ({
-  title: "Yapply", seoTitle: "Change Careers Without Starting Over | Yapply AI Career Coach",
-  desc: "Changing direction in your first three years? Talk once with Yapply's AI career coach. It finds what transfers, rewrites your resume for the job you want, and applies for you.",
-  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "AI career coach for career changers: finds what transfers from your current job, rewrites your resume for the role you want and applies for you.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
+  title: "Yapply", seoTitle: "Free Resume Roast: Find Out Why You're Getting Rejected | Yapply",
+  desc: "Rejected before a human ever read it? Get your resume roasted on a free call, no sign-up. Yapply rewrites what you actually did for the job you want, then applies for you.",
+  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "Free resume roast on a call, resume rewritten from what you say, and swipe-to-apply with proof, for people changing direction.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
   html: `
   <section class="hero2"><div class="wrap h2-grid">
     <div class="h2-left">
-      <p class="proof"><span class="pulse"></span>For your first three years at work · Free call</p>
-      <h1 class="serif"><span class="h1-kicker">Yapply · AI career coach</span>Change direction without starting over.</h1>
+      <p class="proof"><span class="pulse"></span>Free call · No sign-up · Zero AI-speak</p>
+      <h1 class="serif">Rejected before a human ever read it?</h1>
       <div class="h2-bottom">
-        <p class="h2-lead">Talk once. We find what transfers from your current work and rewrite your real experience for the job you want. <b>Then swipe right on the roles you like, and we apply for you.</b></p>
-        <div class="row"><a class="btn primary lg" href="#call">Start a free call</a><a class="btn lg" href="#report-c">See a career-change report</a></div>
-        <p class="small muted" style="margin-top:14px">Nothing invented. Every line comes from what you said.</p>
+        <p class="h2-lead">Companies screen you with AI and reject you in two minutes. Fight back with the one thing AI can't fake: the real story you tell out loud. On a free roast call, Yapply shows you exactly why you're getting filtered, then rewrites what you actually did in the new field's language. <b>Swipe right on real jobs, and we apply.</b></p>
+        <div class="row"><a class="btn primary lg" href="#call">Roast my resume, free</a><a class="btn lg" href="#call-c">Hear a sample roast</a></div>
+        <ul class="ticks"><li>Beats the filter</li><li>Zero AI-speak</li><li>Holds up in the interview</li></ul>
       </div>
     </div>
-    ${heroStage()}
+    ${heroRoast()}
   </div></section>
 
   <section class="section roomy dark-sec"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">The problem</span><h2 class="serif">You're not starting over. You're being misread.</h2><p>Most people changing direction apply first and figure out how to explain it later. Recruiters read the old title, not what you can do.</p></div>
-    ${statBand()}
+    <div class="sec-head"><span class="eyebrow">It's not you</span><h2 class="serif">It's not you. It's a filter.</h2><p>Another fake listing. Another Workday account. Another rejection two minutes later, or no answer at all. And if you're changing fields, your resume is written in words the filter isn't looking for.</p></div>
+    <div class="stat-band">${[["#1", "theme in 23,846 job-search comments we analyzed on TikTok: getting rejected or ghosted.", null, TIKTOK_STUDY], ["70.3%", "of job seekers applied to at least one role outside their resume's field, the people most likely to be filtered on keywords.", "https://huntr.co/research/career-changer", "Huntr, 15,175 job seekers"], ["18–22%", "of job posts on Greenhouse were ghost listings that companies weren't trying to fill.", "https://www.entrepreneur.com/business-news/ghost-job-listings-on-the-rise-how-to-spot-avoid-experts/485494", "Greenhouse via Entrepreneur"]].map(([n, t, u, src]) => `<div><b class="serif">${n}</b><p>${t}</p>${u ? `<a class="small muted" href="${u}">Source: ${src} ↗</a>` : `<span class="small muted">Source: ${src}</span>`}</div>`).join("")}</div>
   </div></section>
 
   <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Same experience. New direction.</span><h2 class="serif">Four switches, one call each</h2><p class="muted">The most common ways people move in their first few years. Nothing below was invented; each line came out of a conversation.</p></div>
+    <div class="sec-head"><span class="eyebrow">Whose side we're on</span><h2 class="serif">They screen you with AI. Then reject you for sounding like AI.</h2><p class="muted">Fine. Beat their filter with your real story, in your own words: the version a recruiter believes and an interviewer can't poke holes in.</p></div>
+    <div class="sides"><div class="side them"><span class="eyebrow" style="margin:0">Their side</span><ul>${["AI screening that rejects you in two minutes", "Detectors that flag anything that sounds like AI", "Fake listings kept up to collect resumes", "Silence instead of feedback"].map(x => `<li>${x}</li>`).join("")}</ul></div>
+      <div class="side us"><span class="eyebrow" style="margin:0">Your side</span><ul>${["Your real experience, said out loud, in the words their filter searches for", "Zero AI-speak: it sounds like you because it came from you", "Every line holds up when the interviewer digs", "A straight answer about why you're getting rejected, free"].map(x => `<li>${x}</li>`).join("")}</ul></div></div>
+  </div></section>
+
+  <section class="section roomy vs-claude"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Why not just use Claude?</span><h2 class="serif">Claude and ChatGPT are great writers. They weren't built to get you hired.</h2><p class="muted">The short answer: Claude can't dig your real experience out of you in a three-minute call, and it can't apply for you. Here's the long answer.</p></div>
+    <div class="cmp-wrap"><table class="cmp cmp-big"><thead><tr><th scope="col"></th><th scope="col">Claude or ChatGPT, on your own</th><th scope="col">Yapply</th></tr></thead><tbody>
+      ${[["Getting started", "Write a prompt. Paste your resume and the job description.", "Just talk. No prompt, no copy-paste."],
+         ["What it knows about you", "Only what you remember to paste in", "Asks the follow-ups until it finds your results and numbers"],
+         ["Details you didn't give", "Can fill gaps with plausible-sounding details unless you catch them", "Asks you. Gaps stay gaps."],
+         ["How it sounds", "Polished, and easy to spot as AI", "Your words and your examples"],
+         ["Changing fields", "Only as good as your prompt", "Rewrites your experience in the new field's language and shows which roles fit"],
+         ["Finding real jobs", "Not its job", "Re-checked daily; ghost and scam posts filtered out"],
+         ["Applying", "You retype it into every application form", "Swipe right; Yapply fills out and submits it"],
+         ["After you apply", "Nothing to track", "Receipt, screenshot and status for every application"]].map(([a, b, c]) => `<tr><th scope="row">${a}</th><td><span class="x">✕</span>${b}</td><td><span class="ck">✓</span><b>${c}</b></td></tr>`).join("")}
+    </tbody></table></div>
+    <p class="small muted" style="margin-top:14px">Compares using a general-purpose assistant on its own for a job search. Claude is a trademark of Anthropic; ChatGPT is a trademark of OpenAI.</p>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap grid-2" style="align-items:center;gap:clamp(32px,6vw,96px)">
+    <div><span class="eyebrow">Swipe to Apply</span><h2 class="serif">Stop retyping your resume into application forms.</h2><p class="muted" style="font-size:1.1rem;line-height:1.65">Swipe right on a matched job and Yapply fills out the application and submits it with a resume tailored to that job. You approve every one: no mass-applying, nothing that looks like spam. ${ATS_LINE} Every application comes with a receipt and a screenshot.</p><a class="btn lg" href="#feature-job-match">How Swipe to Apply works →</a></div>
+    <div class="fv">${fvMatch()}</div>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap grid-2" style="align-items:center;gap:clamp(32px,6vw,96px)">
+    <div class="fv">${fvVerified()}</div>
+    <div><span class="eyebrow">Verified Jobs</span><h2 class="serif">Ghosted? Not by a job that never existed.</h2><p class="muted" style="font-size:1.1rem;line-height:1.65">Jobs come from company career pages and application systems, not reposted boards. Every one is re-checked daily, with the posting time shown. Duplicates, likely ghost jobs and scam patterns are filtered out before you see them.</p><a class="btn lg" href="#feature-verified-jobs">How we verify jobs →</a></div>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Same experience. New direction.</span><h2 class="serif">Four roasts. Four new directions.</h2><p class="muted">The most common ways people switch in their first few years. Each line came out of a conversation; nothing was invented.</p></div>
     <div class="who-grid">${["A", "B", "C", "D"].map(switchCard).join("")}</div>
     <p class="small muted" style="margin-top:18px">Sample calls with fictional people, built on the most common switch paths in Huntr's career-changer research.</p>
   </div></section>
 
-  <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">How it works</span><h2 class="serif">Talk once. Rewrite. Apply.</h2></div>
-    <div class="how3">
-      <a class="h3l" href="#feature-ai-career-coach"><span class="n serif">1</span><h3>Talk once</h3><p class="muted">Tell the coach where you want to go, or that you're not sure. It asks the follow-ups a recruiter in that field would, and rewrites what transfers while you talk.</p></a>
-      <a class="h3l" href="#feature-tailored-applications"><span class="n serif">2</span><h3>Rewritten for the job you want</h3><p class="muted">Every application gets its own resume in the new field's language, built only from what you actually did.</p></a>
-      <a class="h3l" href="#feature-application-tracker"><span class="n serif">3</span><h3>Swipe right. We apply.</h3><p class="muted">Only fresh, verified jobs. Every application comes with a receipt, a screenshot and the exact resume sent.</p></a>
-    </div>
-    <div style="margin-top:56px">${liveDemo("live-home")}</div>
-  </div></section>
+  <section class="section roomy"><div class="wrap"><div class="price-tease"><div><span class="eyebrow">Pricing</span><h2 class="serif">Free to roast. Pay when you apply.</h2><p class="muted">The roast call and your rewritten resume are free, with no sign-up. A subscription starts when you send your first application. Prefer to paste? Try the free <a href="#tool-resume-roaster">Resume Roaster</a>.</p></div><a class="btn lg" href="#pricing">See pricing →</a></div></div></section>
 
-  <section class="section roomy"><div class="wrap grid-2 dir-wrap">
-    <div><span class="eyebrow">Not sure where yet?</span><h2 class="serif">Start with what you've done.</h2><p class="muted" style="font-size:1.1rem;line-height:1.65">You don't need a destination to start. Talk about your current job; the coach tells you which roles your experience already fits, what proves it, and what's missing.</p><a class="btn primary lg" href="#call" style="margin-top:10px">Find my direction</a></div>
-    <div class="fits-card"><span class="eyebrow" style="margin:0">From Diego's call · assistant store manager</span>${PERSONAS.c.fits.map(([role, lvl, why]) => `<div class="fit-row ${lvl.startsWith("Strong") ? "strong" : ""}"><div><b>${role}</b><span>${why}</span></div><span class="tag">${lvl}</span></div>`).join("")}</div>
-  </div></section>
-
-  <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Popular switches</span><h2 class="serif">Where people switch from, and to</h2><p class="muted">The fields people leave most often, and the ones they move into most.</p></div>
-    <div class="paths">${PATHS.map(([a, b, d, h]) => `<a class="path" href="#${h}"><span class="pf-from">${a}</span><span class="pf-arrow">→</span><span class="pf-to serif">${b}</span><p class="small muted">${d}</p></a>`).join("")}</div>
-    <p class="small muted" style="margin-top:16px">Source: <a href="https://huntr.co/research/career-changer">Huntr Career Changer Research ↗</a>, 15,175 job seekers. Paths 3–6 pair the origins most likely to apply outside their field with the most popular destinations.</p>
-  </div></section>
-
-  <section class="section roomy dark-sec"><div class="wrap">
-    <div class="promise"><span class="eyebrow">Our promise</span><h2 class="serif">Reframed, never invented.</h2><p>Changing fields is exactly when AI tools are tempted to invent the skills a new role asks for. Yapply only rewrites what you actually did, in the new field's language.</p></div>
-    <div class="prom4">${[["No invented answers", "Every line traces back to something you said. Gaps are shown as gaps."], ["Recommendations that listen", "Skipped jobs never come back. Your direction comes first."], ["Jobs that exist", "Re-checked daily; ghost jobs and scam patterns filtered out."], ["Proof, not a counter", "Receipt, screenshot and the exact resume for every application."]].map(([t, d]) => `<div><h3>${t}</h3><p>${d}</p></div>`).join("")}</div>
-  </div></section>
-
-  <section class="section roomy"><div class="wrap grid-2 signals-wrap">
-    <div><span class="eyebrow">Built for years one to three</span><h2 class="serif">Two or more of these? Talk to the coach.</h2><p class="muted">These five signals mean your experience is fine. It's written for the wrong job.</p><a class="btn primary lg" href="#call" style="margin-top:12px">Start a free call</a></div>
-    <ol class="signals">${SIGNALS.map(([t, d]) => `<li><b>${t}</b><span class="small muted">${d}</span></li>`).join("")}</ol>
-  </div></section>
-
-  <section class="section roomy"><div class="wrap grid-2" style="align-items:center">
-    <div><span class="eyebrow">Interview</span><h2 class="serif">Nail “Why are you switching?”</h2><p class="muted" style="font-size:1.1rem;line-height:1.65">It's the question that decides a career-change interview. Practice it with an AI interviewer that knows your old job, your new direction and your resume, so your answer and your resume tell the same story.</p><a class="btn lg" href="#feature-ai-mock-interview">AI Mock Interview →</a></div>
-    <div class="fv">${fvInterview()}</div>
-  </div></section>
-
-  <section class="section roomy"><div class="wrap"><div class="price-tease"><div><span class="eyebrow">Pricing</span><h2 class="serif">Free to find your story. Pay when you apply.</h2><p class="muted">The call, your new-direction resume and your matches are free. A subscription starts when you send your first application.</p></div><a class="btn lg" href="#pricing">See pricing →</a></div></div></section>
-
-  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions career changers ask</h2>${faqBlock(HOME_FAQ)}</div></section>
-  ${ctaBand("Your next role is already in your experience.", "Talk once. Leave with a resume for the job you want, and let Yapply apply for you.")}`
+  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions before you get roasted</h2>${faqBlock(HOME_FAQ)}</div></section>
+  ${ctaBand("Find out why. Then fix it, in one call.", "Free, no sign-up. Leave with a resume that sounds like you, written for the job you want.")}`
 }));
 
 function mockInterviewDemo() {
@@ -147,7 +154,7 @@ function mockInterviewDemo() {
   });
   return `<div class="chat" style="max-height:440px;overflow:auto" id="mi-log" aria-live="polite"><div class="msg ai">Tell me about the study-room app on your resume.</div></div>
   <form id="mi-form" class="row" style="margin-top:10px"><label for="mi-in" class="hidden">Your answer</label><input id="mi-in" style="flex:1" placeholder="Type your answer (the product listens by voice)"><button class="btn primary">Answer</button></form>
-  <p class="small muted">Demo of the follow-up logic. In the product this is a live, full-duplex voice conversation.</p>`;
+  <p class="small muted">Demo of the follow-up logic. In the product this is a live, spoken conversation.</p>`;
 }
 
 route("pricing", () => ({
@@ -155,7 +162,7 @@ route("pricing", () => ({
   html: pageHead({ eyebrow: "Pricing", title: "Free to start. Pay when you're applying hard.", lead: "Prices below are placeholders for design review and are not final." }) + `
   <section class="section"><div class="wrap plans">
     <div class="plan"><h3>Free</h3><div class="price">$0</div><ul><li>Voice AI resume builder: 1 full resume</li><li>Unlimited job search with sponsorship labels</li><li>3 tailored resumes per month</li><li>All free tools</li></ul><a class="btn" href="#signup">Start free</a></div>
-    <div class="plan featured"><span class="tag hi">Most students</span><h3>Pro</h3><div class="price">$TBD<span class="small muted" style="font-size:1rem">/month</span></div><ul><li>Unlimited voice sessions and resume versions</li><li>Unlimited tailoring and cover letters</li><li>Auto apply with review</li><li>Unlimited voice mock interviews</li></ul><a class="btn primary" href="#signup">Start Pro trial</a></div>
+    <div class="plan featured"><span class="tag hi">Most students</span><h3>Pro</h3><div class="price">$TBD<span class="small muted" style="font-size:1rem">/month</span></div><ul><li>Unlimited calls and resume versions</li><li>Unlimited tailoring and cover letters</li><li>Auto apply with review</li><li>Unlimited voice mock interviews</li></ul><a class="btn primary" href="#signup">Start Pro trial</a></div>
     <div class="plan"><h3>Universities</h3><div class="price">Talk to us</div><ul><li>Accounts for your students</li><li>Workshops for career centers</li><li>Anonymous outcome reports</li></ul><a class="btn" href="#about">Contact</a></div>
   </div></section>
   <section class="section"><div class="wrap"><h2>Pricing FAQ</h2>${faqBlock([["Can I cancel anytime?", "Yes, from Settings. You keep access until the end of the paid period."], ["Is there a student discount?", "Pricing is designed for students; final prices will be set before launch."], ["What happens to my resume if I downgrade?", "You keep your resume and every version you created."]])}</div></section>`
@@ -164,7 +171,7 @@ route("pricing", () => ({
 route("app", () => {
   onRender(() => $("#wl").addEventListener("submit", e => { e.preventDefault(); $("#wl-ok").classList.remove("hidden"); e.target.classList.add("hidden"); }));
   return { title: "Mobile App", path: "/app", crumbs: [["Home", "home"], ["Mobile App"]],
-    html: pageHead({ eyebrow: "Mobile App", title: "Build your resume on a walk", lead: "The voice session works best on your phone: talk with earbuds in, and your resume is ready when you get back." }) + `
+    html: pageHead({ eyebrow: "Mobile App", title: "Build your resume on a walk", lead: "Calls work best on your phone: talk with earbuds in, and your resume is ready when you get back." }) + `
     <section class="section"><div class="wrap grid-2"><div class="stack">
       <div class="row"><span class="tag">iOS · in development</span><span class="tag">Android · in development</span></div>
       <form id="wl" class="form card"><label for="wl-email">Email for the waitlist<input id="wl-email" type="email" required placeholder="you@school.edu"></label><button class="btn primary">Join the waitlist</button></form>
@@ -182,7 +189,7 @@ route("signup", () => {
         <div class="two"><label for="su-year">Graduation<select id="su-year"><option>Dec 2026</option><option selected>May 2027</option><option>Dec 2027</option><option>2028</option></select></label>
         <label for="su-look">Looking for<select id="su-look"><option>Full-time new grad</option><option>Summer internship</option><option>Both</option></select></label></div>
         <label for="su-auth">Work authorization<select id="su-auth"><option>US citizen or green card</option><option>F-1 student (will need OPT / H-1B)</option><option>Other visa</option></select></label>
-        <button class="btn primary">Start my voice session</button>
+        <button class="btn primary">Start my free call</button>
         <p class="small muted">Prototype: this form doesn't create an account.</p>
       </form>
       <div class="stack"><h3>What happens next</h3><ol class="prose"><li>Talk for about 10 minutes</li><li>Watch your resume being written, and correct it out loud</li><li>Hang up with a finished resume, then tailor and apply</li></ol></div>

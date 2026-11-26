@@ -50,7 +50,7 @@ const NAV = [
 const FOOTER = [
   ["Features", [...FEATURES.map(f => ["feature-" + f.slug, f.name])]],
   ["Opportunities", [["jobs", "Search all jobs"], ["jobs-internships", "Internships"], ["jobs-new-grad", "Entry level & new grads"], ["international-students", "International students"], ["h1b-jobs", "H1B jobs"], ["jobs-remote", "Remote work"], ["companies", "Discover companies"]]],
-  ["Tools", [["tool-ats-resume-checker", "ATS Resume Checker"], ["tool-resume-synonyms", "Resume Synonyms"], ["tool-resume-skills", "Resume Skills"], ["tool-cover-letter-generator", "Cover Letter Generator"], ["tool-elevator-pitch-generator", "Elevator Pitch Generator"], ["tool-h1b-sponsor-checker", "H-1B Sponsor Checker"], ["tools", "All tools"]]],
+  ["Tools", [["tool-ats-resume-checker", "ATS Resume Checker"], ["tool-resume-synonyms", "Resume Synonyms"], ["tool-resume-skills", "Resume Skills"], ["tool-cover-letter-generator", "Cover Letter Generator"], ["tool-resume-roaster", "Resume Roaster"], ["tool-h1b-sponsor-checker", "H-1B Sponsor Checker"], ["tools", "All tools"]]],
   ["Resources", [["blog", "Blog"], ["help", "Help Center"], ["guides", "Guides"], ["glossary", "Glossary"], ["reports", "Reports"], ["interview-questions", "Interview questions"], ["faq", "FAQ"], ["compare", "Compare"], ["creator-program", "Creator program"], ["affiliate-program", "Affiliate program"]]],
   ["Company", [["about", "About us"], ["privacy", "Privacy policy"], ["terms", "Terms of service"]]]
 ];
@@ -98,11 +98,11 @@ function render() {
   afterRender = [];
   FAQ_LD = [];
   const page = resolve(name);
-  document.title = page.seoTitle || (page.title === "Yapply" ? "Change Careers Without Starting Over | Yapply AI Career Coach" : `${page.title} | Yapply`);
+  document.title = page.seoTitle || (page.title === "Yapply" ? "Free Resume Roast: Find Out Why You're Getting Rejected | Yapply" : `${page.title} | Yapply`);
   const plain = s => String(s || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
   const clip = t => t.length <= 160 ? t : t.slice(0, 157).replace(/\s+\S*$/, "") + "…";
   const desc = clip(plain(page.desc || (page.html.match(/class="answer">([\s\S]*?)<\/p>/) || [])[1] || (page.html.match(/class="lead"[^>]*>([\s\S]*?)<\/p>/) || [])[1]));
-  $("#meta-desc").setAttribute("content", desc || "Yapply is an AI career coach for people changing direction: talk once, and it rewrites your real experience for the job you want, then applies for you.");
+  $("#meta-desc").setAttribute("content", desc || "Get your resume roasted on a free call. Yapply tells you why you're getting rejected, rewrites what you actually did for the job you want, and applies for you.");
   $("#canonical").setAttribute("href", "https://yapply.ai" + (page.path || "/"));
   $("#app").innerHTML = (page.path ? urlbar(page.path, page.crumbs) : "") + page.html;
   window.scrollTo(0, 0);

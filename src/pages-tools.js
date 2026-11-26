@@ -4,7 +4,7 @@ const TOOLS = [
   { id: "tool-resume-synonyms", name: "Resume Synonyms", one: "Stronger action verbs for created, developed, managed and more." },
   { id: "tool-resume-skills", name: "Resume Skills by Role", one: "The hard skills, tools and soft skills each role expects." },
   { id: "tool-cover-letter-generator", name: "Cover Letter Generator", one: "A specific, one-page cover letter from five inputs." },
-  { id: "tool-elevator-pitch-generator", name: "Elevator Pitch Generator", one: "A 30-second pitch you can say out loud at a career fair." },
+  { id: "tool-resume-roaster", name: "Resume Roaster", one: "Paste your resume. Get a blunt list of what's getting it filtered out." },
   { id: "tool-h1b-sponsor-checker", name: "H-1B Sponsor Checker", one: "Check whether a company sponsors H-1B for new grads." }
 ];
 const toolCrumbs = name => [["Home", "home"], ["Tools", "tools"], [name]];
@@ -13,7 +13,7 @@ const toolFoot = (others = 3) => `<section class="section"><div class="wrap"><h2
 
 route("tools", () => ({
   title: "Free job search tools", path: "/tools", crumbs: [["Home", "home"], ["Tools"]],
-  html: pageHead({ eyebrow: "Tools", title: "Free job search tools for students", lead: "No sign-up. Each tool runs in your browser." }) +
+  html: pageHead({ eyebrow: "Tools", title: "Free job search tools", lead: "No sign-up. Each tool runs in your browser." }) +
   `<section class="section"><div class="wrap grid">${TOOLS.map(t => `<a class="card" href="#${t.id}"><h3>${t.name}</h3><p class="muted">${t.one}</p></a>`).join("")}</div></section>${ctaBand("Tools fix one thing. Yapply fixes the whole search.")}`
 }));
 
@@ -40,7 +40,7 @@ route("tool-ats-resume-checker", () => {
         <h4>Missing keywords</h4><div class="row">${miss.map(m => `<span class="tag warn">${esc(m)}</span>`).join("") || "<span class='tag good'>None</span>"}</div>
         <h4 style="margin-top:16px">Matched</h4><div class="row">${hit.map(m => `<span class="tag good">${esc(m)}</span>`).join("")}</div>
         <h4 style="margin-top:16px">Checks</h4><ul>${checks.map(([ok, t]) => `<li>${ok ? "✓" : "✗"} ${t}</li>`).join("")}</ul>
-        <p class="small muted">Only add a missing keyword if it's true. <a href="#signup">Yapply's voice session</a> finds experience you can honestly add.</p>`;
+        <p class="small muted">Only add a missing keyword if it's true. <a href="#call">A free Yapply call</a> finds experience you can honestly add.</p>`;
     };
     $("#ats-run").addEventListener("click", run); run();
   });
@@ -127,25 +127,55 @@ route("tool-cover-letter-generator", () => {
     <div><div class="out" id="cl-out" aria-live="polite"></div><button class="btn" id="cl-copy" style="margin-top:10px">Copy letter</button></div></div></section>${toolFoot()}${ctaBand("Yapply drafts cover letters from your voice profile, tailored to every job.")}` };
 });
 
-// Elevator pitch
-route("tool-elevator-pitch-generator", () => {
+// Resume Roaster (replaces the elevator pitch generator)
+const ROAST_FIELDS = {
+  "Data analytics": ["sql", "excel", "python", "tableau", "power bi", "dashboard", "analysis", "reporting", "a/b", "stakeholders"],
+  "Operations": ["excel", "forecasting", "inventory", "process", "scheduling", "kpi", "supply chain", "logistics", "cost", "vendor"],
+  "Sales": ["quota", "pipeline", "crm", "salesforce", "prospecting", "negotiat", "revenue", "demo", "closing", "accounts"],
+  "Product": ["user research", "roadmap", "prioritiz", "requirements", "launch", "metrics", "stakeholders", "experiment", "spec", "engineers"],
+  "Software & IT": ["python", "javascript", "sql", "api", "git", "cloud", "aws", "testing", "automation", "debug"]
+};
+const ROAST_AI = ["spearheaded", "leveraged", "leveraging", "synergy", "synergies", "results-driven", "passionate", "dynamic", "detail-oriented", "proven track record", "delve", "utilize", "utilized", "seamless", "robust", "cutting-edge", "fast-paced", "go-getter", "team player", "hard-working", "hardworking", "self-starter", "innovative", "thought leader"];
+const ROAST_DUTY = /\b(responsible for|duties included|helped( with)?|assisted( with)?|worked on|handled|participated in|involved in|in charge of)\b/i;
+const EX_ROAST = "Diego Ramirez\nResults-driven, hard-working team player passionate about leveraging synergies.\n\nEXPERIENCE\nAssistant Store Manager, Riverside Market (2023–now)\n- Responsible for opening and closing the store\n- Handled customers and scheduling\n- Helped with inventory and ordering\n\nSKILLS\nCustomer service, teamwork, Microsoft Office";
+function roastResume(text, field, gentle) {
+  const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+  const bullets = lines.filter(l => /^[-•*]/.test(l) || l.split(/\s+/).length > 5);
+  const low = text.toLowerCase(), out = [];
+  const say = (roast, soft) => gentle ? soft : roast;
+  const duty = bullets.filter(l => ROAST_DUTY.test(l));
+  if (duty.length) out.push([`Duty, not result (${duty.length})`, duty.slice(0, 3).map(l => l.replace(/^[-•*]\s*/, "")).join("” · “"), say("This is your job description, not what you achieved. Nobody hires “responsible for”.", "These describe duties. Add what changed because you did them."), "Say what changed and by how much: “cut waste by $1.2K a month”."]);
+  const noNum = bullets.filter(l => !/\d/.test(l) && !ROAST_DUTY.test(l)).slice(0, 2);
+  noNum.forEach(l => out.push(["No numbers", l, say("Zero numbers. The filter can't rank it and the recruiter won't remember it.", "There's no number here yet; even a rough one helps."), "How many, how often, how much: people, dollars, hours, percent."]));
+  const ai = ROAST_AI.filter(w => low.includes(w));
+  if (ai.length) out.push(["Sounds like ChatGPT", ai.slice(0, 5).join(", "), say(`“${ai[0]}” is the first word recruiters skim past. It reads as AI-written, and nobody believes it.`, `Words like “${ai[0]}” read as generic and AI-written.`), "Replace adjectives with one concrete example of the thing you're claiming."]);
+  const kws = ROAST_FIELDS[field] || [], missing = kws.filter(k => !low.includes(k));
+  if (missing.length) out.push([`Missing ${field} keywords`, `${kws.length - missing.length} of ${kws.length} found`, say(`You're applying to ${field.toLowerCase()} roles with your old job's vocabulary. The filter is searching for ${missing.slice(0, 3).join(", ")}. It can't find them.`, `${field} job descriptions often ask for ${missing.slice(0, 3).join(", ")}. Add the ones you've really used.`), "Only add keywords you can back up with something you actually did."]);
+  if (/\b(i|my|me)\b/i.test(lines.slice(1).join(" "))) out.push(["First person", "I / my", say("Resumes don't say “I”. It reads like a cover letter that got lost.", "Drop “I” and “my” and start each bullet with a verb."), "Start each bullet with a strong verb."]);
+  bullets.filter(l => l.split(/\s+/).length > 32).slice(0, 1).forEach(l => out.push(["Too long", l.slice(0, 80) + "…", say("Nobody reads a paragraph in a bullet. Neither does the filter.", "This bullet is long; split it or trim to one result."), "One result per bullet, two lines max."]));
+  const risk = out.length >= 5 ? ["High", "bad"] : out.length >= 3 ? ["Medium", "warn"] : ["Low", "good"];
+  return { out, risk, found: kws.length - missing.length, total: kws.length };
+}
+route("tool-resume-roaster", () => {
   onRender(() => {
     const go = () => {
-      const v = id => $("#" + id).value.trim();
-      const t = `Hi, I'm ${v("ep-name")}. I'm a ${v("ep-year")} studying ${v("ep-major")}. Most recently I ${v("ep-proof")}. I'm looking for ${v("ep-goal")}, and I'd love to hear how your team ${v("ep-ask")}.`;
-      const words = t.split(/\s+/).length; const secs = Math.round(words / 150 * 60);
-      $("#ep-out").textContent = t; $("#ep-time").textContent = `${words} words · about ${secs} seconds out loud`;
-      $("#ep-time").className = "tag " + (secs <= 35 ? "good" : "warn");
+      const r = roastResume($("#rr-text").value, $("#rr-field").value, $("#rr-gentle").checked);
+      $("#rr-out").innerHTML = `<div class="row" style="justify-content:space-between"><span class="eyebrow" style="margin:0">The roast</span><span class="tag ${r.risk[1]}">Filter risk: ${r.risk[0]}</span></div>
+        ${r.out.length ? r.out.map(([t, q, m, fix]) => `<div class="rr-item"><b>${t}</b><p class="rr-q">“${esc(q)}”</p><p>${m}</p><p class="small muted">Fix: ${fix}</p></div>`).join("") : `<p>Honestly? Not much to roast here. Try it against a specific job on a call.</p>`}
+        <div class="rr-cta"><p class="small"><b>This tool only reads text.</b> On a free call, Yapply asks what's missing and rewrites the weak lines with you, from what you actually did.</p><a class="btn primary" href="#call">Roast me on a call, free</a></div>`;
     };
-    document.querySelectorAll("#ep-form input").forEach(i => i.addEventListener("input", go)); go();
-    $("#ep-copy").addEventListener("click", () => copyText($("#ep-out").textContent));
+    ["#rr-text", "#rr-field", "#rr-gentle"].forEach(s => $(s).addEventListener("input", go)); go();
   });
-  const f = (id, l, val) => `<label for="${id}">${l}<input id="${id}" value="${val}"></label>`;
-  return { title: "Elevator pitch generator", path: toolPath("tool-elevator-pitch-generator"), crumbs: toolCrumbs("Elevator Pitch Generator"),
-    html: pageHead({ eyebrow: "Free tool", title: "Elevator pitch generator", answer: "A good career-fair pitch is 20–35 seconds: who you are, one proof point, what you want, one question. The timer assumes 150 words per minute." }) + `
-    <section class="section"><div class="wrap grid-2"><form id="ep-form" class="form" onsubmit="return false"><div class="two">${f("ep-name", "Name", "Jordan")}${f("ep-year", "Year", "senior")}</div>${f("ep-major", "Major", "statistics at Michigan")}${f("ep-proof", "One proof point", "built a churn model from 2,400 survey responses that our advising office now uses")}${f("ep-goal", "What you want", "a new grad data analyst role")}${f("ep-ask", "Your question", "decides which analyses to run each quarter")}</form>
-    <div class="stack"><div class="out" id="ep-out" aria-live="polite"></div><div class="row"><span id="ep-time" class="tag"></span><button class="btn sm" id="ep-copy">Copy</button></div><p class="small muted">Practice it out loud with <a href="#feature-ai-mock-interview">AI Mock Interview</a>.</p></div></div></section>${toolFoot()}` };
+  return { title: "Resume Roaster", seoTitle: "Resume Roaster: Free, Blunt Resume Review | Yapply", desc: "Paste your resume and pick the field you're applying to. The Resume Roaster flags duty-only bullets, missing numbers, AI-sounding words and missing keywords. Free, no sign-up.", path: toolPath("tool-resume-roaster"), crumbs: toolCrumbs("Resume Roaster"),
+    html: pageHead({ eyebrow: "Free tool", title: "Resume Roaster", answer: "Paste your resume and pick the field you're applying to. The roaster flags what usually gets a resume filtered out: duty-only bullets, missing numbers, AI-sounding words and the new field's missing keywords. It runs in your browser; nothing is saved." }) + `
+    <section class="section"><div class="wrap grid-2"><form class="form" onsubmit="return false">
+      <label for="rr-field">Applying to<select id="rr-field">${Object.keys(ROAST_FIELDS).map(f => `<option${f === "Operations" ? " selected" : ""}>${f}</option>`).join("")}</select></label>
+      <label for="rr-text">Your resume (plain text)<textarea id="rr-text" rows="14">${EX_ROAST}</textarea></label>
+      <label class="row" style="gap:8px;align-items:center"><input type="checkbox" id="rr-gentle" style="width:auto"> Go easy on me</label>
+      <p class="small muted">The example is a fictional store manager applying to operations roles. Replace it with yours.</p></form>
+    <div class="out" id="rr-out" aria-live="polite"></div></div></section>${toolFoot()}${ctaBand("Find out why. Then fix it, in one call.", "Free, no sign-up. Yapply roasts your resume out loud and rewrites it with you.")}` };
 });
+route("tool-elevator-pitch-generator", () => ROUTES["tool-resume-roaster"]());
 
 // H-1B checker
 route("tool-h1b-sponsor-checker", () => {

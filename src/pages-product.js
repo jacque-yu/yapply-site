@@ -71,9 +71,9 @@ route("home", () => ({
   <section class="hero2"><div class="wrap h2-grid">
     <div class="h2-left">
       <p class="proof"><span class="pulse"></span>Free 10-minute call · No resume needed</p>
-      <h1 class="serif"><span class="h1-kicker">Yapply · AI career coach</span>Your resume is underselling you.</h1>
+      <h1 class="serif"><span class="h1-kicker">Yapply · AI career coach</span>You've done more than your resume says.</h1>
       <div class="h2-bottom">
-        <p class="h2-lead">Class projects, a campus job, a first job outside your field: you've done more than the page shows. Talk with Yapply's AI career coach for 10 minutes. It asks the questions that dig out your real results, and rewrites your resume <b>live, while you're still talking</b>.</p>
+        <p class="h2-lead">Class projects, a campus job, a first job outside your field: it all counts, if someone asks the right questions. Talk with Yapply's AI career coach for 10 minutes. It asks the questions that dig out your real results, and rewrites your resume <b>live, while you're still talking</b>.</p>
         <div class="row"><a class="btn primary lg" href="#call">Start a free call</a><a class="btn lg" href="#report-a">See a sample report</a></div>
       </div>
     </div>
@@ -118,7 +118,7 @@ route("home", () => ({
   </div></section>
 
   <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions about the AI career coach</h2>${faqBlock(HOME_FAQ)}</div></section>
-  ${ctaBand("You've done more than your resume says.", "Ten minutes with the coach. Leave with a resume that shows it, and a report on what you're good at.")}`
+  ${ctaBand("Your resume is underselling you. Fix it in one call.", "Ten minutes with the coach. Leave with a resume that shows it, and a report on what you're good at.")}`
 }));
 
 route("how-it-works", () => ({

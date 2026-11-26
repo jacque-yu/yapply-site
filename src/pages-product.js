@@ -121,20 +121,6 @@ route("home", () => ({
   ${ctaBand("Your resume is underselling you. Fix it in one call.", "Ten minutes with the coach. Leave with a resume that shows it, and a report on what you're good at.")}`
 }));
 
-route("how-it-works", () => ({
-  title: "How it works", path: "/how-it-works", crumbs: [["Home", "home"], ["How it works"]],
-  html: pageHead({ eyebrow: "Features", title: "How Yapply works", lead: "A voice conversation replaces the resume form, and the resume is written while you talk.", answer: "You talk with Yapply for about 10 minutes. Each answer is written onto your resume in real time, and you can correct any line out loud. When the conversation ends, the resume is finished; Yapply then tailors it to matched jobs, helps you apply and lets you practice the interview." }) + `
-  <section class="section"><div class="wrap">${liveDemo("live-how")}</div></section>
-  <section class="section"><div class="wrap">
-    ${[["1. Talk", "The coach asks about your classes, projects and jobs, then the follow-ups a recruiter would ask: how many, which tools, what changed.", "feature-ai-career-coach"],
-      ["2. Watch it write", "Each answer lands on your resume as a card within seconds. Cut in to correct it: “no, that was a team project”.", "feature-ai-career-coach"],
-      ["3. Get matched", "Jobs ranked by your filters and your call, each with the reason it's there. Only fresh, verified listings.", "feature-job-match"],
-      ["4. Swipe to apply", "Every application goes out with a resume tailored to that job description, using only true facts.", "feature-tailored-applications"],
-      ["5. Track it, with proof", "Receipt, screenshot, original posting and the exact resume sent, with status as it changes.", "feature-application-tracker"],
-      ["6. Practice and debrief", "Rehearse with an interviewer that knows your resume, then get a debrief that sets the next round.", "feature-ai-mock-interview"]].map(([t, d, h]) => `<div class="grid-2" style="padding:22px 0;border-bottom:1px solid var(--line)"><h3>${t}</h3><div><p>${d}</p><a href="#${h}">Learn more</a></div></div>`).join("")}
-  </div></section>${ctaBand()}`
-}));
-
 function mockInterviewDemo() {
   onRender(() => {
     const qs = ["Tell me about the study-room app on your resume.", ...IQ.behavioral.qs.map(q => q[0])]; let i = 0;

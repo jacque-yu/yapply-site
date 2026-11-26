@@ -1514,7 +1514,7 @@ const NAV = [
 ];
 
 const FOOTER = [
-  ["Features", [["how-it-works", "How it works"], ...FEATURES.map(f => ["feature-" + f.slug, f.name])]],
+  ["Features", [...FEATURES.map(f => ["feature-" + f.slug, f.name])]],
   ["Opportunities", [["jobs", "Search all jobs"], ["jobs-internships", "Internships"], ["jobs-new-grad", "Entry level & new grads"], ["international-students", "International students"], ["h1b-jobs", "H1B jobs"], ["jobs-remote", "Remote work"], ["companies", "Discover companies"]]],
   ["Tools", [["tool-ats-resume-checker", "ATS Resume Checker"], ["tool-resume-synonyms", "Resume Synonyms"], ["tool-resume-skills", "Resume Skills"], ["tool-cover-letter-generator", "Cover Letter Generator"], ["tool-elevator-pitch-generator", "Elevator Pitch Generator"], ["tool-h1b-sponsor-checker", "H-1B Sponsor Checker"], ["tools", "All tools"]]],
   ["Resources", [["blog", "Blog"], ["help", "Help Center"], ["guides", "Guides"], ["glossary", "Glossary"], ["reports", "Reports"], ["interview-questions", "Interview questions"], ["faq", "FAQ"], ["compare", "Compare"], ["creator-program", "Creator program"], ["affiliate-program", "Affiliate program"]]],
@@ -2206,20 +2206,6 @@ route("home", () => ({
   ${ctaBand("Your resume is underselling you. Fix it in one call.", "Ten minutes with the coach. Leave with a resume that shows it, and a report on what you're good at.")}`
 }));
 
-route("how-it-works", () => ({
-  title: "How it works", path: "/how-it-works", crumbs: [["Home", "home"], ["How it works"]],
-  html: pageHead({ eyebrow: "Features", title: "How Yapply works", lead: "A voice conversation replaces the resume form, and the resume is written while you talk.", answer: "You talk with Yapply for about 10 minutes. Each answer is written onto your resume in real time, and you can correct any line out loud. When the conversation ends, the resume is finished; Yapply then tailors it to matched jobs, helps you apply and lets you practice the interview." }) + `
-  <section class="section"><div class="wrap">${liveDemo("live-how")}</div></section>
-  <section class="section"><div class="wrap">
-    ${[["1. Talk", "The coach asks about your classes, projects and jobs, then the follow-ups a recruiter would ask: how many, which tools, what changed.", "feature-ai-career-coach"],
-      ["2. Watch it write", "Each answer lands on your resume as a card within seconds. Cut in to correct it: “no, that was a team project”.", "feature-ai-career-coach"],
-      ["3. Get matched", "Jobs ranked by your filters and your call, each with the reason it's there. Only fresh, verified listings.", "feature-job-match"],
-      ["4. Swipe to apply", "Every application goes out with a resume tailored to that job description, using only true facts.", "feature-tailored-applications"],
-      ["5. Track it, with proof", "Receipt, screenshot, original posting and the exact resume sent, with status as it changes.", "feature-application-tracker"],
-      ["6. Practice and debrief", "Rehearse with an interviewer that knows your resume, then get a debrief that sets the next round.", "feature-ai-mock-interview"]].map(([t, d, h]) => `<div class="grid-2" style="padding:22px 0;border-bottom:1px solid var(--line)"><h3>${t}</h3><div><p>${d}</p><a href="#${h}">Learn more</a></div></div>`).join("")}
-  </div></section>${ctaBand()}`
-}));
-
 function mockInterviewDemo() {
   onRender(() => {
     const qs = ["Tell me about the study-room app on your resume.", ...IQ.behavioral.qs.map(q => q[0])]; let i = 0;
@@ -2660,7 +2646,7 @@ legalPage("terms", "Terms of Service", TERMS);
 // ---------- HTML SITEMAP (not linked from the footer) ----------
 route("sitemap", () => {
   const groups = [
-    ["Product", [["home", "Home"], ["how-it-works", "How it works"], ["features", "Features"], ...FEATURES.map(f => ["feature-" + f.slug, f.name]), ["pricing", "Pricing"], ["app", "Mobile App"], ["signup", "Sign up"]]],
+    ["Product", [["home", "Home"], ["features", "Features"], ...FEATURES.map(f => ["feature-" + f.slug, f.name]), ["pricing", "Pricing"], ["app", "Mobile App"], ["signup", "Sign up"]]],
     ["Opportunities", [["jobs", "Search all jobs"], ["jobs-internships", "Internships"], ["jobs-new-grad", "New grad"], ["jobs-remote", "Remote"], ["international-students", "International students"], ["h1b-jobs", "H1B jobs"], ...ROLES.map(r => ["jobs-" + r.slug + "-new-grad", r.name + " new grad"]), ...ROLES.map(r => ["h1b-jobs-" + r.slug, "H1B " + r.name]), ["companies", "Companies"], ...COMPANIES.map(c => ["company-" + c.slug, c.name]), ...COMPANIES.map(c => ["company-" + c.slug + "-interview", c.name + " interviews"]), ["job-" + JOBS[0].id, "Job detail (example)"], ["lists-new-grad-2027", "New Grad 2027 list"], ["lists-summer-2027-internships", "Summer 2027 internships list"]]],
     ["Tools", [["tools", "All tools"], ...TOOLS.map(t => [t.id, t.name]), ...Object.keys(VERBS).map(v => ["tool-resume-synonyms-" + v, v + " synonyms"]), ...ROLES.map(r => ["tool-resume-skills-" + r.slug, r.name + " skills"])]],
     ["Resources", [["blog", "Blog"], ...BLOG.map(b => ["blog-" + b.slug, b.title]), ["help", "Help Center"], ["guides", "Guides"], ...GUIDES.map(g => ["guide-" + g.slug, g.title]), ["glossary", "Glossary"], ...GLOSSARY.map(g => ["glossary-" + g.slug, g.term]), ["interview-questions", "Interview questions"], ...Object.keys(IQ).map(k => ["interview-questions-" + k, IQ[k].name]), ["reports", "Reports"], ["report-2026-11", "November 2026 report"], ["faq", "FAQ"], ["compare", "Compare"], ...COMPETITORS.map(c => ["compare-yapply-vs-" + c.slug, "Yapply vs " + c.name]), ["creator-program", "Creator program"], ["affiliate-program", "Affiliate program"]]],

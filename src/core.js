@@ -29,7 +29,7 @@ function pageHead({ eyebrow, title, lead, answer, extra = "" }) {
   return `<section class="phead"><div class="wrap">${eyebrow ? `<span class="eyebrow">${eyebrow}</span>` : ""}<h1>${title}</h1>${lead ? `<p class="lead">${lead}</p>` : ""}${answer ? `<p class="answer">${answer}</p>` : ""}${extra}</div></section>`;
 }
 
-function ctaBand(title = "Talk for 10 minutes. Leave with a resume that shows what you can do.", sub = "Free during beta. No resume needed to start.") {
+function ctaBand(title = "Change direction without starting over.", sub = "Talk once. We find what transfers and rewrite it for the job you want.") {
   return `<section class="section"><div class="wrap"><div class="cta-band"><h2>${title}</h2><p>${sub}</p><a class="btn" href="#call">Start a free call</a></div></div></section>`;
 }
 
@@ -98,11 +98,11 @@ function render() {
   afterRender = [];
   FAQ_LD = [];
   const page = resolve(name);
-  document.title = page.seoTitle || (page.title === "Yapply" ? "AI Career Coach That Writes Your Resume Live | Yapply" : `${page.title} | Yapply`);
+  document.title = page.seoTitle || (page.title === "Yapply" ? "Change Careers Without Starting Over | Yapply AI Career Coach" : `${page.title} | Yapply`);
   const plain = s => String(s || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
   const clip = t => t.length <= 160 ? t : t.slice(0, 157).replace(/\s+\S*$/, "") + "…";
   const desc = clip(plain(page.desc || (page.html.match(/class="answer">([\s\S]*?)<\/p>/) || [])[1] || (page.html.match(/class="lead"[^>]*>([\s\S]*?)<\/p>/) || [])[1]));
-  $("#meta-desc").setAttribute("content", desc || "Yapply is an AI career coach you talk to. It finds strengths you missed and polishes your resume live while you talk.");
+  $("#meta-desc").setAttribute("content", desc || "Yapply is an AI career coach for people changing direction: talk once, and it rewrites your real experience for the job you want, then applies for you.");
   $("#canonical").setAttribute("href", "https://yapply.ai" + (page.path || "/"));
   $("#app").innerHTML = (page.path ? urlbar(page.path, page.crumbs) : "") + page.html;
   window.scrollTo(0, 0);

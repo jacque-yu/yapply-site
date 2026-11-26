@@ -3,74 +3,76 @@
 // kind: Added · Quantified · Corrected by voice · Reframed · Impact · Strength found
 const NACE = ["Communication", "Critical thinking", "Teamwork", "Leadership", "Technology", "Professionalism"];
 const PERSONAS = {
-  a: { key: "A", name: "Maya Johnson", first: "Maya", img: () => IMG.a, role: "Senior, B.S. Statistics", aim: "Entry-level data analyst", mins: "9:42",
-    line: "“All I have is class projects, a club and a campus job.”", contact: "maya.j@stateu.edu · Columbus, OH",
-    edu: "State University, B.S. Statistics · May 2026 · GPA 3.5",
-    before: [["Projects", "Member, Data Science Club"], ["Experience", "Peer tutor, Math Learning Center: helped students with homework"], ["Skills", "Python, SQL, regression (coursework)"]],
-    sections: [["Projects", "Meal-Plan Retention Study · Data Science Club", ["p1"]], ["Experience", "Peer Tutor · Math Learning Center", ["e1", "e2"]]],
+  a: { key: "A", name: "Maya Johnson", first: "Maya", img: () => IMG.a, role: "IT support specialist, 2 years · regional health network", aim: "Data analyst", mins: "9:42",
+    line: "“I fix laptops. Data teams don't think that counts.”", contact: "maya.johnson@email.com · Columbus, OH",
+    edu: "State University, B.S. Information Systems · 2024",
+    before: [["Experience", "IT support specialist: resolved tickets and helped staff with technical issues."], ["Skills", "Windows, Active Directory, ServiceNow"]],
+    sections: [["Experience", "IT Support Specialist · Regional Health Network", ["e1", "e2", "e3"]]],
     steps: [
-      { ai: "Let's start with the club. What did you actually work on?" },
-      { me: "We did a project on why students drop the meal plan. I cleaned the survey data, mostly.", id: "p1", kind: "Added", html: "Cleaned and analyzed survey data on meal-plan cancellations." },
-      { ai: "How many responses, and which tools?" },
-      { me: "About 2,400 responses. Python and pandas, then a logistic regression.", id: "p1", kind: "Quantified", html: "Cleaned <mark>2,400 survey responses</mark> in <mark>Python (pandas)</mark> and built a <mark>logistic regression</mark> to predict meal-plan cancellations." },
-      { ai: "Did anyone actually use the result?" },
-      { me: "Yeah, dining services changed the plan options the next semester.", id: "p1", kind: "Impact", html: "Cleaned 2,400 survey responses in Python (pandas) and built a logistic regression to predict meal-plan cancellations; <mark>findings shaped dining services' plan options</mark> the next semester.", strength: ["Turns analysis into decisions", "Critical thinking"] },
-      { ai: "Switching to tutoring. How many students a week?" },
-      { me: "Like 15 a week. Oh wait, more like 20 during finals.", id: "e1", kind: "Corrected by voice", html: "Tutored <mark>15–20 students a week</mark> in statistics and calculus." },
-      { ai: "Did you change how the center tutors?" },
-      { me: "I made a sheet of the most common mistakes. The center hands it to everyone now.", id: "e2", kind: "Strength found", html: "<mark>Created a common-mistakes guide</mark> that the center now gives every student.", strength: ["Explains hard ideas simply", "Communication"] }
+      { ai: "You want data analyst roles. What do you already measure in support?" },
+      { me: "We track tickets in ServiceNow. I export them every week to see what's breaking.", id: "e1", kind: "Reframed", html: "Built a weekly <mark>ticket-trend report</mark> from <mark>ServiceNow data</mark> to show which issues were rising." },
+      { ai: "Which tools, and how much data?" },
+      { me: "Excel, and some SQL against the ticket database. About 1,800 tickets a month.", id: "e1", kind: "Quantified", html: "Built a weekly ticket-trend report from ServiceNow data (<mark>~1,800 tickets a month</mark>) using <mark>SQL and Excel</mark>.", strength: ["Works with real operational data", "Technology"] },
+      { ai: "Did anything change because of that report?" },
+      { me: "It showed password resets were a third of all tickets. We rolled out self-service reset and they dropped by half.", id: "e2", kind: "Impact", html: "Showed password resets were <mark>a third of all tickets</mark>; the self-service reset that followed <mark>cut them by half</mark>.", strength: ["Turns data into a decision", "Critical thinking"] },
+      { ai: "Who sees your findings?" },
+      { me: "The IT director, every month. Wait, every two weeks since spring.", id: "e3", kind: "Corrected by voice", html: "Present findings to the IT director <mark>every two weeks</mark>.", strength: ["Explains numbers to leaders", "Communication"] }
     ],
-    extra: [["Data analysis in Python", "Technology", "2,400 responses, pandas, logistic regression"], ["Initiative without a title", "Leadership", "Made a guide nobody asked for; it became standard"]] },
-  b: { key: "B", name: "Lin Chen", first: "Lin", img: () => IMG.b, role: "M.S. Materials Science · F-1, OPT from June 2026", aim: "Data scientist, manufacturing", mins: "11:05",
-    line: "“I explain my work better out loud than in written English.”", contact: "lin.chen@techu.edu · Pittsburgh, PA",
-    edu: "Tech University, M.S. Materials Science · May 2026",
-    before: [["Research", "Responsible for data analysis in battery lab."], ["Research", "Participated in group meetings and presented results."]],
-    sections: [["Research", "Graduate Researcher · Battery Materials Lab", ["r1", "r2", "r3"]]],
+    extra: [["SQL on production data", "Technology", "Queries the ticket database weekly"], ["Reliable stakeholder reporting", "Professionalism", "Biweekly director updates"]],
+    fits: [["Data analyst", "Strong fit", "SQL, weekly reporting, a finding that changed a decision"], ["IT operations analyst", "Strong fit", "Knows the systems and the data behind them"], ["BI analyst", "Worth exploring", "Gap: no dashboard tool yet (Tableau or Power BI)"]] },
+  b: { key: "B", name: "Lin Chen", first: "Lin", img: () => IMG.b, role: "High school biology teacher, 2 years", aim: "Life-science sales", mins: "11:05",
+    line: "“Teaching doesn't sound like sales on paper.”", contact: "lin.chen@email.com · Boston, MA",
+    edu: "State University, B.S. Biology · 2024",
+    before: [["Experience", "Biology teacher: planned lessons and taught five classes."], ["Experience", "Lab coordinator for the science department."]],
+    sections: [["Experience", "Biology Teacher · Lincoln High School", ["t1", "t2", "t3"]]],
     steps: [
-      { ai: "Tell me about the lab work. Say it however it comes out." },
-      { me: "We test battery cells. I wrote Python to read the sensor data... it was 18 months of data.", id: "r1", kind: "Added", html: "Analyzed <mark>18 months</mark> of battery-cell sensor data in <mark>Python</mark>." },
-      { ai: "What did you find in it?" },
-      { me: "One machine had calibration problem, so many tests repeat. After we fix, re-test is less, maybe 30 percent.", id: "r1", kind: "Quantified", html: "Analyzed 18 months of battery-cell sensor data in Python, <mark>tracing repeat failures to a calibration error</mark> and <mark>cutting the lab's re-test rate by 30%</mark>.", strength: ["Root-cause analysis", "Critical thinking"] },
-      { ai: "Who did you show this to, and how?" },
-      { me: "I made dashboard and presented to my professor and the company sponsor.", id: "r2", kind: "Reframed", html: "Built a <mark>Plotly dashboard</mark> and presented findings to the PI and an <mark>industry sponsor</mark>.", strength: ["Explains technical work to industry", "Communication"] },
-      { ai: "Did the sponsor do anything with it?" },
-      { me: "They use my script in their factory now. Two lines, I think.", id: "r3", kind: "Impact", html: "Sponsor adopted the analysis script on <mark>2 production lines</mark>." }
+      { ai: "You're aiming for life-science sales. Where in teaching do you persuade people?" },
+      { me: "Every day, honestly. Getting 150 teenagers to care about cell biology.", id: "t1", kind: "Reframed", html: "Taught biology to <mark>150 students</mark> across five sections, getting teenagers to care about cell biology." },
+      { ai: "Have you ever had to win budget or buy-in?" },
+      { me: "I pitched the principal for new lab equipment. Got about eight thousand dollars approved.", id: "t2", kind: "Quantified", html: "<mark>Secured $8K</mark> in lab-equipment funding by pitching the principal.", strength: ["Makes the case for budget", "Communication"] },
+      { ai: "What happened after the equipment arrived?" },
+      { me: "Our state exam pass rate went from 71 to 84 percent.", id: "t2", kind: "Impact", html: "<mark>Secured $8K</mark> in lab-equipment funding by pitching the principal; state-exam pass rate rose from <mark>71% to 84%</mark> the next year.", strength: ["Ties a pitch to outcomes", "Critical thinking"] },
+      { ai: "Do you deal with any vendors?" },
+      { me: "I'm the department's contact for our lab supplier. I run their product demos for the other teachers.", id: "t3", kind: "Reframed", html: "Department contact for a <mark>lab-supply vendor</mark>; run their product demos for the other teachers.", strength: ["Already knows the buyer's side", "Professionalism"] }
     ],
-    extra: [["Production-grade Python", "Technology", "Script now runs on 2 production lines"], ["Works across lab and industry", "Teamwork", "Presented to PI and sponsor"]] },
-  c: { key: "C", name: "Diego Ramirez", first: "Diego", img: () => IMG.c, role: "B.A. Economics 2024 · grocery shift lead", aim: "Junior data analyst", mins: "10:18",
-    line: "“Recruiters don't see a shift lead as a data analyst.”", contact: "diego.r@email.com · San Antonio, TX",
-    edu: "City University, B.A. Economics · 2024",
-    before: [["Experience", "Cashier and shift lead. Handled customers, opened and closed the store."], ["Education", "B.A. Economics"]],
-    sections: [["Experience", "Shift Lead · Neighborhood Grocery", ["x1", "x2"]], ["Projects", "Senior Thesis · Economics", ["t1"]]],
+    extra: [["Presenting to tough rooms", "Communication", "Five classes a day"], ["Product knowledge", "Technology", "B.S. Biology; runs the lab equipment"]],
+    fits: [["Life-science sales rep", "Strong fit", "Budget pitch, outcome story, vendor-side experience"], ["Customer success (EdTech)", "Strong fit", "Onboards and trains users every day"], ["Instructional designer", "Worth exploring", "Gap: no authoring tool yet (Articulate or Captivate)"]] },
+  c: { key: "C", name: "Diego Ramirez", first: "Diego", img: () => IMG.c, role: "Assistant store manager, 3 years · grocery", aim: "Operations analyst", mins: "10:18",
+    line: "“Recruiters see a store, not the operations I run.”", contact: "diego.ramirez@email.com · San Antonio, TX",
+    edu: "City University, B.A. Economics · 2023",
+    before: [["Experience", "Assistant store manager. Handled customers, scheduling, opened and closed the store."]],
+    sections: [["Experience", "Assistant Store Manager · Riverside Market", ["x1", "x2", "x3"]]],
     steps: [
-      { ai: "You're a shift lead. What do you keep track of during a shift?" },
-      { me: "Sales, waste, who's on the schedule. I keep a spreadsheet for the manager.", id: "x1", kind: "Reframed", html: "Maintained weekly <mark>sales and waste tracking in Excel</mark> for store management." },
-      { ai: "What did that spreadsheet show?" },
-      { me: "Three products we always threw away, so we ordered less. Saved like a thousand a month... maybe twelve hundred.", id: "x1", kind: "Quantified", html: "Maintained weekly sales and waste tracking in Excel; flagged <mark>3 slow-moving products</mark>, cutting waste by <mark>$1.2K a month</mark>.", strength: ["Finds the number that matters", "Critical thinking"] },
-      { ai: "How many people are on your shift?" },
-      { me: "Twelve. I build the schedule around the busy hours.", id: "x2", kind: "Added", html: "Lead a <mark>12-person shift</mark>; build the weekly schedule around <mark>sales peaks</mark>.", strength: ["Leads people under pressure", "Leadership"] },
-      { ai: "Anything from your economics degree you still use?" },
-      { me: "My senior thesis was on food prices. Regression, in Stata.", id: "t1", kind: "Added", html: "Regression analysis of regional <mark>food-price inflation</mark> in <mark>Stata</mark>." }
+      { ai: "You're aiming for operations analyst roles. What do you track every week?" },
+      { me: "Sales, waste, labor hours. I keep a spreadsheet for the district manager.", id: "x1", kind: "Reframed", html: "Own the store's weekly <mark>sales, waste and labor-hours tracking</mark> in Excel for the district manager." },
+      { ai: "What has that spreadsheet shown you?" },
+      { me: "Three products we always threw away. We ordered less and saved about a thousand a month. Maybe twelve hundred.", id: "x1", kind: "Quantified", html: "Own the store's weekly sales, waste and labor-hours tracking in Excel; flagged <mark>3 slow-moving products</mark>, cutting waste by <mark>$1.2K a month</mark>.", strength: ["Finds the number that matters", "Critical thinking"] },
+      { ai: "How do you build the schedule?" },
+      { me: "Twelve people on my shift. I match staffing to the sales peaks, hour by hour.", id: "x2", kind: "Reframed", html: "Schedule a <mark>12-person team</mark> against <mark>hourly sales peaks</mark>.", strength: ["Capacity planning", "Leadership"] },
+      { ai: "Have you changed a process for the whole store?" },
+      { me: "I redid how we receive deliveries. Check-in went from forty minutes to fifteen.", id: "x3", kind: "Impact", html: "<mark>Redesigned delivery receiving</mark>, cutting check-in from <mark>40 to 15 minutes</mark>.", strength: ["Fixes processes", "Professionalism"] }
     ],
-    extra: [["Spreadsheet modeling", "Technology", "Weekly sales and waste model in Excel"], ["Econometrics", "Technology", "Stata regression thesis"]] },
-  d: { key: "D", name: "Priya Nair", first: "Priya", img: () => IMG.d, role: "Operations coordinator, 2 years · logistics", aim: "Associate product manager", mins: "12:30",
-    line: "“My experience is real, but it points the wrong way.”", contact: "priya.nair@email.com · Chicago, IL",
-    edu: "State University, B.S. Supply Chain Management · 2023",
-    before: [["Experience", "Operations coordinator managing vendor schedules."], ["Experience", "Point of contact for vendors and warehouse."]],
-    sections: [["Experience", "Operations Coordinator · Regional Logistics Co.", ["o1", "o2", "o3"]]],
+    extra: [["Spreadsheet modeling", "Technology", "Weekly sales, waste and labor model"], ["Economics background", "Critical thinking", "B.A. Economics"]],
+    fits: [["Operations analyst", "Strong fit", "Forecasting, waste analysis, a process redesign with a number"], ["Inventory or supply chain analyst", "Strong fit", "Ordering decisions backed by data"], ["Project coordinator", "Worth exploring", "Gap: no cross-team project yet"]] },
+  d: { key: "D", name: "Priya Nair", first: "Priya", img: () => IMG.d, role: "Consulting analyst, 2 years · supply-chain clients", aim: "Associate product manager", mins: "12:30",
+    line: "“Consulting decks don't read like product work.”", contact: "priya.nair@email.com · Chicago, IL",
+    edu: "State University, B.S. Industrial Engineering · 2024",
+    before: [["Experience", "Business analyst: supported client engagements and built slide decks."], ["Experience", "Conducted research and analysis for logistics clients."]],
+    sections: [["Experience", "Business Analyst · Supply-chain consulting", ["o1", "o2", "o3"]]],
     steps: [
       { ai: "Where do you want to go next?" },
-      { me: "Product management. But I've only done operations." },
-      { ai: "Let's find the product work hiding in it. What broke most often?" },
-      { me: "Vendors missed their delivery slots, constantly. We have about 40 vendors.", id: "o1", kind: "Reframed", html: "Identified missed delivery slots across <mark>40 vendors</mark> as the top operations problem." },
-      { ai: "What did you do about it?" },
-      { me: "I set up a booking sheet with automatic reminders, then we turned it into a small internal tool with IT.", id: "o1", kind: "Reframed", html: "Identified missed delivery slots across 40 vendors as the top operations problem; <mark>designed a self-serve booking flow</mark> with reminders and <mark>shipped it with IT</mark>.", strength: ["Ships a fix, not just a report", "Technology"] },
-      { ai: "And the result?" },
-      { me: "Missed deliveries dropped about a quarter.", id: "o2", kind: "Quantified", html: "Cut missed deliveries by <mark>25%</mark> within one quarter of launch." },
-      { ai: "How did you decide what to build?" },
-      { me: "I called the warehouse leads and some vendors. Maybe ten calls.", id: "o3", kind: "Strength found", html: "Ran <mark>10 user interviews</mark> with warehouse leads and vendors to define requirements.", strength: ["User research instinct", "Communication"] }
+      { me: "Product management. But I've only done consulting." },
+      { ai: "Let's find the product work in it. On your last project, what was the client's problem?" },
+      { me: "Vendors kept missing their delivery slots. About 40 vendors.", id: "o1", kind: "Reframed", html: "Diagnosed missed delivery slots across <mark>40 vendors</mark> as a logistics client's top problem." },
+      { ai: "How did you work out what to build?" },
+      { me: "I interviewed the warehouse leads and some vendors. Ten calls... no, twelve.", id: "o2", kind: "Corrected by voice", html: "Ran <mark>12 user interviews</mark> with warehouse leads and vendors to define requirements.", strength: ["User research instinct", "Communication"] },
+      { ai: "And what shipped?" },
+      { me: "A self-serve booking flow with reminders. The client's IT team built it with me. Missed deliveries dropped about a quarter.", id: "o1", kind: "Impact", html: "Diagnosed missed delivery slots across 40 vendors; <mark>designed a self-serve booking flow</mark> with reminders, built with the client's IT team, <mark>cutting missed deliveries 25%</mark>.", strength: ["Ships with engineers", "Technology"] },
+      { ai: "How did you decide what went into version one?" },
+      { me: "We ranked features by how many missed slots each would prevent, and cut the rest.", id: "o3", kind: "Strength found", html: "<mark>Prioritized v1 by impact</mark> on missed slots and cut lower-value features.", strength: ["Prioritizes like a PM", "Critical thinking"] }
     ],
-    extra: [["Owns a metric", "Professionalism", "Missed deliveries, tracked to the quarter"], ["Cross-team delivery", "Teamwork", "Built the tool with IT"]] }
+    extra: [["Executive communication", "Communication", "Client steering-committee updates"], ["Structured problem solving", "Critical thinking", "Consulting training"]],
+    fits: [["Associate product manager", "Strong fit", "User interviews, a spec that shipped, impact-based prioritization"], ["Business operations (BizOps)", "Strong fit", "Diagnoses problems with data, works across teams"], ["Product operations", "Worth exploring", "Gap: no experience with product analytics tools yet"]] }
 };
 
 function personaReport(p) {
@@ -101,7 +103,7 @@ function heroStage() {
       k = i; const p = PERSONAS[keys[i]];
       root.querySelectorAll(".av").forEach((b, j) => { b.setAttribute("aria-pressed", j === i); });
       root.querySelector(".st-img").style.backgroundImage = `url(${p.img()})`;
-      root.querySelector(".st-who").innerHTML = `<b>${p.name}</b><span>${p.role}</span>`;
+      root.querySelector(".st-who").innerHTML = `<b>${p.name}</b><span>${ICP[p.key].tag}</span>`;
       root.querySelector(".st-call").setAttribute("href", "#call-" + keys[i]);
       root.querySelector(".st-call span").textContent = `Hear ${p.first}'s call`;
       const qs = p.steps.filter(s => s.ai), ms = p.steps.filter(s => s.me && s.id);
@@ -138,11 +140,11 @@ route("call", () => {
       note.classList.remove("hidden");
     });
   });
-  return { title: "Start a free call", seoTitle: "Start a Free Call with Your AI Career Coach | Yapply", desc: "Talk with Yapply's AI career coach for 10 minutes. It digs into what you've done and writes your resume live while you speak.", path: "/call", crumbs: [["Home", "home"], ["Call"]],
+  return { title: "Start a free call", seoTitle: "Start a Free Call with Your AI Career Coach | Yapply", desc: "Talk with Yapply's AI career coach for 10 minutes. It finds what transfers from your current job and rewrites your resume for the direction you want, live.", path: "/call", crumbs: [["Home", "home"], ["Call"]],
     html: `<section class="lobby"><div class="wrap lobby-in">
       <div class="orb big" aria-hidden="true"></div>
       <h1 class="serif">Your coach is ready.</h1>
-      <p class="lead muted">About 10 minutes. No resume needed. Talk about anything you've done (classes, a club, a job outside your field) and watch your resume being written while you speak.</p>
+      <p class="lead muted">About 10 minutes. No resume needed. Tell the coach where you want to go, or that you're not sure yet, then talk about your current job. Watch it rewrite your experience for the new direction while you speak.</p>
       <div class="row center"><button class="btn primary lg" id="mic" type="button">Allow microphone & start</button></div>
       <p id="mic-note" class="answer hidden" style="max-width:560px;margin:18px auto 0"></p>
       <p class="small muted" style="margin-top:34px">Or hear a sample call first:</p>
@@ -196,20 +198,20 @@ pattern(/^report-([abcd])$/, k => {
   const p = PERSONAS[k], r = personaReport(p), n = p.steps.length;
   const comp = NACE.map(c => [c, r.strengths.filter(s => s[1] === c).length]).filter(([, v]) => v);
   const max = Math.max(...comp.map(c => c[1]), 1);
-  return { title: `Call report: ${p.name}`, seoTitle: `Sample Career Coach Report: ${ICP[p.key].tag} | Yapply`, desc: `A sample Yapply call report: how ${p.first}'s resume was written live during the call, before-and-after lines, and the strengths the AI career coach uncovered.`, path: "/report/sample-" + k, crumbs: [["Home", "home"], ["Call", "call"], [p.first + "'s report"]],
+  return { title: `Call report: ${p.name}`, seoTitle: `Sample Career Coach Report: ${ICP[p.key].tag} | Yapply`, desc: `A sample Yapply career-change report: how ${p.first}'s resume was rewritten for ${p.aim.toLowerCase()} roles during the call, which directions fit, and what transfers.`, path: "/report/sample-" + k, crumbs: [["Home", "home"], ["Call", "call"], [p.first + "'s report"]],
     html: `<section class="rep-head"><div class="wrap">
-      <div class="rh-grid"><div><span class="eyebrow">Call report · sample · ${p.mins}</span><h1 class="serif">${p.first} talked for ${p.mins.split(":")[0]} minutes. Here's what the coach found.</h1>
+      <div class="rh-grid"><div><span class="eyebrow">Call report · sample · ${p.mins}</span><h1 class="serif">${p.first} talked for ${p.mins.split(":")[0]} minutes. Here's what transfers.</h1>
         <p class="lead muted">${p.role}. Aiming for ${p.aim.toLowerCase()}. Came in saying: <i>${p.line}</i></p></div>
         <div class="rh-photo" style="background-image:url(${p.img()})"></div></div>
-      <div class="kpis">${[[r.questions, "follow-up questions"], [r.log.length, "lines written live"], [r.corrections, "rewrites as the story got better"], [r.numbers, "numbers you didn't have before"]].map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("")}</div>
+      <div class="kpis">${[[r.questions, "follow-up questions"], [r.log.length, "lines written live"], [r.corrections, "rewrites as the story got better"], [r.numbers, "numbers for the new role"]].map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("")}</div>
     </div></section>
 
     <section class="section"><div class="wrap">
-      <span class="eyebrow">01 · Before and after</span><h2 class="serif">Same person. Same experience. Different resume.</h2>
+      <span class="eyebrow">01 · Before and after</span><h2 class="serif">Same experience. New direction.</h2>
       <div class="ba2">
-        <div class="ba-col old"><h4>What ${p.first} had</h4>${p.before.map(([h, t]) => `<p><small>${h}</small>${esc(t)}</p>`).join("")}<p class="ba-stat">0 numbers · ${p.before.length} lines describing duties</p></div>
+        <div class="ba-col old"><h4>Written for the old job</h4>${p.before.map(([h, t]) => `<p><small>${h}</small>${esc(t)}</p>`).join("")}<p class="ba-stat">0 numbers · ${p.before.length} lines in the old field's language</p></div>
         <div class="ba-arrow" aria-hidden="true">→</div>
-        <div class="ba-col new"><h4>After one call</h4>${p.sections.map(([h, sub, ids]) => `<p><small>${h} · ${sub}</small></p>${ids.map(id => `<p>${r.lines[id]}</p>`).join("")}`).join("")}<p class="ba-stat">${r.numbers} numbers · every line a result</p></div>
+        <div class="ba-col new"><h4>Written for ${p.aim.toLowerCase()} roles</h4>${p.sections.map(([h, sub, ids]) => `<p><small>${h} · ${sub}</small></p>${ids.map(id => `<p>${r.lines[id]}</p>`).join("")}`).join("")}<p class="ba-stat">${r.numbers} numbers · every line evidence for the new role</p></div>
       </div>
     </div></section>
 
@@ -222,15 +224,17 @@ pattern(/^report-([abcd])$/, k => {
     </div></section>
 
     <section class="section"><div class="wrap">
-      <span class="eyebrow">03 · What the coach dug up</span><h2 class="serif">Strengths ${p.first} never wrote down</h2>
+      <span class="eyebrow">03 · Where the evidence points</span><h2 class="serif">Directions ${p.first}'s experience already fits</h2>
+      <div class="fits">${p.fits.map(([role, lvl, why]) => `<div class="fit ${lvl.startsWith("Strong") ? "strong" : ""}"><span class="tag">${lvl}</span><h3>${role}</h3><p class="small muted">${why}</p></div>`).join("")}</div>
+      <h3 style="margin:48px 0 16px">What transfers</h3>
       <div class="str-grid">${r.strengths.map(([name, c, ev]) => `<div class="str"><span class="tag">${c}</span><h3>${name}</h3><p class="small muted">Evidence: ${esc(ev)}</p></div>`).join("")}</div>
       <div class="tmap"><h3>Talent map <span class="small muted">· NACE career-readiness competencies, by evidence found in the call</span></h3>
         ${comp.map(([c, v]) => `<div class="tm-row"><span>${c}</span><div class="tm-bar"><i style="width:${(v / max) * 100}%"></i></div><b class="num">${v}</b></div>`).join("")}</div>
     </div></section>
 
     <section class="section"><div class="wrap rep-final">
-      <div><span class="eyebrow">04 · The resume</span><h2 class="serif">Ready the moment the call ended</h2><p class="muted">One page, ATS-friendly, every line from what ${p.first} said. Next: tailor it to a job, or practice the interview with the same coach.</p>
-        <div class="row" style="margin-top:20px"><a class="btn primary lg" href="#call">Start my own call</a><a class="btn" href="#feature-tailored-applications">Tailor to a job</a><a class="btn" href="#feature-ai-mock-interview">Practice the interview</a></div>
+      <div><span class="eyebrow">04 · The resume</span><h2 class="serif">A ${p.aim.toLowerCase()} resume, ready when the call ended</h2><p class="muted">One page, ATS-friendly, every line from what ${p.first} said. Next: swipe right on matched jobs and Yapply applies with a version tailored to each, or practice “why are you switching?” with the same coach.</p>
+        <div class="row" style="margin-top:20px"><a class="btn primary lg" href="#call">Start my own call</a><a class="btn" href="#feature-job-match">See matched jobs</a><a class="btn" href="#feature-ai-mock-interview">Practice the interview</a></div>
         <p class="small muted" style="margin-top:22px">Other sample reports: ${Object.keys(PERSONAS).filter(x => x !== k).map(x => `<a href="#report-${x}">${PERSONAS[x].first} (${ICP[PERSONAS[x].key].tag.toLowerCase()})</a>`).join(" · ")}</p></div>
       ${resumePaper(p, r.lines, false)}
     </div></section>` };

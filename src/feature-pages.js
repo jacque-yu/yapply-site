@@ -2,29 +2,29 @@
 const FP_OK = '<span class="ck" aria-hidden="true">✓</span>';
 function fvCoach() {
   return `<div class="fv-phone"><div class="fv-top"><span class="rec"></span>Coach · live <span class="muted">3:12</span></div>
-    <div class="fv-b ai">How many students did you tutor a week?</div>
-    <div class="fv-b me">Like 15 a week.</div>
-    <div class="fv-card folded"><small>Experience · Peer Tutor</small><span>Updated below ↓</span></div>
-    <div class="fv-b me cut"><em>You cut in</em>Wait, more like 20 during finals.</div>
-    <div class="fv-card pop"><small>Experience · Peer Tutor</small><p>Tutored <del>15 students a week</del> <mark>15–20 students a week</mark> in statistics and calculus.</p><span class="src">From your words · 3:12</span></div>
-    <div class="fv-b ai">Did you change how the center tutors?</div>
+    <div class="fv-b ai">You're aiming for operations. What do you track every week?</div>
+    <div class="fv-b me">Sales, waste, labor hours. A spreadsheet for my district manager.</div>
+    <div class="fv-card folded"><small>Assistant Store Manager → Operations</small><span>Updated below ↓</span></div>
+    <div class="fv-b me cut"><em>You cut in</em>Oh, and it flagged three products we kept throwing away.</div>
+    <div class="fv-card pop"><small>Assistant Store Manager → Operations</small><p><del>Handled scheduling and closing.</del> <mark>Own weekly sales, waste and labor tracking in Excel</mark>; flagged 3 slow-moving products.</p><span class="src">From your words · 3:12 · matches “inventory analysis”</span></div>
+    <div class="fv-b ai">How much did ordering less save?</div>
     <div class="fv-foot"><span>View draft</span><span class="wave mini" aria-hidden="true">${"<i></i>".repeat(14)}</span></div></div>`;
 }
 function fvMatch() {
-  return `<div class="fv-stack"><div class="chips">${["Data analyst", "Entry level", "NYC or remote", "$70K+", "Sponsors H-1B"].map(c => `<span class="chip on">${c}</span>`).join("")}</div>
-    <div class="jcard"><div class="jc-head"><span class="logo-sq" style="background:#2b37d4">K</span><div><b>Data Analyst, New Grad</b><span>Kestrel Analytics · New York, NY · Hybrid</span><span>$78K–$92K · Posted 6 hours ago</span></div>
+  return `<div class="fv-stack"><div class="chips">${["Data analyst", "From IT support", "NYC or remote", "$70K+", "0–3 years"].map(c => `<span class="chip on">${c}</span>`).join("")}</div>
+    <div class="jcard"><div class="jc-head"><span class="logo-sq" style="background:#2b37d4">K</span><div><b>Data Analyst</b><span>Kestrel Analytics · New York, NY · Hybrid</span><span>$78K–$92K · Posted 6 hours ago</span></div>
       <div class="ring" style="--p:92"><b>92</b><small>match</small></div></div>
       <div class="why"><span class="eyebrow" style="margin:0">Why we recommend you</span>
-        <p>${FP_OK}Your 2,400-response survey analysis matches their <mark>SQL + Python</mark> ask</p><p>${FP_OK}Entry level, no internship required</p><p>${FP_OK}Sponsors H-1B (likely) and fits your NYC filter</p></div>
+        <p>${FP_OK}Your weekly ticket-trend reports match their <mark>SQL + reporting</mark> ask</p><p>${FP_OK}Asks for 1–3 years of experience; yours counts</p><p>${FP_OK}Your director updates match “present to stakeholders”</p></div>
       <div class="swipe"><span class="sw no">✕ Skip</span><span class="hint">Swipe</span><span class="sw yes">Apply ✓</span></div></div>
     <p class="small muted center">Example listing with a fictional employer.</p></div>`;
 }
 function fvTailor() {
-  return `<div class="fv-stack"><div class="jd"><span class="eyebrow" style="margin:0">Job description · Kestrel Analytics</span>
-      <div class="chips">${[["SQL", 1], ["Python", 1], ["A/B testing", 1], ["Stakeholder communication", 1], ["Tableau", 0]].map(([k, y]) => `<span class="chip ${y ? "on" : "gap"}">${y ? "✓" : "–"} ${k}</span>`).join("")}</div></div>
+  return `<div class="fv-stack"><div class="jd"><span class="eyebrow" style="margin:0">Job description · Data Analyst, Kestrel Analytics</span>
+      <div class="chips">${[["SQL", 1], ["Excel", 1], ["Reporting", 1], ["Stakeholder communication", 1], ["Tableau", 0]].map(([k, y]) => `<span class="chip ${y ? "on" : "gap"}">${y ? "✓" : "–"} ${k}</span>`).join("")}</div></div>
     <div class="paper rp diffp"><span class="eyebrow" style="margin:0">Your resume, tailored for this job</span>
-      <p><del>Cleaned and analyzed survey data on meal-plan cancellations.</del></p>
-      <p>Analyzed 2,400 survey responses in <mark>SQL</mark> and <mark>Python</mark> and built a logistic regression; <mark>presented findings to dining services</mark>, who changed plan options.</p>
+      <p><del>Resolved tickets and helped staff with technical issues.</del></p>
+      <p>Built a weekly ticket-trend report in <mark>SQL</mark> and <mark>Excel</mark> (~1,800 tickets a month) and <mark>presented findings to the IT director</mark>; password-reset tickets fell by half.</p>
       <p class="moved">↑ Moved to top: most relevant to this role</p>
       <div class="gapnote"><b>Gap, not added:</b> Tableau. You didn't mention it in your call. <span class="lnk">Talk it through →</span></div></div></div>`;
 }
@@ -36,7 +36,7 @@ function fvVerified() {
     <p class="small muted center">Example listings with fictional employers.</p></div>`;
 }
 function fvTracker() {
-  return `<div class="fv-stack"><div class="jcard"><div class="jc-head"><span class="logo-sq" style="background:#2b37d4">K</span><div><b>Data Analyst, New Grad</b><span>Kestrel Analytics</span></div><span class="tag warn">Viewed</span></div>
+  return `<div class="fv-stack"><div class="jcard"><div class="jc-head"><span class="logo-sq" style="background:#2b37d4">K</span><div><b>Data Analyst</b><span>Kestrel Analytics</span></div><span class="tag warn">Viewed</span></div>
       <ol class="stl">${[["Applied", "Nov 24, 9:41 AM · confirmation #GH-48213", 1], ["Viewed", "Nov 25, 2:10 PM", 1], ["Interview", "Waiting", 0]].map(([a, b, d]) => `<li class="${d ? "done" : ""}"><b>${a}</b><span>${b}</span></li>`).join("")}</ol>
       <div class="proofs">${["Receipt", "Original posting ↗", "Screenshot", "Submission log", "Resume sent · tailored v3"].map(p => `<span class="pf">${p}</span>`).join("")}</div>
       <div class="shot" aria-hidden="true"><i></i><i></i><i class="s"></i><i></i><b>Submitted</b></div></div>
@@ -44,8 +44,8 @@ function fvTracker() {
 }
 function fvInterview() {
   return `<div class="fv-stack"><div class="modes-tabs">${["Practice", "Live", "Debrief"].map((m, i) => `<span class="${i === 1 ? "on" : ""}">${m}</span>`).join("")}</div>
-    <div class="jcard live-int"><div class="li-q"><span class="tag">Behavioral · detected</span><p>“Tell me about a time you had to convince someone with data.”</p></div>
-      <div class="li-s"><span class="eyebrow" style="margin:0">Private suggestion · only you see this</span><p>Use your meal-plan study: <b>situation</b> (students dropping plans), <b>what you did</b> (2,400 responses, regression), <b>result</b> (dining services changed options).</p></div></div>
+    <div class="jcard live-int"><div class="li-q"><span class="tag">Career change · detected</span><p>“Why are you leaving IT support for data?”</p></div>
+      <div class="li-s"><span class="eyebrow" style="margin:0">Private suggestion · only you see this</span><p>Bridge it with your ticket report: <b>what you did</b> (weekly SQL report), <b>what changed</b> (password resets cut in half), <b>why data</b> (you liked finding the cause more than closing tickets).</p></div></div>
     <div class="jcard deb"><span class="eyebrow" style="margin:0">Debrief</span>${[["Structure", 80], ["Specifics", 64], ["Pace", 88]].map(([k, v]) => `<div class="tm-row"><span>${k}</span><div class="tm-bar"><i style="width:${v}%"></i></div></div>`).join("")}<p class="small"><b>Fix next:</b> say the number earlier. Next practice starts here.</p></div></div>`;
 }
 const FV = { "ai-career-coach": fvCoach, "job-match": fvMatch, "tailored-applications": fvTailor, "verified-jobs": fvVerified, "application-tracker": fvTracker, "ai-mock-interview": fvInterview };
@@ -88,7 +88,7 @@ pattern(/^feature-(.+)$/, raw => {
       <tbody>${f.vs.map(([a, b, c]) => `<tr><th scope="row">${a}</th><td>${b}</td><td><b>${c}</b></td></tr>`).join("")}</tbody></table></div>
       <p class="small muted" style="margin-top:14px">Based on our review study and public product pages. <a href="#compare">See named comparisons →</a></p></div></section>
 
-    <section class="section roomy"><div class="wrap"><div class="sec-head"><span class="eyebrow">Who it's for</span><h2 class="serif">Built for four kinds of job seekers</h2></div>
+    <section class="section roomy"><div class="wrap"><div class="sec-head"><span class="eyebrow">Who it's for</span><h2 class="serif">Built for people changing direction</h2></div>
       <div class="who-mini">${Object.entries(f.for).map(([k, line]) => { const p = PERSONAS[k.toLowerCase()]; return `<a class="wm" href="#report-${k.toLowerCase()}"><span class="wm-img" style="background-image:url(${p.img()})"></span><span class="wm-t"><small>${k} · ${ICP[k].tag}</small><b>${line}</b></span></a>`; }).join("")}</div></div></section>
 
     <section class="section roomy"><div class="wrap narrow"><h2 class="serif">${f.name} FAQ</h2>${faqBlock(f.faq)}</div></section>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Yapply</title>
-<meta name="description" id="meta-desc" content="Yapply is an AI career coach you talk to. It digs into what you have done, finds strengths you missed, and polishes your resume live while you talk.">
+<meta name="description" id="meta-desc" content="Yapply is an AI career coach for people changing direction in their first three years: talk once, and it rewrites your real experience for the job you want, then applies for you.">
 <link rel="canonical" id="canonical" href="https://yapply.ai/">
 <script type="application/ld+json" id="ld">{}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -737,6 +737,39 @@ h2.serif { font-size: clamp(2.2rem, 4.2vw, 3.4rem); line-height: 1.04; margin: 0
 .wrap.narrow { max-width: var(--wrap); }
 .wrap.narrow > * { max-width: 880px; }
 
+/* ===== Career-change homepage ===== */
+.h3l { display: block; text-decoration: none; color: inherit; padding: 4px 0; border-radius: 12px; }
+.h3l:hover h3 { color: var(--accent); }
+.dir-wrap { align-items: center; gap: clamp(32px, 6vw, 96px); }
+.fits-card { background: var(--panel); border: 1px solid var(--line); border-radius: 24px; padding: 26px; display: grid; gap: 12px; box-shadow: 0 24px 60px rgba(20,22,42,.08); }
+.fit-row { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 16px; background: var(--soft); }
+.fit-row b { display: block; font-size: 1.05rem; }
+.fit-row span:not(.tag) { font-size: .88rem; color: var(--muted); }
+.fit-row.strong { background: #eef8f2; }
+.fit-row.strong .tag { background: var(--good); color: #fff; }
+.fit-row .tag { white-space: nowrap; }
+.fits { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-top: 8px; }
+.fit { padding: 22px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); }
+.fit.strong { border-color: var(--good); }
+.fit.strong .tag { background: var(--good); color: #fff; }
+.fit h3 { margin: 10px 0 6px; }
+.paths { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+.path { display: grid; grid-template-columns: auto auto 1fr; align-items: baseline; gap: 4px 10px; padding: 24px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); text-decoration: none; color: inherit; transition: border-color .2s, transform .2s; }
+.path:hover { border-color: var(--ink); transform: translateY(-2px); }
+.pf-from { font: 600 .78rem var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); grid-column: 1 / -1; }
+.pf-arrow { color: var(--accent); font-size: 1.4rem; }
+.pf-to { font-size: 2rem; line-height: 1.05; grid-column: 2 / -1; }
+.path p { grid-column: 1 / -1; margin: 10px 0 0; line-height: 1.55; }
+.prom4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: clamp(20px, 3vw, 36px); }
+.prom4 > div { border-top: 1px solid rgba(255,255,255,.22); padding-top: 20px; }
+.prom4 h3 { color: #ffe04a; font-size: 1.2rem; margin: 0 0 8px; }
+.prom4 p { color: #c9ccdd; line-height: 1.6; margin: 0; }
+.promise .eyebrow { color: #ffe04a; }
+.price-tease { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; padding: clamp(28px, 4vw, 48px); border-radius: 28px; background: linear-gradient(160deg, #e9ebff 0%, #fff6cc 100%); }
+.price-tease h2 { margin-bottom: 8px; }
+.price-tease p { margin: 0; max-width: 60ch; }
+@media (max-width: 960px) { .fits, .paths, .prom4 { grid-template-columns: 1fr; } }
+
 </style>
 </head>
 <body>
@@ -1144,25 +1177,35 @@ const VERBS = {
 Object.values(VERBS).forEach(v => { v.alts = v.best.concat(v.groups.flatMap(g => g.words.map(w => w.word.toLowerCase())).filter(w => !v.best.includes(w))).slice(0, 12); v.before = v.misuse[0][0]; v.after = v.misuse[0][1]; });
 const BEST_NOTE = { designed: "you decided how it should look or work", developed: "you built it up over time; standard in software", built: "hands-on making of something that works", directed: "you set priorities and gave instructions", "teamed up": "informal; fine for clubs and student projects", "joined forces": "two groups combined efforts", arranged: "you set up the logistics", offered: "you made something available", furnished: "formal; you supplied what was needed", managed: "real ownership of a budget, team or project", kept: "plain and honest; pair it with a number" };
 
-// ---------- ICP ----------
-// From "竞品卖点与 ICP 对比 · yapply ICP 收窄建议": people whose experience is worth more than their resume shows.
+// ---------- ICP: 0–3 years in, changing direction ----------
+// Paths chosen from the most common switch types in "美国 0–3 年职场人换工作与转行调研" (Huntr, Monster), white-collar only.
+// Keys A–D are kept for routing (#report-a…d); each is now a switch path.
 const ICP = {
-  A: { tag: "No relevant internship", who: "New grads without a relevant internship", pain: "“All I have is class projects, a club and a campus job.”", fix: "Yapply asks the follow-up questions that turn projects, research and part-time work into bullets with numbers and impact.", before: "Member of the Data Science Club.", after: "Built a churn model on 2,400 survey responses with 3 club members; the advising office now uses it to plan outreach.", link: ["report-a", "See Maya's call report"] },
-  B: { tag: "International students", who: "International students graduating in the US", pain: "“I explain my work better out loud than in written English.”", fix: "Talk in your own words. Yapply writes natural, recruiter-ready English and flags employers likely to sponsor H-1B, so your short OPT window isn't wasted.", before: "Responsible for data analysis in lab.", after: "Analyzed 18 months of sensor data in Python, finding a calibration error that cut the lab's re-test rate by 30%.", link: ["report-b", "See Lin's call report"] },
-  C: { tag: "First job off-track", who: "Grads 0–3 years out whose first job isn't in their field", pain: "“I work in retail (or support, or admin). Recruiters don't see me as a data analyst.”", fix: "Yapply finds the transferable results in your current job and rewrites them in the language of the role you want.", before: "Cashier and shift lead at a grocery store.", after: "Tracked weekly sales in Excel for a 12-person store and flagged 3 slow products, cutting waste by $1.2K a month.", link: ["report-c", "See Diego's call report"] },
-  D: { tag: "Changing direction", who: "Early-career people changing direction", pain: "“My experience is real, but it points the wrong way.”", fix: "Tell Yapply where you're going. It turns your old experience into evidence for the new direction, job by job.", before: "Operations coordinator managing vendor schedules.", after: "Owned a scheduling system for 40 vendors, reducing missed deliveries 25%, the product thinking behind a move into PM.", link: ["report-d", "See Priya's call report"] }
+  A: { tag: "IT support → Data analyst", from: "Software & IT", to: "Data analytics", who: "Two years in IT support, aiming for data analyst roles", pain: "“I fix laptops. Data teams don't think that counts.”", fix: "Yapply finds the analysis you already do in support (ticket data, SQL, reports leaders act on) and writes it for a data team.", link: ["report-a", "See Maya's call report"] },
+  B: { tag: "Teacher → Life-science sales", from: "Education", to: "Sales", who: "Two years teaching biology, aiming for life-science sales", pain: "“Teaching doesn't sound like sales on paper.”", fix: "Yapply turns pitching to 150 students, winning budget and running vendor demos into the evidence sales managers hire for.", link: ["report-b", "See Lin's call report"] },
+  C: { tag: "Store manager → Operations", from: "Retail & hospitality", to: "Operations", who: "Three years running a store floor, aiming for operations analyst roles", pain: "“Recruiters see a store, not the operations I run.”", fix: "Yapply finds the forecasting, scheduling and process fixes behind your shifts and writes them as operations work.", link: ["report-c", "See Diego's call report"] },
+  D: { tag: "Consulting → Product", from: "Consulting", to: "Product", who: "Two years as a consulting analyst, aiming for product management", pain: "“Consulting decks don't read like product work.”", fix: "Yapply pulls the user research, prioritization and shipping out of your client work and writes it as product experience.", link: ["report-d", "See Priya's call report"] }
 };
+// Popular switch paths for the homepage. The first two are measured paths (Huntr); the rest pair the origins most likely to apply outside their field with the most popular destinations.
+const PATHS = [
+  ["Software & IT", "Data analytics", "The single largest switch path Huntr measured: 19.1% of software and IT job seekers applied to data roles.", "report-a"],
+  ["Data analytics", "Software & IT", "The reverse path: 39.0% of data analytics job seekers applied to software and IT roles.", "call"],
+  ["Retail & hospitality", "Operations", "95.5% of retail and hospitality job seekers applied outside their field; operations is the #1 destination.", "report-c"],
+  ["Education", "Sales", "94.7% of education job seekers applied outside their field; sales is a top-3 destination.", "report-b"],
+  ["Consulting", "Product", "96.4% of consulting job seekers applied outside their field. Product and BizOps are common next steps.", "report-d"],
+  ["Operations", "Data analytics", "82.9% of operations job seekers applied outside their field; data analytics is a top-4 destination.", "call"]
+];
 const SIGNALS = [
-  ["Your experience doesn't “look like experience”", "Mostly class projects, research, clubs, part-time or small-company work, no big-name internship."],
-  ["Your bullets are duties, not results", "“Responsible for…”, “Participated in…”, almost no numbers."],
-  ["You need a cross-over story", "The job you want isn't on the same line as what you've done."],
-  ["You speak better than you write", "English isn't your first language, or writing about yourself is hard, but you can explain it out loud."],
-  ["You apply but hear nothing back", "Plenty of applications, few interviews: the bottleneck is the resume, not the interview."]
+  ["Your title doesn't match where you're going", "Your resume says one job. The roles you want ask for another."],
+  ["Your resume is written in your old field's language", "Shift reports, lesson plans, client decks: true, but not what the new field searches for."],
+  ["You've applied across fields and heard nothing", "Plenty of applications outside your field, very few replies."],
+  ["You don't want to start from zero", "No new degree, no bootcamp, no pretending the last few years didn't happen."],
+  ["You're not sure which direction fits", "Ops or product? Data or sales? You want your experience to point the way."]
 ];
 const STATS = [
-  ["~80% vs 54%", "of graduating seniors rate their own communication as very or extremely proficient, vs 54% of employers who say the same of new grads", "https://naceweb.org/career-readiness/competencies/are-college-graduates-career-ready", "NACE"],
-  ["38%", "of the Class of 2023 graduated without an internship (62% had one)", "https://naceweb.org/about-us/press/b75773e6-def0-4df8-9c6d-8416df61dba1", "NACE, 2023"],
-  ["52%", "of recent grads are underemployed a year after graduation; 73% of them are still underemployed 10 years later", "https://www.burningglassinstitute.org/s/Talent-Disrupted-03052024.pdf", "Strada & Burning Glass, 2024"]
+  ["70.3%", "of job seekers applied to at least one role outside their resume's field.", "https://huntr.co/research/career-changer", "Huntr, 15,175 job seekers"],
+  ["64%", "applied outside their industry or role type, most casting a wide net before working out how to explain the switch.", "https://www.monster.com/career-advice/research/career-change-statistics", "Monster Career Pivot Report"],
+  ["38.6%", "of postings were entry level in March 2026, down from 44% in 2023, while clicks per job rose about 22% year over year.", "https://fortune.com/2026/09/25/despite-entry-level-job-apocalypse-half-of-gen-z-planning-to-look-for-new-work-before-end-of-2026/", "ZipRecruiter via Fortune"]
 ];
 
 // ---------- FEATURES ----------
@@ -1171,38 +1214,38 @@ const FEATURE_GROUPS = [["Coach", "Find your story"], ["Apply", "Send it to real
 const REVIEW_STUDY = "Yapply analysis of 3,406 app-store and browser-extension reviews of three popular AI job-search tools, Nov 2026";
 const FEATURES = [
   { slug: "ai-career-coach", group: "Coach", flag: true, name: "AI Career Coach", short: "Talk it through. Your resume writes itself live.",
-    title: "AI Career Coach & AI Resume Builder You Talk To", desc: "Talk with Yapply's AI career coach. It digs into what you've done and writes your resume live, from your own words only. Cut in any time to fix a line.",
-    h1: "Talk it through. Watch your resume write itself.", pain: "A blank template assumes you already know what's worth writing. Most people don't.",
-    sub: "The coach asks the follow-ups a great recruiter would, finds the results you forgot you had, and writes them onto your resume while you're still talking.",
+    title: "AI Career Coach for Career Changers & AI Resume Builder", desc: "Talk once with Yapply's AI career coach. It finds what transfers from your current job, shows which directions fit, and rewrites your resume live for the role you want.",
+    h1: "Find what transfers. Say it once.", pain: "Your experience is written in your old field's language. The job you want speaks another.",
+    sub: "Tell the coach where you want to go, or that you're not sure yet. It asks the follow-ups a recruiter in that field would, finds the results that carry over, and rewrites your resume while you're still talking.",
     cta: ["call", "Start a free call"],
-    answer: "Yapply's AI career coach is a full-duplex voice conversation: it listens and writes at the same time. Each change to your resume appears as a card in the chat, with new words highlighted and removed words struck through. You can cut in at any moment to correct it. Nothing goes on the page that you didn't say.",
+    answer: "Yapply's AI career coach is a full-duplex voice conversation for people changing direction. It asks where you want to go (or helps you work that out from what you've done), digs into your current job for results that transfer, and rewrites each one in the new field's language as you talk. Every change appears as a card you can correct by cutting in. Nothing goes on the page that you didn't say.",
     kws: [["ai resume builder", 22200, 88], ["resume ai", 6600, 82], ["ai resume", 5400, 46], ["ai career coach", null, null]],
     proof: [["~80% vs 54%", "of graduating seniors rate their own communication highly; 54% of employers say the same of new grads.", "https://naceweb.org/career-readiness/competencies/are-college-graduates-career-ready", "NACE"], ["#1", "complaint about AI-tailored resumes in our review study: invented metrics the user never gave.", null, REVIEW_STUDY]],
-    steps: [["Upload or skip", "Start from your current resume, or from nothing. Either way, the coach takes it from there."], ["Talk. It digs.", "“How many people used it? What changed after?” It keeps asking until it finds the result and the number."], ["Watch the cards", "Every edit lands as a card: new words highlighted, old words struck through. Cut in to fix anything."], ["Hang up with a resume", "One page, ATS-friendly, every line traceable to something you said. Revise it by voice any time."]],
-    points: [["Full duplex", "It listens and writes at the same time, like a coach taking notes while you talk."], ["Cut in any time", "“No, closer to 300.” Interrupt mid-sentence and the card updates."], ["Every change visible", "When a line changes again, the old card folds into “updated below”. You always see the latest."], ["Your words, polished", "Speak naturally, in any accent. It writes clear, recruiter-ready English from what you mean."]],
-    promise: ["No invented answers, ever.", "Most AI resume tools fill gaps with plausible numbers. Yapply only writes what you said. If a line needs a number you didn't give, the coach asks for it instead of guessing."],
+    steps: [["Say where you're headed", "Name the role you want, or say you're not sure. Upload your current resume or skip it."], ["Talk. It digs.", "“How many people used it? What changed after?” It keeps asking until it finds the result and the number."], ["Watch the cards", "Every edit lands as a card: new words highlighted, old words struck through. Cut in to fix anything."], ["Hang up with a new-direction resume", "One page, ATS-friendly, written for the role you want, every line traceable to something you said."]],
+    points: [["Finds your direction", "Not sure yet? The coach tells you which roles your experience already points to, and why."], ["Full duplex", "It listens and writes at the same time, like a coach taking notes while you talk."], ["Cut in any time", "“No, closer to 300.” Interrupt mid-sentence and the card updates."], ["Every change visible", "When a line changes again, the old card folds into “updated below”. You always see the latest."], ["Your words, polished", "Speak naturally, in any accent. It writes clear, recruiter-ready English from what you mean."]],
+    promise: ["Reframed, never invented.", "Changing fields is exactly when AI tools are tempted to invent skills that fit the new role. Yapply only rewrites what you actually did, in the new field's language. If a line needs a number you didn't give, the coach asks for it."],
     vs: [["Where the content comes from", "Templates and what you type", "A conversation that digs for it"], ["Numbers and results", "AI fills gaps with guesses", "Only what you said, or it asks"], ["Fixing mistakes", "Edit the document afterwards", "Cut in and correct it live"], ["Seeing what changed", "A finished rewrite", "Every edit as a card, as it happens"]],
-    for: { A: "Turns class projects, research and clubs into real experience.", B: "Say it in your own words; get fluent, recruiter-ready English.", C: "Finds the results hidden in a job outside your field.", D: "Frames past work as evidence for where you're going." },
-    faq: [["Will it make up numbers or experience?", "No. Every line comes from something you said or uploaded. If a bullet needs a number you didn't give, the coach asks for it."], ["Can I start from my existing resume?", "Yes. Upload a PDF; Yapply shows what it parsed, then the coach talks through the weakest lines first."], ["What if I say something wrong?", "Cut in and correct it. The card updates and the old version folds away."], ["Can I edit the resume by typing?", "In the app you revise by voice, so every line stays traceable to what you said. Say “change the second bullet” and it does."], ["Is my English good enough?", "Yes. Speak the way you normally do; the coach writes polished English from what you mean, and you approve it."]] },
+    for: { A: "Turns ticket data and support reports into analyst experience.", B: "Turns teaching and budget pitches into a sales track record.", C: "Turns shift scheduling and waste tracking into operations work.", D: "Turns client research and specs into product experience." },
+    faq: [["What if I don't know which direction to switch to?", "Start with what you've done. The coach shows which roles your experience already fits, with the evidence for each, and you can choose from there."], ["Will it make up numbers or experience?", "No. Every line comes from something you said or uploaded. If a bullet needs a number you didn't give, the coach asks for it."], ["Can I start from my existing resume?", "Yes. Upload a PDF; Yapply shows what it parsed, then the coach talks through the weakest lines first."], ["What if I say something wrong?", "Cut in and correct it. The card updates and the old version folds away."], ["Can I edit the resume by typing?", "In the app you revise by voice, so every line stays traceable to what you said. Say “change the second bullet” and it does."], ["Is my English good enough?", "Yes. Speak the way you normally do; the coach writes polished English from what you mean, and you approve it."]] },
 
   { slug: "job-match", group: "Apply", name: "Job Match", short: "Your filters, ranked by fit, with the reasons.",
-    title: "AI Job Match: Entry-Level Jobs Ranked by Fit", desc: "Set your own filters. Yapply ranks entry-level jobs and internships by how well they match your coaching call, and explains every recommendation.",
-    h1: "Jobs you'd actually say yes to, ranked by fit.", pain: "Most job feeds bury the right roles under hundreds you'd never take, and keep showing the ones you skipped.",
-    sub: "Tell Yapply what you want. It scores each job against your filters and everything you said in your call, and tells you why each one made the list.",
+    title: "AI Job Match for Career Changers: Jobs Ranked by Fit", desc: "Yapply ranks jobs in your new direction by the experience your coaching call surfaced, not your old title, and explains every recommendation. Swipe right and we apply.",
+    h1: "Jobs where your experience already counts.", pain: "Job boards match your old title. You're not applying for your old title.",
+    sub: "Yapply ranks jobs in your new direction by what you've actually done, not what your last job was called, and tells you which part of your experience matched.",
     cta: ["call", "Start a free call"],
-    answer: "Yapply's job match starts from your own filters (role, level, location, salary, sponsorship) and your coaching call. Each job gets a match score and a plain-language reason, such as “your survey-analysis project matches their SQL and Python ask”. Swipe right to apply with a tailored resume, or left to skip; skipped jobs never come back.",
+    answer: "Yapply's job match starts from your own filters (role, level, location, salary, sponsorship) and your coaching call. Each job gets a match score and a plain-language reason, such as “your weekly ticket-trend reports match their SQL and reporting ask”. Swipe right to apply with a tailored resume, or left to skip; skipped jobs never come back.",
     kws: [["entry level remote jobs", 22200, 34], ["internship opportunities for college students", 12100, 31], ["ai job search", 4400, 85], ["ai job finder", 1300, 80]],
     proof: [["#1", "complaint about job-matching apps in our review study: jobs you rejected keep coming back.", null, REVIEW_STUDY]],
     steps: [["Set your filters", "Role, level, location, salary, H-1B sponsorship. Save more than one search."], ["Get ranked matches", "Each job is scored against your filters and your call, with the reasons spelled out."], ["Swipe", "Right applies with a resume tailored to that job. Left skips it, for good."]],
     points: [["Match score", "One number for how well you fit, built from skills, level and what you've actually done."], ["“Why we recommend this”", "Every job says why it's here, in plain words you can check."], ["Skips stick", "Skipped and applied jobs never reappear. No déjà vu."], ["Sponsorship labels", "H-1B likelihood on every role, for international students."]],
     promise: ["Recommendations that listen.", "The best ranking model is worthless if it ignores you. Your filters and skips come first; the score only ranks what's left."],
     vs: [["What you see", "Everything that matches a keyword", "Only what fits your filters"], ["Ranking", "Title and keyword overlap", "Your call: skills, results, level"], ["Explanation", "None", "A reason on every job"], ["Jobs you skipped", "Come back next week", "Gone for good"]],
-    for: { A: "Surfaces roles that hire without a prior internship.", B: "Filters for employers likely to sponsor H-1B.", C: "Finds entry-level roles in the field you want, not the one you're in.", D: "Matches on your new direction, not just your last title." },
-    faq: [["How is the match score calculated?", "From your filters plus your coaching call: required skills you've shown, level, location and sponsorship needs. The reasons under each job show what drove it."], ["Will I see jobs I already skipped?", "No. Skipped and applied jobs are removed permanently."], ["Can I save several searches?", "Yes, for example one for data analyst roles and one for product roles."], ["Is swiping right final?", "Yes. A right swipe sends the application with a tailored resume, so check the job first; the reasons and match score are there for that."]] },
+    for: { A: "Data roles where SQL and reporting count, not a data-analyst title.", B: "Sales roles that value presenting and product knowledge.", C: "Operations roles that want people who've run a floor.", D: "Product roles that hire from consulting." },
+    faq: [["Will it only show jobs like my current one?", "No. Matches come from your target direction and the experience your call surfaced, so a support specialist aiming for data roles sees data roles."], ["How is the match score calculated?", "From your filters plus your coaching call: required skills you've shown, level, location and sponsorship needs. The reasons under each job show what drove it."], ["Will I see jobs I already skipped?", "No. Skipped and applied jobs are removed permanently."], ["Can I save several searches?", "Yes, for example one for data analyst roles and one for product roles."], ["Is swiping right final?", "Yes. A right swipe sends the application with a tailored resume, so check the job first; the reasons and match score are there for that."]] },
 
   { slug: "tailored-applications", group: "Apply", name: "Tailored Applications", short: "Every application gets its own resume.",
     title: "Tailor Your Resume to Every Job, Automatically", desc: "Every application you send through Yapply uses a resume tailored to that job description: true keywords only, reordered by relevance, with gaps flagged.",
-    h1: "Every application gets its own resume.", pain: "One resume sent to 200 jobs reads like it was written for none of them.",
+    h1: "Every application gets its own resume.", pain: "One resume can't speak your old field and your new one at the same time.",
     sub: "Before anything is sent, Yapply reads the job description and tailors your resume to it, using only facts from your call. You see exactly what changed.",
     cta: ["call", "Start a free call"],
     answer: "When you apply through Yapply, your resume is tailored to that job description first: it uses the job's keywords where your call backs them up, reorders bullets by relevance, and shows the difference. Keywords you can't back up are listed as gaps, not added. The exact version sent is saved with the application.",
@@ -1212,12 +1255,12 @@ const FEATURES = [
     points: [["True keywords only", "The job's terms appear where your experience supports them. Never as filler."], ["Reordered by relevance", "The bullets this employer cares about move to the top."], ["Gaps, not fakes", "“Tableau: not added, you didn't mention it.” You decide whether to talk it through."], ["ATS-friendly", "Clean one-page layout that applicant tracking systems can read."]],
     promise: ["Tailored, never invented.", "Tailoring means choosing and phrasing what's true for this job. It never means adding skills or numbers you didn't give."],
     vs: [["Resume per job", "The same file every time", "Tailored to each job description"], ["Missing keywords", "Quietly stuffed in", "Flagged as gaps for you"], ["Formatting", "Sometimes changed without asking", "Your one-page layout, kept"], ["What was sent", "Hard to tell", "Saved with every application"]],
-    for: { A: "Points class projects at each job's requirements.", B: "Matches the job's terms while keeping your English natural.", C: "Re-frames your current job for each target role.", D: "Writes a new-direction version without losing the facts." },
-    faq: [["Does tailoring add skills I don't have?", "No. Keywords are used only where your call supports them; the rest are listed as gaps."], ["Can I see the resume before it's sent?", "Yes. Every tailored version shows what changed, and the sent version is saved with the application."], ["Will it pass ATS?", "The layout is a clean single column built for applicant tracking systems. No tool can promise a human will pick it, but nothing in the format will block it."], ["How many tailored versions can I make?", "One for every application you send."]] },
+    for: { A: "Leads with SQL and reporting for analyst roles.", B: "Leads with pitches and outcomes for sales roles.", C: "Leads with process and forecasting for ops roles.", D: "Leads with research and shipping for product roles." },
+    faq: [["How does tailoring work for a career change?", "Your old job stays true; the wording and order change. Bullets that prove the new role's requirements move up and use that field's terms where your call backs them up."], ["Does tailoring add skills I don't have?", "No. Keywords are used only where your call supports them; the rest are listed as gaps."], ["Can I see the resume before it's sent?", "Yes. Every tailored version shows what changed, and the sent version is saved with the application."], ["Will it pass ATS?", "The layout is a clean single column built for applicant tracking systems. No tool can promise a human will pick it, but nothing in the format will block it."], ["How many tailored versions can I make?", "One for every application you send."]] },
 
   { slug: "verified-jobs", group: "Apply", name: "Verified Jobs", short: "Fresh, real, never repeated. No ghost jobs.",
     title: "Verified Jobs: Avoid Ghost Jobs and Job Scams", desc: "Every job on Yapply is re-checked daily: posting time shown, duplicates removed, employers verified, likely ghost jobs and scam patterns filtered out.",
-    h1: "Only real jobs, still open, from real employers.", pain: "Ghost jobs and scam postings cost you more than time. They cost you hope.",
+    h1: "Only real jobs, still open, from real employers.", pain: "When you're switching fields, every dead-end application costs you twice.",
     sub: "Yapply re-checks every job every day, shows you when it was posted, removes anything you've seen, verifies the employer, and tells you why it's there.",
     cta: ["jobs", "Browse verified jobs"],
     answer: "Every job in Yapply is re-checked daily. You see when it was posted and last verified; duplicates and jobs you've already skipped or applied to are removed; the employer is verified; and every listing explains why it was recommended. Postings that show ghost-job or scam signals are filtered out before you see them.",
@@ -1227,13 +1270,13 @@ const FEATURES = [
     points: [["Freshness, shown", "Posted time and last-verified time on every job."], ["Deduplicated", "Swiped or applied? It never appears again, even if it's reposted."], ["Employer verified", "The employer exists and the apply link leads to their own system."], ["Scam patterns blocked", "Requests for payment, equipment deposits or chat-app interviews get a listing removed."]],
     promise: ["Your time goes to jobs that exist.", "We'd rather show you 20 real openings than 200 that might be ghosts."],
     vs: [["Freshness", "“30+ days ago”, if shown", "Posted and last-verified times"], ["Duplicates", "Same job, five boards", "One listing, once"], ["Employer check", "Anyone can post", "Verified employer and apply link"], ["Why it's shown", "Sponsored or keyword-matched", "A reason tied to your profile"]],
-    for: { A: "Spend your first search on roles that are really hiring.", B: "Avoid scams that target students on visas.", C: "Stop losing evenings to postings that were never open.", D: "See only roles where a career-changer can get through." },
+    for: { A: "Spend your applications on data roles that are really open.", B: "Skip commission-only scams posing as sales jobs.", C: "Stop losing evenings to postings that were never open.", D: "Avoid ghost product roles kept up to collect resumes." },
     faq: [["What is a ghost job?", "A posting for a role the company isn't actively trying to fill, kept up to signal growth or collect resumes."], ["How do you spot job scams?", "Common signals include asking you to pay for equipment or training, interviews held only over chat apps, and employers that can't be verified. Listings with these signals are removed."], ["What if a job closes after I apply?", "Your application stays in your tracker with its receipt; the status updates if the employer closes the role."], ["Can I report a bad listing?", "Yes. Reports are reviewed and the listing is removed for everyone if it fails a check."]] },
 
   { slug: "application-tracker", group: "Apply", name: "Application Tracker", short: "Every application, verifiable.",
     title: "Job Application Tracker: Every Application, Verifiable", desc: "For every application Yapply sends you get the confirmation receipt, the original job link, a submission screenshot and log, the exact resume sent, and live status.",
-    h1: "Every application, verifiable.", pain: "“We applied to 300 jobs for you.” Could they show you one?",
-    sub: "For every application Yapply sends, you get proof: the receipt, the original posting, a screenshot of the submission, the exact resume, and the status as it changes.",
+    h1: "Every application, verifiable.", pain: "You swiped right. We applied. Here's the proof.",
+    sub: "When you swipe right, Yapply applies for you. Every application comes with the receipt, the original posting, a screenshot, the exact resume sent, and the status as it changes, so you can see which direction is getting replies.",
     cta: ["call", "Start a free call"],
     answer: "For every application Yapply sends, you get the confirmation receipt, the original job link, a screenshot and submission log, the exact resume version sent, and the status as it comes back: applied, viewed, interview or rejected. If a submission fails, it shows as failed, with the reason.",
     kws: [["application tracker", 2400, 29], ["job application tracker", null, null]],
@@ -1242,13 +1285,13 @@ const FEATURES = [
     points: [["Confirmation receipt", "The employer system's own confirmation, saved."], ["Original posting", "The link you applied through, and a copy of the description."], ["Screenshot and log", "What was submitted, field by field, with a timestamp."], ["Live status", "Applied, viewed, interview or rejected, in one list."]],
     promise: ["Proof, not a counter.", "A number that says “300 applied” means nothing without receipts. Every Yapply application carries its own evidence, and failed ones are shown as failed."],
     vs: [["Proof of submission", "A counter", "Receipt, screenshot and log"], ["Resume sent", "Unclear", "The exact version, saved"], ["Failed submissions", "Silently skipped", "Shown with the reason"], ["Status", "Check each site yourself", "Applied, viewed, interview, rejected"]],
-    for: { A: "See your first applications actually land.", B: "Keep a dated record of your search while the OPT clock runs.", C: "Know which version of your story got the interview.", D: "Track which direction is getting responses." },
+    for: { A: "See which data roles reply to a support background.", B: "Know which version of your story got the call.", C: "Keep proof of every application, in one list.", D: "See whether product roles are responding." },
     faq: [["What counts as an application?", "Only submissions confirmed by the employer's system. Failed attempts are shown as failed, with the reason."], ["Can I see what was submitted?", "Yes: the screenshot, the field-by-field log and the exact resume file."], ["Can I still see my applications after my subscription ends?", "Yes. Your tracker and resume stay available; you just can't send new applications."], ["Is the status always available?", "Applied is always confirmed. Viewed, interview and rejected appear when the employer's system reports them."]] },
 
   { slug: "ai-mock-interview", group: "Interview", name: "AI Mock Interview", short: "Practice, live CoPilot, and debriefs.",
     title: "AI Mock Interview & Interview CoPilot", desc: "Practice out loud with an AI interviewer that knows your role, company and resume, get private live suggestions with Interview CoPilot, and a debrief after every session.",
-    h1: "Practice out loud. Get help live. Debrief after.", pain: "You know the answer, right up until the follow-up question.",
-    sub: "Rehearse with an AI interviewer that already knows your role, company and resume. Bring CoPilot into the real call. Then get a debrief that shapes your next practice.",
+    h1: "Practice the switch story first.", pain: "“So why are you leaving teaching?” is the question that decides it.",
+    sub: "Rehearse “why this change, why now, why us” with an AI interviewer that knows your old job, your new direction and your resume. Bring CoPilot into the real call. Then get a debrief that shapes your next practice.",
     cta: ["call", "Start a free call"],
     answer: "Yapply's interview tools run on the same profile as your resume. Practice Interview rehearses out loud with an AI interviewer that knows your role, company and resume, across eight scenarios. Live Interview CoPilot listens to a live call, recognizes the question and privately suggests an answer you can say in your own words. Interview Debrief writes what worked, what to fix and how ready you sound.",
     kws: [["mock interview", 26600, null], ["behavioral interview questions", 12100, 43], ["ai mock interview", null, null], ["interview copilot", null, null]],
@@ -1258,8 +1301,8 @@ const FEATURES = [
     points: [["Knows your resume", "Questions come from your actual projects and the job you applied to."], ["Follows up", "Vague answer? It asks “what did you personally do?” like a real interviewer."], ["Your own words", "Suggestions are built from stories you told in your coaching call."], ["A loop, not a one-off", "Every debrief sets up the next practice round."]],
     promise: ["The same story, from resume to offer.", "Your coaching call, your resume and your interview answers share one profile, so what you practice is what you wrote."],
     vs: [["Questions", "Generic question banks", "Built from your resume and the job"], ["Realism", "Recorded prompts", "A live interviewer that follows up"], ["In the real interview", "On your own", "Private suggestions in your words"], ["After", "A score", "A debrief that sets your next practice"]],
-    for: { A: "Practice talking about projects as real work.", B: "Build confidence answering in English under pressure.", C: "Rehearse why your current job is relevant.", D: "Nail “why are you changing direction?”" },
-    faq: [["What scenarios can I practice?", "Eight, including Coding, System Design, Behavioral, Product Case and Salary Negotiation."], ["Can I use Live Interview CoPilot in any interview?", "Check each employer's rules first; some don't allow AI assistance during interviews. Practice and Debrief work for every interview."], ["Does the interviewer know my resume?", "Yes. It uses your coaching-call profile and the job you applied to."], ["What's in a debrief?", "What worked, what to fix, and how ready you sound, with the weak spots carried into your next practice."]] }
+    for: { A: "Explain why support made you a better analyst.", B: "Answer “why sales?” with a story, not a hope.", C: "Show the operations work behind the store.", D: "Defend product decisions like a PM, not a consultant." },
+    faq: [["How do I answer “why are you changing careers?”", "Tie the old job to the new one with a real example: what you did, what you learned you were good at, and why this role uses it more. Practice it in the Behavioral scenario until it sounds like you."], ["What scenarios can I practice?", "Eight, including Coding, System Design, Behavioral, Product Case and Salary Negotiation."], ["Can I use Live Interview CoPilot in any interview?", "Check each employer's rules first; some don't allow AI assistance during interviews. Practice and Debrief work for every interview."], ["Does the interviewer know my resume?", "Yes. It uses your coaching-call profile and the job you applied to."], ["What's in a debrief?", "What worked, what to fix, and how ready you sound, with the weak spots carried into your next practice."]] }
 ];
 // Old slugs → new pages (keeps earlier links and indexed URLs working)
 const FEATURE_ALIAS = { "ai-resume-builder": "ai-career-coach", "ai-resume-review": "ai-career-coach", "resume-tailor": "tailored-applications", "ai-cover-letter": "tailored-applications", "job-match-auto-apply": "job-match" };
@@ -1495,7 +1538,7 @@ function pageHead({ eyebrow, title, lead, answer, extra = "" }) {
   return `<section class="phead"><div class="wrap">${eyebrow ? `<span class="eyebrow">${eyebrow}</span>` : ""}<h1>${title}</h1>${lead ? `<p class="lead">${lead}</p>` : ""}${answer ? `<p class="answer">${answer}</p>` : ""}${extra}</div></section>`;
 }
 
-function ctaBand(title = "Talk for 10 minutes. Leave with a resume that shows what you can do.", sub = "Free during beta. No resume needed to start.") {
+function ctaBand(title = "Change direction without starting over.", sub = "Talk once. We find what transfers and rewrite it for the job you want.") {
   return `<section class="section"><div class="wrap"><div class="cta-band"><h2>${title}</h2><p>${sub}</p><a class="btn" href="#call">Start a free call</a></div></div></section>`;
 }
 
@@ -1564,11 +1607,11 @@ function render() {
   afterRender = [];
   FAQ_LD = [];
   const page = resolve(name);
-  document.title = page.seoTitle || (page.title === "Yapply" ? "AI Career Coach That Writes Your Resume Live | Yapply" : `${page.title} | Yapply`);
+  document.title = page.seoTitle || (page.title === "Yapply" ? "Change Careers Without Starting Over | Yapply AI Career Coach" : `${page.title} | Yapply`);
   const plain = s => String(s || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
   const clip = t => t.length <= 160 ? t : t.slice(0, 157).replace(/\s+\S*$/, "") + "…";
   const desc = clip(plain(page.desc || (page.html.match(/class="answer">([\s\S]*?)<\/p>/) || [])[1] || (page.html.match(/class="lead"[^>]*>([\s\S]*?)<\/p>/) || [])[1]));
-  $("#meta-desc").setAttribute("content", desc || "Yapply is an AI career coach you talk to. It finds strengths you missed and polishes your resume live while you talk.");
+  $("#meta-desc").setAttribute("content", desc || "Yapply is an AI career coach for people changing direction: talk once, and it rewrites your real experience for the job you want, then applies for you.");
   $("#canonical").setAttribute("href", "https://yapply.ai" + (page.path || "/"));
   $("#app").innerHTML = (page.path ? urlbar(page.path, page.crumbs) : "") + page.html;
   window.scrollTo(0, 0);
@@ -1584,74 +1627,76 @@ function render() {
 // kind: Added · Quantified · Corrected by voice · Reframed · Impact · Strength found
 const NACE = ["Communication", "Critical thinking", "Teamwork", "Leadership", "Technology", "Professionalism"];
 const PERSONAS = {
-  a: { key: "A", name: "Maya Johnson", first: "Maya", img: () => IMG.a, role: "Senior, B.S. Statistics", aim: "Entry-level data analyst", mins: "9:42",
-    line: "“All I have is class projects, a club and a campus job.”", contact: "maya.j@stateu.edu · Columbus, OH",
-    edu: "State University, B.S. Statistics · May 2026 · GPA 3.5",
-    before: [["Projects", "Member, Data Science Club"], ["Experience", "Peer tutor, Math Learning Center: helped students with homework"], ["Skills", "Python, SQL, regression (coursework)"]],
-    sections: [["Projects", "Meal-Plan Retention Study · Data Science Club", ["p1"]], ["Experience", "Peer Tutor · Math Learning Center", ["e1", "e2"]]],
+  a: { key: "A", name: "Maya Johnson", first: "Maya", img: () => IMG.a, role: "IT support specialist, 2 years · regional health network", aim: "Data analyst", mins: "9:42",
+    line: "“I fix laptops. Data teams don't think that counts.”", contact: "maya.johnson@email.com · Columbus, OH",
+    edu: "State University, B.S. Information Systems · 2024",
+    before: [["Experience", "IT support specialist: resolved tickets and helped staff with technical issues."], ["Skills", "Windows, Active Directory, ServiceNow"]],
+    sections: [["Experience", "IT Support Specialist · Regional Health Network", ["e1", "e2", "e3"]]],
     steps: [
-      { ai: "Let's start with the club. What did you actually work on?" },
-      { me: "We did a project on why students drop the meal plan. I cleaned the survey data, mostly.", id: "p1", kind: "Added", html: "Cleaned and analyzed survey data on meal-plan cancellations." },
-      { ai: "How many responses, and which tools?" },
-      { me: "About 2,400 responses. Python and pandas, then a logistic regression.", id: "p1", kind: "Quantified", html: "Cleaned <mark>2,400 survey responses</mark> in <mark>Python (pandas)</mark> and built a <mark>logistic regression</mark> to predict meal-plan cancellations." },
-      { ai: "Did anyone actually use the result?" },
-      { me: "Yeah, dining services changed the plan options the next semester.", id: "p1", kind: "Impact", html: "Cleaned 2,400 survey responses in Python (pandas) and built a logistic regression to predict meal-plan cancellations; <mark>findings shaped dining services' plan options</mark> the next semester.", strength: ["Turns analysis into decisions", "Critical thinking"] },
-      { ai: "Switching to tutoring. How many students a week?" },
-      { me: "Like 15 a week. Oh wait, more like 20 during finals.", id: "e1", kind: "Corrected by voice", html: "Tutored <mark>15–20 students a week</mark> in statistics and calculus." },
-      { ai: "Did you change how the center tutors?" },
-      { me: "I made a sheet of the most common mistakes. The center hands it to everyone now.", id: "e2", kind: "Strength found", html: "<mark>Created a common-mistakes guide</mark> that the center now gives every student.", strength: ["Explains hard ideas simply", "Communication"] }
+      { ai: "You want data analyst roles. What do you already measure in support?" },
+      { me: "We track tickets in ServiceNow. I export them every week to see what's breaking.", id: "e1", kind: "Reframed", html: "Built a weekly <mark>ticket-trend report</mark> from <mark>ServiceNow data</mark> to show which issues were rising." },
+      { ai: "Which tools, and how much data?" },
+      { me: "Excel, and some SQL against the ticket database. About 1,800 tickets a month.", id: "e1", kind: "Quantified", html: "Built a weekly ticket-trend report from ServiceNow data (<mark>~1,800 tickets a month</mark>) using <mark>SQL and Excel</mark>.", strength: ["Works with real operational data", "Technology"] },
+      { ai: "Did anything change because of that report?" },
+      { me: "It showed password resets were a third of all tickets. We rolled out self-service reset and they dropped by half.", id: "e2", kind: "Impact", html: "Showed password resets were <mark>a third of all tickets</mark>; the self-service reset that followed <mark>cut them by half</mark>.", strength: ["Turns data into a decision", "Critical thinking"] },
+      { ai: "Who sees your findings?" },
+      { me: "The IT director, every month. Wait, every two weeks since spring.", id: "e3", kind: "Corrected by voice", html: "Present findings to the IT director <mark>every two weeks</mark>.", strength: ["Explains numbers to leaders", "Communication"] }
     ],
-    extra: [["Data analysis in Python", "Technology", "2,400 responses, pandas, logistic regression"], ["Initiative without a title", "Leadership", "Made a guide nobody asked for; it became standard"]] },
-  b: { key: "B", name: "Lin Chen", first: "Lin", img: () => IMG.b, role: "M.S. Materials Science · F-1, OPT from June 2026", aim: "Data scientist, manufacturing", mins: "11:05",
-    line: "“I explain my work better out loud than in written English.”", contact: "lin.chen@techu.edu · Pittsburgh, PA",
-    edu: "Tech University, M.S. Materials Science · May 2026",
-    before: [["Research", "Responsible for data analysis in battery lab."], ["Research", "Participated in group meetings and presented results."]],
-    sections: [["Research", "Graduate Researcher · Battery Materials Lab", ["r1", "r2", "r3"]]],
+    extra: [["SQL on production data", "Technology", "Queries the ticket database weekly"], ["Reliable stakeholder reporting", "Professionalism", "Biweekly director updates"]],
+    fits: [["Data analyst", "Strong fit", "SQL, weekly reporting, a finding that changed a decision"], ["IT operations analyst", "Strong fit", "Knows the systems and the data behind them"], ["BI analyst", "Worth exploring", "Gap: no dashboard tool yet (Tableau or Power BI)"]] },
+  b: { key: "B", name: "Lin Chen", first: "Lin", img: () => IMG.b, role: "High school biology teacher, 2 years", aim: "Life-science sales", mins: "11:05",
+    line: "“Teaching doesn't sound like sales on paper.”", contact: "lin.chen@email.com · Boston, MA",
+    edu: "State University, B.S. Biology · 2024",
+    before: [["Experience", "Biology teacher: planned lessons and taught five classes."], ["Experience", "Lab coordinator for the science department."]],
+    sections: [["Experience", "Biology Teacher · Lincoln High School", ["t1", "t2", "t3"]]],
     steps: [
-      { ai: "Tell me about the lab work. Say it however it comes out." },
-      { me: "We test battery cells. I wrote Python to read the sensor data... it was 18 months of data.", id: "r1", kind: "Added", html: "Analyzed <mark>18 months</mark> of battery-cell sensor data in <mark>Python</mark>." },
-      { ai: "What did you find in it?" },
-      { me: "One machine had calibration problem, so many tests repeat. After we fix, re-test is less, maybe 30 percent.", id: "r1", kind: "Quantified", html: "Analyzed 18 months of battery-cell sensor data in Python, <mark>tracing repeat failures to a calibration error</mark> and <mark>cutting the lab's re-test rate by 30%</mark>.", strength: ["Root-cause analysis", "Critical thinking"] },
-      { ai: "Who did you show this to, and how?" },
-      { me: "I made dashboard and presented to my professor and the company sponsor.", id: "r2", kind: "Reframed", html: "Built a <mark>Plotly dashboard</mark> and presented findings to the PI and an <mark>industry sponsor</mark>.", strength: ["Explains technical work to industry", "Communication"] },
-      { ai: "Did the sponsor do anything with it?" },
-      { me: "They use my script in their factory now. Two lines, I think.", id: "r3", kind: "Impact", html: "Sponsor adopted the analysis script on <mark>2 production lines</mark>." }
+      { ai: "You're aiming for life-science sales. Where in teaching do you persuade people?" },
+      { me: "Every day, honestly. Getting 150 teenagers to care about cell biology.", id: "t1", kind: "Reframed", html: "Taught biology to <mark>150 students</mark> across five sections, getting teenagers to care about cell biology." },
+      { ai: "Have you ever had to win budget or buy-in?" },
+      { me: "I pitched the principal for new lab equipment. Got about eight thousand dollars approved.", id: "t2", kind: "Quantified", html: "<mark>Secured $8K</mark> in lab-equipment funding by pitching the principal.", strength: ["Makes the case for budget", "Communication"] },
+      { ai: "What happened after the equipment arrived?" },
+      { me: "Our state exam pass rate went from 71 to 84 percent.", id: "t2", kind: "Impact", html: "<mark>Secured $8K</mark> in lab-equipment funding by pitching the principal; state-exam pass rate rose from <mark>71% to 84%</mark> the next year.", strength: ["Ties a pitch to outcomes", "Critical thinking"] },
+      { ai: "Do you deal with any vendors?" },
+      { me: "I'm the department's contact for our lab supplier. I run their product demos for the other teachers.", id: "t3", kind: "Reframed", html: "Department contact for a <mark>lab-supply vendor</mark>; run their product demos for the other teachers.", strength: ["Already knows the buyer's side", "Professionalism"] }
     ],
-    extra: [["Production-grade Python", "Technology", "Script now runs on 2 production lines"], ["Works across lab and industry", "Teamwork", "Presented to PI and sponsor"]] },
-  c: { key: "C", name: "Diego Ramirez", first: "Diego", img: () => IMG.c, role: "B.A. Economics 2024 · grocery shift lead", aim: "Junior data analyst", mins: "10:18",
-    line: "“Recruiters don't see a shift lead as a data analyst.”", contact: "diego.r@email.com · San Antonio, TX",
-    edu: "City University, B.A. Economics · 2024",
-    before: [["Experience", "Cashier and shift lead. Handled customers, opened and closed the store."], ["Education", "B.A. Economics"]],
-    sections: [["Experience", "Shift Lead · Neighborhood Grocery", ["x1", "x2"]], ["Projects", "Senior Thesis · Economics", ["t1"]]],
+    extra: [["Presenting to tough rooms", "Communication", "Five classes a day"], ["Product knowledge", "Technology", "B.S. Biology; runs the lab equipment"]],
+    fits: [["Life-science sales rep", "Strong fit", "Budget pitch, outcome story, vendor-side experience"], ["Customer success (EdTech)", "Strong fit", "Onboards and trains users every day"], ["Instructional designer", "Worth exploring", "Gap: no authoring tool yet (Articulate or Captivate)"]] },
+  c: { key: "C", name: "Diego Ramirez", first: "Diego", img: () => IMG.c, role: "Assistant store manager, 3 years · grocery", aim: "Operations analyst", mins: "10:18",
+    line: "“Recruiters see a store, not the operations I run.”", contact: "diego.ramirez@email.com · San Antonio, TX",
+    edu: "City University, B.A. Economics · 2023",
+    before: [["Experience", "Assistant store manager. Handled customers, scheduling, opened and closed the store."]],
+    sections: [["Experience", "Assistant Store Manager · Riverside Market", ["x1", "x2", "x3"]]],
     steps: [
-      { ai: "You're a shift lead. What do you keep track of during a shift?" },
-      { me: "Sales, waste, who's on the schedule. I keep a spreadsheet for the manager.", id: "x1", kind: "Reframed", html: "Maintained weekly <mark>sales and waste tracking in Excel</mark> for store management." },
-      { ai: "What did that spreadsheet show?" },
-      { me: "Three products we always threw away, so we ordered less. Saved like a thousand a month... maybe twelve hundred.", id: "x1", kind: "Quantified", html: "Maintained weekly sales and waste tracking in Excel; flagged <mark>3 slow-moving products</mark>, cutting waste by <mark>$1.2K a month</mark>.", strength: ["Finds the number that matters", "Critical thinking"] },
-      { ai: "How many people are on your shift?" },
-      { me: "Twelve. I build the schedule around the busy hours.", id: "x2", kind: "Added", html: "Lead a <mark>12-person shift</mark>; build the weekly schedule around <mark>sales peaks</mark>.", strength: ["Leads people under pressure", "Leadership"] },
-      { ai: "Anything from your economics degree you still use?" },
-      { me: "My senior thesis was on food prices. Regression, in Stata.", id: "t1", kind: "Added", html: "Regression analysis of regional <mark>food-price inflation</mark> in <mark>Stata</mark>." }
+      { ai: "You're aiming for operations analyst roles. What do you track every week?" },
+      { me: "Sales, waste, labor hours. I keep a spreadsheet for the district manager.", id: "x1", kind: "Reframed", html: "Own the store's weekly <mark>sales, waste and labor-hours tracking</mark> in Excel for the district manager." },
+      { ai: "What has that spreadsheet shown you?" },
+      { me: "Three products we always threw away. We ordered less and saved about a thousand a month. Maybe twelve hundred.", id: "x1", kind: "Quantified", html: "Own the store's weekly sales, waste and labor-hours tracking in Excel; flagged <mark>3 slow-moving products</mark>, cutting waste by <mark>$1.2K a month</mark>.", strength: ["Finds the number that matters", "Critical thinking"] },
+      { ai: "How do you build the schedule?" },
+      { me: "Twelve people on my shift. I match staffing to the sales peaks, hour by hour.", id: "x2", kind: "Reframed", html: "Schedule a <mark>12-person team</mark> against <mark>hourly sales peaks</mark>.", strength: ["Capacity planning", "Leadership"] },
+      { ai: "Have you changed a process for the whole store?" },
+      { me: "I redid how we receive deliveries. Check-in went from forty minutes to fifteen.", id: "x3", kind: "Impact", html: "<mark>Redesigned delivery receiving</mark>, cutting check-in from <mark>40 to 15 minutes</mark>.", strength: ["Fixes processes", "Professionalism"] }
     ],
-    extra: [["Spreadsheet modeling", "Technology", "Weekly sales and waste model in Excel"], ["Econometrics", "Technology", "Stata regression thesis"]] },
-  d: { key: "D", name: "Priya Nair", first: "Priya", img: () => IMG.d, role: "Operations coordinator, 2 years · logistics", aim: "Associate product manager", mins: "12:30",
-    line: "“My experience is real, but it points the wrong way.”", contact: "priya.nair@email.com · Chicago, IL",
-    edu: "State University, B.S. Supply Chain Management · 2023",
-    before: [["Experience", "Operations coordinator managing vendor schedules."], ["Experience", "Point of contact for vendors and warehouse."]],
-    sections: [["Experience", "Operations Coordinator · Regional Logistics Co.", ["o1", "o2", "o3"]]],
+    extra: [["Spreadsheet modeling", "Technology", "Weekly sales, waste and labor model"], ["Economics background", "Critical thinking", "B.A. Economics"]],
+    fits: [["Operations analyst", "Strong fit", "Forecasting, waste analysis, a process redesign with a number"], ["Inventory or supply chain analyst", "Strong fit", "Ordering decisions backed by data"], ["Project coordinator", "Worth exploring", "Gap: no cross-team project yet"]] },
+  d: { key: "D", name: "Priya Nair", first: "Priya", img: () => IMG.d, role: "Consulting analyst, 2 years · supply-chain clients", aim: "Associate product manager", mins: "12:30",
+    line: "“Consulting decks don't read like product work.”", contact: "priya.nair@email.com · Chicago, IL",
+    edu: "State University, B.S. Industrial Engineering · 2024",
+    before: [["Experience", "Business analyst: supported client engagements and built slide decks."], ["Experience", "Conducted research and analysis for logistics clients."]],
+    sections: [["Experience", "Business Analyst · Supply-chain consulting", ["o1", "o2", "o3"]]],
     steps: [
       { ai: "Where do you want to go next?" },
-      { me: "Product management. But I've only done operations." },
-      { ai: "Let's find the product work hiding in it. What broke most often?" },
-      { me: "Vendors missed their delivery slots, constantly. We have about 40 vendors.", id: "o1", kind: "Reframed", html: "Identified missed delivery slots across <mark>40 vendors</mark> as the top operations problem." },
-      { ai: "What did you do about it?" },
-      { me: "I set up a booking sheet with automatic reminders, then we turned it into a small internal tool with IT.", id: "o1", kind: "Reframed", html: "Identified missed delivery slots across 40 vendors as the top operations problem; <mark>designed a self-serve booking flow</mark> with reminders and <mark>shipped it with IT</mark>.", strength: ["Ships a fix, not just a report", "Technology"] },
-      { ai: "And the result?" },
-      { me: "Missed deliveries dropped about a quarter.", id: "o2", kind: "Quantified", html: "Cut missed deliveries by <mark>25%</mark> within one quarter of launch." },
-      { ai: "How did you decide what to build?" },
-      { me: "I called the warehouse leads and some vendors. Maybe ten calls.", id: "o3", kind: "Strength found", html: "Ran <mark>10 user interviews</mark> with warehouse leads and vendors to define requirements.", strength: ["User research instinct", "Communication"] }
+      { me: "Product management. But I've only done consulting." },
+      { ai: "Let's find the product work in it. On your last project, what was the client's problem?" },
+      { me: "Vendors kept missing their delivery slots. About 40 vendors.", id: "o1", kind: "Reframed", html: "Diagnosed missed delivery slots across <mark>40 vendors</mark> as a logistics client's top problem." },
+      { ai: "How did you work out what to build?" },
+      { me: "I interviewed the warehouse leads and some vendors. Ten calls... no, twelve.", id: "o2", kind: "Corrected by voice", html: "Ran <mark>12 user interviews</mark> with warehouse leads and vendors to define requirements.", strength: ["User research instinct", "Communication"] },
+      { ai: "And what shipped?" },
+      { me: "A self-serve booking flow with reminders. The client's IT team built it with me. Missed deliveries dropped about a quarter.", id: "o1", kind: "Impact", html: "Diagnosed missed delivery slots across 40 vendors; <mark>designed a self-serve booking flow</mark> with reminders, built with the client's IT team, <mark>cutting missed deliveries 25%</mark>.", strength: ["Ships with engineers", "Technology"] },
+      { ai: "How did you decide what went into version one?" },
+      { me: "We ranked features by how many missed slots each would prevent, and cut the rest.", id: "o3", kind: "Strength found", html: "<mark>Prioritized v1 by impact</mark> on missed slots and cut lower-value features.", strength: ["Prioritizes like a PM", "Critical thinking"] }
     ],
-    extra: [["Owns a metric", "Professionalism", "Missed deliveries, tracked to the quarter"], ["Cross-team delivery", "Teamwork", "Built the tool with IT"]] }
+    extra: [["Executive communication", "Communication", "Client steering-committee updates"], ["Structured problem solving", "Critical thinking", "Consulting training"]],
+    fits: [["Associate product manager", "Strong fit", "User interviews, a spec that shipped, impact-based prioritization"], ["Business operations (BizOps)", "Strong fit", "Diagnoses problems with data, works across teams"], ["Product operations", "Worth exploring", "Gap: no experience with product analytics tools yet"]] }
 };
 
 function personaReport(p) {
@@ -1682,7 +1727,7 @@ function heroStage() {
       k = i; const p = PERSONAS[keys[i]];
       root.querySelectorAll(".av").forEach((b, j) => { b.setAttribute("aria-pressed", j === i); });
       root.querySelector(".st-img").style.backgroundImage = `url(${p.img()})`;
-      root.querySelector(".st-who").innerHTML = `<b>${p.name}</b><span>${p.role}</span>`;
+      root.querySelector(".st-who").innerHTML = `<b>${p.name}</b><span>${ICP[p.key].tag}</span>`;
       root.querySelector(".st-call").setAttribute("href", "#call-" + keys[i]);
       root.querySelector(".st-call span").textContent = `Hear ${p.first}'s call`;
       const qs = p.steps.filter(s => s.ai), ms = p.steps.filter(s => s.me && s.id);
@@ -1719,11 +1764,11 @@ route("call", () => {
       note.classList.remove("hidden");
     });
   });
-  return { title: "Start a free call", seoTitle: "Start a Free Call with Your AI Career Coach | Yapply", desc: "Talk with Yapply's AI career coach for 10 minutes. It digs into what you've done and writes your resume live while you speak.", path: "/call", crumbs: [["Home", "home"], ["Call"]],
+  return { title: "Start a free call", seoTitle: "Start a Free Call with Your AI Career Coach | Yapply", desc: "Talk with Yapply's AI career coach for 10 minutes. It finds what transfers from your current job and rewrites your resume for the direction you want, live.", path: "/call", crumbs: [["Home", "home"], ["Call"]],
     html: `<section class="lobby"><div class="wrap lobby-in">
       <div class="orb big" aria-hidden="true"></div>
       <h1 class="serif">Your coach is ready.</h1>
-      <p class="lead muted">About 10 minutes. No resume needed. Talk about anything you've done (classes, a club, a job outside your field) and watch your resume being written while you speak.</p>
+      <p class="lead muted">About 10 minutes. No resume needed. Tell the coach where you want to go, or that you're not sure yet, then talk about your current job. Watch it rewrite your experience for the new direction while you speak.</p>
       <div class="row center"><button class="btn primary lg" id="mic" type="button">Allow microphone & start</button></div>
       <p id="mic-note" class="answer hidden" style="max-width:560px;margin:18px auto 0"></p>
       <p class="small muted" style="margin-top:34px">Or hear a sample call first:</p>
@@ -1777,20 +1822,20 @@ pattern(/^report-([abcd])$/, k => {
   const p = PERSONAS[k], r = personaReport(p), n = p.steps.length;
   const comp = NACE.map(c => [c, r.strengths.filter(s => s[1] === c).length]).filter(([, v]) => v);
   const max = Math.max(...comp.map(c => c[1]), 1);
-  return { title: `Call report: ${p.name}`, seoTitle: `Sample Career Coach Report: ${ICP[p.key].tag} | Yapply`, desc: `A sample Yapply call report: how ${p.first}'s resume was written live during the call, before-and-after lines, and the strengths the AI career coach uncovered.`, path: "/report/sample-" + k, crumbs: [["Home", "home"], ["Call", "call"], [p.first + "'s report"]],
+  return { title: `Call report: ${p.name}`, seoTitle: `Sample Career Coach Report: ${ICP[p.key].tag} | Yapply`, desc: `A sample Yapply career-change report: how ${p.first}'s resume was rewritten for ${p.aim.toLowerCase()} roles during the call, which directions fit, and what transfers.`, path: "/report/sample-" + k, crumbs: [["Home", "home"], ["Call", "call"], [p.first + "'s report"]],
     html: `<section class="rep-head"><div class="wrap">
-      <div class="rh-grid"><div><span class="eyebrow">Call report · sample · ${p.mins}</span><h1 class="serif">${p.first} talked for ${p.mins.split(":")[0]} minutes. Here's what the coach found.</h1>
+      <div class="rh-grid"><div><span class="eyebrow">Call report · sample · ${p.mins}</span><h1 class="serif">${p.first} talked for ${p.mins.split(":")[0]} minutes. Here's what transfers.</h1>
         <p class="lead muted">${p.role}. Aiming for ${p.aim.toLowerCase()}. Came in saying: <i>${p.line}</i></p></div>
         <div class="rh-photo" style="background-image:url(${p.img()})"></div></div>
-      <div class="kpis">${[[r.questions, "follow-up questions"], [r.log.length, "lines written live"], [r.corrections, "rewrites as the story got better"], [r.numbers, "numbers you didn't have before"]].map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("")}</div>
+      <div class="kpis">${[[r.questions, "follow-up questions"], [r.log.length, "lines written live"], [r.corrections, "rewrites as the story got better"], [r.numbers, "numbers for the new role"]].map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("")}</div>
     </div></section>
 
     <section class="section"><div class="wrap">
-      <span class="eyebrow">01 · Before and after</span><h2 class="serif">Same person. Same experience. Different resume.</h2>
+      <span class="eyebrow">01 · Before and after</span><h2 class="serif">Same experience. New direction.</h2>
       <div class="ba2">
-        <div class="ba-col old"><h4>What ${p.first} had</h4>${p.before.map(([h, t]) => `<p><small>${h}</small>${esc(t)}</p>`).join("")}<p class="ba-stat">0 numbers · ${p.before.length} lines describing duties</p></div>
+        <div class="ba-col old"><h4>Written for the old job</h4>${p.before.map(([h, t]) => `<p><small>${h}</small>${esc(t)}</p>`).join("")}<p class="ba-stat">0 numbers · ${p.before.length} lines in the old field's language</p></div>
         <div class="ba-arrow" aria-hidden="true">→</div>
-        <div class="ba-col new"><h4>After one call</h4>${p.sections.map(([h, sub, ids]) => `<p><small>${h} · ${sub}</small></p>${ids.map(id => `<p>${r.lines[id]}</p>`).join("")}`).join("")}<p class="ba-stat">${r.numbers} numbers · every line a result</p></div>
+        <div class="ba-col new"><h4>Written for ${p.aim.toLowerCase()} roles</h4>${p.sections.map(([h, sub, ids]) => `<p><small>${h} · ${sub}</small></p>${ids.map(id => `<p>${r.lines[id]}</p>`).join("")}`).join("")}<p class="ba-stat">${r.numbers} numbers · every line evidence for the new role</p></div>
       </div>
     </div></section>
 
@@ -1803,15 +1848,17 @@ pattern(/^report-([abcd])$/, k => {
     </div></section>
 
     <section class="section"><div class="wrap">
-      <span class="eyebrow">03 · What the coach dug up</span><h2 class="serif">Strengths ${p.first} never wrote down</h2>
+      <span class="eyebrow">03 · Where the evidence points</span><h2 class="serif">Directions ${p.first}'s experience already fits</h2>
+      <div class="fits">${p.fits.map(([role, lvl, why]) => `<div class="fit ${lvl.startsWith("Strong") ? "strong" : ""}"><span class="tag">${lvl}</span><h3>${role}</h3><p class="small muted">${why}</p></div>`).join("")}</div>
+      <h3 style="margin:48px 0 16px">What transfers</h3>
       <div class="str-grid">${r.strengths.map(([name, c, ev]) => `<div class="str"><span class="tag">${c}</span><h3>${name}</h3><p class="small muted">Evidence: ${esc(ev)}</p></div>`).join("")}</div>
       <div class="tmap"><h3>Talent map <span class="small muted">· NACE career-readiness competencies, by evidence found in the call</span></h3>
         ${comp.map(([c, v]) => `<div class="tm-row"><span>${c}</span><div class="tm-bar"><i style="width:${(v / max) * 100}%"></i></div><b class="num">${v}</b></div>`).join("")}</div>
     </div></section>
 
     <section class="section"><div class="wrap rep-final">
-      <div><span class="eyebrow">04 · The resume</span><h2 class="serif">Ready the moment the call ended</h2><p class="muted">One page, ATS-friendly, every line from what ${p.first} said. Next: tailor it to a job, or practice the interview with the same coach.</p>
-        <div class="row" style="margin-top:20px"><a class="btn primary lg" href="#call">Start my own call</a><a class="btn" href="#feature-tailored-applications">Tailor to a job</a><a class="btn" href="#feature-ai-mock-interview">Practice the interview</a></div>
+      <div><span class="eyebrow">04 · The resume</span><h2 class="serif">A ${p.aim.toLowerCase()} resume, ready when the call ended</h2><p class="muted">One page, ATS-friendly, every line from what ${p.first} said. Next: swipe right on matched jobs and Yapply applies with a version tailored to each, or practice “why are you switching?” with the same coach.</p>
+        <div class="row" style="margin-top:20px"><a class="btn primary lg" href="#call">Start my own call</a><a class="btn" href="#feature-job-match">See matched jobs</a><a class="btn" href="#feature-ai-mock-interview">Practice the interview</a></div>
         <p class="small muted" style="margin-top:22px">Other sample reports: ${Object.keys(PERSONAS).filter(x => x !== k).map(x => `<a href="#report-${x}">${PERSONAS[x].first} (${ICP[PERSONAS[x].key].tag.toLowerCase()})</a>`).join(" · ")}</p></div>
       ${resumePaper(p, r.lines, false)}
     </div></section>` };
@@ -2086,14 +2133,14 @@ route("tool-h1b-sponsor-checker", () => {
 // ---------- PRODUCT PAGES ----------
 // Live demo: the conversation on the left writes the resume on the right.
 const LIVE_STEPS = [
-  { who: "ai", t: "Let's start with something you built. What are you proud of?" },
-  { who: "me", t: "I made a study-room booking app for the CS club.", line: ["b1", "Built a booking app for the CS club's study rooms."] },
-  { who: "ai", t: "Nice. How many people used it?" },
-  { who: "me", t: "Around 200... actually, closer to 300.", line: ["b1", "Built a <mark>React + Firebase</mark> booking app used by <mark>300 CS club members</mark>."] },
-  { who: "ai", t: "What changed after it launched?" },
-  { who: "me", t: "No more double-bookings, and the officers stopped tracking it in a spreadsheet.", line: ["b1", "Built a React + Firebase booking app used by 300 CS club members, <mark>eliminating double-bookings</mark> and replacing a manual spreadsheet."] },
-  { who: "ai", t: "Got it. Did you do it alone?" },
-  { who: "me", t: "I led it, two friends helped with the design.", line: ["b2", "<mark>Led</mark> a 3-person team from idea to launch in 4 weeks."] }
+  { who: "ai", t: "You want customer success roles. Which accounts do you know best?" },
+  { who: "me", t: "I handle tickets for our biggest clients, about 30 accounts.", line: ["b1", "Primary support contact for <mark>30 enterprise accounts</mark>."] },
+  { who: "ai", t: "Have you ever kept one from leaving?" },
+  { who: "me", t: "One was about to churn, so I set up weekly check-ins and they renewed. Around 80K a year... actually 120K.", line: ["b1", "Primary support contact for 30 enterprise accounts; <mark>saved a $120K/year renewal</mark> by running weekly check-ins with an at-risk client."] },
+  { who: "ai", t: "What else would a customer success manager recognize?" },
+  { who: "me", t: "I wrote an onboarding guide so new clients stopped asking the same questions.", line: ["b2", "<mark>Wrote the onboarding guide</mark> now sent to every new client."] },
+  { who: "ai", t: "Did ticket volume change?" },
+  { who: "me", t: "New-client tickets dropped by about a third.", line: ["b2", "Wrote the onboarding guide now sent to every new client, <mark>cutting new-client tickets by a third</mark>."] }
 ];
 function liveDemo(id = "live") {
   onRender(() => {
@@ -2116,94 +2163,106 @@ function liveDemo(id = "live") {
       <div class="wave" aria-hidden="true">${Array.from({ length: 28 }, (_, i) => `<i style="animation-delay:${(i * 0.07).toFixed(2)}s"></i>`).join("")}</div>
       <div class="lv-chat" aria-live="polite"></div></div>
     <div class="paper" aria-label="Resume being written">
-      <div class="row" style="justify-content:space-between"><span class="eyebrow" style="margin:0">Your resume · writing live</span><button class="btn sm lv-replay" type="button">▶ Watch it write</button></div>
-      <h3 style="margin:10px 0 0">Jordan Lee</h3><p class="small muted" style="margin:0 0 10px">jordan@umich.edu · Ann Arbor, MI</p>
-      <h5>Education</h5><p class="small">University of Michigan, B.S. Statistics, May 2027 · GPA 3.6</p>
-      <h5>Projects</h5><p class="small"><b>Study Room Booker</b> · CS Club</p>
+      <div class="row" style="justify-content:space-between"><span class="eyebrow" style="margin:0">Support → Customer success · writing live</span><button class="btn sm lv-replay" type="button">▶ Watch it write</button></div>
+      <h3 style="margin:10px 0 0">Jordan Lee</h3><p class="small muted" style="margin:0 0 10px">jordan.lee@email.com · Austin, TX · Target: Customer Success Manager</p>
+      <h5>Experience</h5><p class="small"><b>Customer Support Specialist</b> · B2B software company · 2023–now</p>
       <ul class="small"><li data-l="b1"></li><li data-l="b2"></li></ul>
-      <h5>Experience</h5><p class="small muted">Next: your campus job…</p>
+      <h5>Education</h5><p class="small">University of Texas, B.A. Communication · 2023</p>
+      <p class="small muted">Next: what else carries over to customer success…</p>
     </div></div>`;
 }
 
-function whoCard(k) {
+function switchCard(k) {
   const c = ICP[k], p = PERSONAS[k.toLowerCase()], r = personaReport(p), last = p.sections[0][2][0];
   return `<article class="who-card">
     <div class="wc-img" style="background-image:url(${p.img()})"><div class="wc-shade"></div>
-      <span class="wc-tag"><b>${k}</b>${c.tag}</span>
-      <blockquote class="serif">${c.pain}</blockquote><p class="wc-who">${c.who}</p></div>
-    <div class="wc-body"><p>${c.fix}</p>
-      <div class="wc-ba"><p class="b"><small>Before</small>${esc(p.before[0][1])}</p><p class="a"><small>After one call</small>${r.lines[last]}</p></div>
-      <a class="wc-link" href="#report-${k.toLowerCase()}">See ${p.first}'s call report →</a></div>
+      <span class="wc-tag"><b>↗</b>${c.from} → ${c.to}</span>
+      <blockquote class="serif">${c.pain}</blockquote><p class="wc-who">${p.name} · ${p.role}</p></div>
+    <div class="wc-body">
+      <div class="wc-ba"><p class="b"><small>Written for the old job</small>${esc(p.before[0][1])}</p><p class="a"><small>Rewritten for ${p.aim.toLowerCase()} roles</small>${r.lines[last]}</p></div>
+      <a class="wc-link" href="#report-${k.toLowerCase()}">See ${p.first}'s career-change report →</a></div>
   </article>`;
 }
 function statBand() {
   return `<div class="stat-band">${STATS.map(([n, t, u, s]) => `<div><b class="serif">${n}</b><p>${t}</p><a class="small muted" href="${u}">Source: ${s} ↗</a></div>`).join("")}</div>`;
 }
 const HOME_FAQ = [
-  ["What is an AI career coach?", "An AI career coach talks with you about your goals and experience and helps you act on them. Yapply's coach focuses on one thing most people get stuck on: finding what you've actually done well and turning it into a resume, live, while you talk."],
-  ["How is Yapply different from an AI resume builder?", "A resume builder starts from what you type. Yapply starts with a conversation: it asks follow-up questions until it finds the numbers and results, and writes them onto your resume during the call."],
-  ["How do I write a resume with no internship experience?", "Use class projects, research, clubs and part-time jobs, and write each as a result with a number. Yapply's coach asks the questions that pull those numbers out of you."],
-  ["I'm an international student. Can I talk in imperfect English?", "Yes. Speak naturally; Yapply writes clear, recruiter-ready English from what you mean, and you approve every line."],
-  ["My first job isn't in my field. Can Yapply help me switch?", "Yes. Tell the coach the role you want; it finds the transferable results in your current job and rewrites them for that role."],
-  ["What's in the report after a call?", "A before-and-after view of your resume, a timeline of every line written live during the call, and the strengths the coach found, each backed by what you said."],
-  ["Will the AI make things up?", "No. Every line comes from what you said or uploaded, and you can see and edit everything."]
+  ["How do I write a resume for a career change?", "Keep your real job titles, but rewrite each bullet as evidence for the new role: the result, the number, and the skill the new field asks for. Yapply's coach finds those results by asking follow-up questions, then rewrites them live while you talk."],
+  ["What transferable skills do I have?", "More than your title suggests. Reporting, scheduling, presenting, budgeting, user interviews: the coach finds them in your current job and shows which roles they fit."],
+  ["Can I change careers without going back to school?", "Often, yes. Many switches in your first three years (support to data, teaching to sales, retail to operations, consulting to product) are won on evidence you already have, written in the new field's language."],
+  ["I'm not sure which direction to switch to. Can Yapply help?", "Yes. Start with what you've done; the coach shows which roles your experience already points to, with the evidence for each."],
+  ["Does Yapply apply to jobs for me?", "Yes. Swipe right on a matched job and Yapply applies with a resume tailored to it, and you get a receipt and screenshot for every application."],
+  ["Will it make up experience to fit the new role?", "No. Yapply only rewrites what you said. Skills the new role wants that you don't have are shown as gaps, not added."]
 ];
 route("home", () => ({
-  title: "Yapply", seoTitle: "AI Career Coach That Writes Your Resume Live | Yapply",
-  desc: "Talk with Yapply's AI career coach for 10 minutes. It digs into what you've done, finds strengths you missed, and polishes your resume live while you talk.",
-  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "AI career coach you talk to: it finds your strengths and writes your resume live during the call.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
+  title: "Yapply", seoTitle: "Change Careers Without Starting Over | Yapply AI Career Coach",
+  desc: "Changing direction in your first three years? Talk once with Yapply's AI career coach. It finds what transfers, rewrites your resume for the job you want, and applies for you.",
+  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "AI career coach for career changers: finds what transfers from your current job, rewrites your resume for the role you want and applies for you.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
   html: `
   <section class="hero2"><div class="wrap h2-grid">
     <div class="h2-left">
-      <p class="proof"><span class="pulse"></span>Free 10-minute call · No resume needed</p>
-      <h1 class="serif"><span class="h1-kicker">Yapply · AI career coach</span>You've done more than your resume says.</h1>
+      <p class="proof"><span class="pulse"></span>For your first three years at work · Free call</p>
+      <h1 class="serif"><span class="h1-kicker">Yapply · AI career coach</span>Change direction without starting over.</h1>
       <div class="h2-bottom">
-        <p class="h2-lead">Class projects, a campus job, a first job outside your field: it all counts, if someone asks the right questions. Talk with Yapply's AI career coach for 10 minutes. It asks the questions that dig out your real results, and rewrites your resume <b>live, while you're still talking</b>.</p>
-        <div class="row"><a class="btn primary lg" href="#call">Start a free call</a><a class="btn lg" href="#report-a">See a sample report</a></div>
+        <p class="h2-lead">Talk once. We find what transfers from your current work and rewrite your real experience for the job you want. <b>Then swipe right on the roles you like, and we apply for you.</b></p>
+        <div class="row"><a class="btn primary lg" href="#call">Start a free call</a><a class="btn lg" href="#report-c">See a career-change report</a></div>
+        <p class="small muted" style="margin-top:14px">Nothing invented. Every line comes from what you said.</p>
       </div>
     </div>
     ${heroStage()}
   </div></section>
 
-  <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">How a call works</span><h2 class="serif">Most tools wait for you to write. Yapply asks.</h2><p class="muted">Two things happen at once on every call: the coach digs, and your resume gets written.</p></div>
-    <div class="how3">
-      <div><span class="n serif">1</span><h3>It digs</h3><p class="muted">“How many people used it? What changed after?” The coach keeps asking until it finds the result and the number behind each thing you did.</p></div>
-      <div><span class="n serif">2</span><h3>It writes while you talk</h3><p class="muted">Full duplex: each answer lands on your resume within seconds. Correct it out loud (“no, closer to 300”) and the line updates.</p></div>
-      <div><span class="n serif">3</span><h3>You get a report</h3><p class="muted">Before and after, every live edit on a timeline, and the strengths it found, each backed by what you said.</p></div>
-    </div>
-    <div style="margin-top:56px">${liveDemo("live-home")}</div>
-  </div></section>
-
   <section class="section roomy dark-sec"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">The articulation gap</span><h2 class="serif">The problem isn't your experience. It's how it's written.</h2><p>Employers want proof in concrete examples. Most people have the examples, but write them as duties, or don't count them at all.</p></div>
+    <div class="sec-head"><span class="eyebrow">The problem</span><h2 class="serif">You're not starting over. You're being misread.</h2><p>Most people changing direction apply first and figure out how to explain it later. Recruiters read the old title, not what you can do.</p></div>
     ${statBand()}
   </div></section>
 
   <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Who Yapply is for</span><h2 class="serif">Your experience is worth more than your resume shows.</h2><p class="muted">Four people we built Yapply for. If one sounds like you, the bottleneck isn't you. It's the page.</p></div>
-    <div class="who-grid">${["A", "B", "C", "D"].map(whoCard).join("")}</div>
-  </div></section>
-
-  <section class="section roomy"><div class="wrap grid-2 signals-wrap">
-    <div><span class="eyebrow">Quick check</span><h2 class="serif">Two or more of these? Talk to the coach.</h2><p class="muted">These five signals mean your resume is underselling you.</p><a class="btn primary lg" href="#call" style="margin-top:12px">Start a free call</a></div>
-    <ol class="signals">${SIGNALS.map(([t, d]) => `<li><b>${t}</b><span class="small muted">${d}</span></li>`).join("")}</ol>
+    <div class="sec-head"><span class="eyebrow">Same experience. New direction.</span><h2 class="serif">Four switches, one call each</h2><p class="muted">The most common ways people move in their first few years. Nothing below was invented; each line came out of a conversation.</p></div>
+    <div class="who-grid">${["A", "B", "C", "D"].map(switchCard).join("")}</div>
+    <p class="small muted" style="margin-top:18px">Sample calls with fictional people, built on the most common switch paths in Huntr's career-changer research.</p>
   </div></section>
 
   <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">After the call</span><h2 class="serif">One conversation powers everything else</h2><p class="muted">Your call becomes a profile the coach reuses: tailored resumes, cover letters in your voice, interview practice and job matches.</p></div>
-    <div class="feat-grid">${FEATURES.map(f => `<a class="feat" href="#feature-${f.slug}">${f.flag ? '<span class="tag hi">Core</span>' : ""}<h3>${f.name}</h3><p class="muted">${f.short}</p><span class="go">→</span></a>`).join("")}</div>
-    <div class="vs-line"><p><b>Swipe-to-apply apps send more applications. Yapply makes each one worth sending.</b> <span class="muted">Sprout and Sorce send the resume you already have; Yapply rewrites it with you first.</span></p><a href="#compare">Compare →</a></div>
+    <div class="sec-head"><span class="eyebrow">How it works</span><h2 class="serif">Talk once. Rewrite. Apply.</h2></div>
+    <div class="how3">
+      <a class="h3l" href="#feature-ai-career-coach"><span class="n serif">1</span><h3>Talk once</h3><p class="muted">Tell the coach where you want to go, or that you're not sure. It asks the follow-ups a recruiter in that field would, and rewrites what transfers while you talk.</p></a>
+      <a class="h3l" href="#feature-tailored-applications"><span class="n serif">2</span><h3>Rewritten for the job you want</h3><p class="muted">Every application gets its own resume in the new field's language, built only from what you actually did.</p></a>
+      <a class="h3l" href="#feature-application-tracker"><span class="n serif">3</span><h3>Swipe right. We apply.</h3><p class="muted">Only fresh, verified jobs. Every application comes with a receipt, a screenshot and the exact resume sent.</p></a>
+    </div>
+    <div style="margin-top:56px">${liveDemo("live-home")}</div>
   </div></section>
 
-  <section class="section roomy"><div class="wrap grid-2">
-    <div><span class="eyebrow">Then apply</span><h2 class="serif">Entry-level roles you can actually get</h2><p class="muted">Internships and entry-level jobs only, with H-1B sponsorship labels and deadlines.</p>
-      <div class="row"><a class="btn" href="#jobs">Search all jobs</a><a class="btn" href="#jobs-internships">Internships for college students</a><a class="btn" href="#international-students">International students</a></div></div>
-    <div class="jobs">${JOBS.filter(j => j.sponsor === "yes").slice(0, 4).map(jobRow).join("")}<div>${DEMO}</div></div>
+  <section class="section roomy"><div class="wrap grid-2 dir-wrap">
+    <div><span class="eyebrow">Not sure where yet?</span><h2 class="serif">Start with what you've done.</h2><p class="muted" style="font-size:1.1rem;line-height:1.65">You don't need a destination to start. Talk about your current job; the coach tells you which roles your experience already fits, what proves it, and what's missing.</p><a class="btn primary lg" href="#call" style="margin-top:10px">Find my direction</a></div>
+    <div class="fits-card"><span class="eyebrow" style="margin:0">From Diego's call · assistant store manager</span>${PERSONAS.c.fits.map(([role, lvl, why]) => `<div class="fit-row ${lvl.startsWith("Strong") ? "strong" : ""}"><div><b>${role}</b><span>${why}</span></div><span class="tag">${lvl}</span></div>`).join("")}</div>
   </div></section>
 
-  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions about the AI career coach</h2>${faqBlock(HOME_FAQ)}</div></section>
-  ${ctaBand("Your resume is underselling you. Fix it in one call.", "Ten minutes with the coach. Leave with a resume that shows it, and a report on what you're good at.")}`
+  <section class="section roomy"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Popular switches</span><h2 class="serif">Where people switch from, and to</h2><p class="muted">The fields people leave most often, and the ones they move into most.</p></div>
+    <div class="paths">${PATHS.map(([a, b, d, h]) => `<a class="path" href="#${h}"><span class="pf-from">${a}</span><span class="pf-arrow">→</span><span class="pf-to serif">${b}</span><p class="small muted">${d}</p></a>`).join("")}</div>
+    <p class="small muted" style="margin-top:16px">Source: <a href="https://huntr.co/research/career-changer">Huntr Career Changer Research ↗</a>, 15,175 job seekers. Paths 3–6 pair the origins most likely to apply outside their field with the most popular destinations.</p>
+  </div></section>
+
+  <section class="section roomy dark-sec"><div class="wrap">
+    <div class="promise"><span class="eyebrow">Our promise</span><h2 class="serif">Reframed, never invented.</h2><p>Changing fields is exactly when AI tools are tempted to invent the skills a new role asks for. Yapply only rewrites what you actually did, in the new field's language.</p></div>
+    <div class="prom4">${[["No invented answers", "Every line traces back to something you said. Gaps are shown as gaps."], ["Recommendations that listen", "Skipped jobs never come back. Your direction comes first."], ["Jobs that exist", "Re-checked daily; ghost jobs and scam patterns filtered out."], ["Proof, not a counter", "Receipt, screenshot and the exact resume for every application."]].map(([t, d]) => `<div><h3>${t}</h3><p>${d}</p></div>`).join("")}</div>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap grid-2 signals-wrap">
+    <div><span class="eyebrow">Built for years one to three</span><h2 class="serif">Two or more of these? Talk to the coach.</h2><p class="muted">These five signals mean your experience is fine. It's written for the wrong job.</p><a class="btn primary lg" href="#call" style="margin-top:12px">Start a free call</a></div>
+    <ol class="signals">${SIGNALS.map(([t, d]) => `<li><b>${t}</b><span class="small muted">${d}</span></li>`).join("")}</ol>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap grid-2" style="align-items:center">
+    <div><span class="eyebrow">Interview</span><h2 class="serif">Nail “Why are you switching?”</h2><p class="muted" style="font-size:1.1rem;line-height:1.65">It's the question that decides a career-change interview. Practice it with an AI interviewer that knows your old job, your new direction and your resume, so your answer and your resume tell the same story.</p><a class="btn lg" href="#feature-ai-mock-interview">AI Mock Interview →</a></div>
+    <div class="fv">${fvInterview()}</div>
+  </div></section>
+
+  <section class="section roomy"><div class="wrap"><div class="price-tease"><div><span class="eyebrow">Pricing</span><h2 class="serif">Free to find your story. Pay when you apply.</h2><p class="muted">The call, your new-direction resume and your matches are free. A subscription starts when you send your first application.</p></div><a class="btn lg" href="#pricing">See pricing →</a></div></div></section>
+
+  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions career changers ask</h2>${faqBlock(HOME_FAQ)}</div></section>
+  ${ctaBand("Your next role is already in your experience.", "Talk once. Leave with a resume for the job you want, and let Yapply apply for you.")}`
 }));
 
 function mockInterviewDemo() {
@@ -2266,29 +2325,29 @@ route("signup", () => {
 const FP_OK = '<span class="ck" aria-hidden="true">✓</span>';
 function fvCoach() {
   return `<div class="fv-phone"><div class="fv-top"><span class="rec"></span>Coach · live <span class="muted">3:12</span></div>
-    <div class="fv-b ai">How many students did you tutor a week?</div>
-    <div class="fv-b me">Like 15 a week.</div>
-    <div class="fv-card folded"><small>Experience · Peer Tutor</small><span>Updated below ↓</span></div>
-    <div class="fv-b me cut"><em>You cut in</em>Wait, more like 20 during finals.</div>
-    <div class="fv-card pop"><small>Experience · Peer Tutor</small><p>Tutored <del>15 students a week</del> <mark>15–20 students a week</mark> in statistics and calculus.</p><span class="src">From your words · 3:12</span></div>
-    <div class="fv-b ai">Did you change how the center tutors?</div>
+    <div class="fv-b ai">You're aiming for operations. What do you track every week?</div>
+    <div class="fv-b me">Sales, waste, labor hours. A spreadsheet for my district manager.</div>
+    <div class="fv-card folded"><small>Assistant Store Manager → Operations</small><span>Updated below ↓</span></div>
+    <div class="fv-b me cut"><em>You cut in</em>Oh, and it flagged three products we kept throwing away.</div>
+    <div class="fv-card pop"><small>Assistant Store Manager → Operations</small><p><del>Handled scheduling and closing.</del> <mark>Own weekly sales, waste and labor tracking in Excel</mark>; flagged 3 slow-moving products.</p><span class="src">From your words · 3:12 · matches “inventory analysis”</span></div>
+    <div class="fv-b ai">How much did ordering less save?</div>
     <div class="fv-foot"><span>View draft</span><span class="wave mini" aria-hidden="true">${"<i></i>".repeat(14)}</span></div></div>`;
 }
 function fvMatch() {
-  return `<div class="fv-stack"><div class="chips">${["Data analyst", "Entry level", "NYC or remote", "$70K+", "Sponsors H-1B"].map(c => `<span class="chip on">${c}</span>`).join("")}</div>
-    <div class="jcard"><div class="jc-head"><span class="logo-sq" style="background:#2b37d4">K</span><div><b>Data Analyst, New Grad</b><span>Kestrel Analytics · New York, NY · Hybrid</span><span>$78K–$92K · Posted 6 hours ago</span></div>
+  return `<div class="fv-stack"><div class="chips">${["Data analyst", "From IT support", "NYC or remote", "$70K+", "0–3 years"].map(c => `<span class="chip on">${c}</span>`).join("")}</div>
+    <div class="jcard"><div class="jc-head"><span class="logo-sq" style="background:#2b37d4">K</span><div><b>Data Analyst</b><span>Kestrel Analytics · New York, NY · Hybrid</span><span>$78K–$92K · Posted 6 hours ago</span></div>
       <div class="ring" style="--p:92"><b>92</b><small>match</small></div></div>
       <div class="why"><span class="eyebrow" style="margin:0">Why we recommend you</span>
-        <p>${FP_OK}Your 2,400-response survey analysis matches their <mark>SQL + Python</mark> ask</p><p>${FP_OK}Entry level, no internship required</p><p>${FP_OK}Sponsors H-1B (likely) and fits your NYC filter</p></div>
+        <p>${FP_OK}Your weekly ticket-trend reports match their <mark>SQL + reporting</mark> ask</p><p>${FP_OK}Asks for 1–3 years of experience; yours counts</p><p>${FP_OK}Your director updates match “present to stakeholders”</p></div>
       <div class="swipe"><span class="sw no">✕ Skip</span><span class="hint">Swipe</span><span class="sw yes">Apply ✓</span></div></div>
     <p class="small muted center">Example listing with a fictional employer.</p></div>`;
 }
 function fvTailor() {
-  return `<div class="fv-stack"><div class="jd"><span class="eyebrow" style="margin:0">Job description · Kestrel Analytics</span>
-      <div class="chips">${[["SQL", 1], ["Python", 1], ["A/B testing", 1], ["Stakeholder communication", 1], ["Tableau", 0]].map(([k, y]) => `<span class="chip ${y ? "on" : "gap"}">${y ? "✓" : "–"} ${k}</span>`).join("")}</div></div>
+  return `<div class="fv-stack"><div class="jd"><span class="eyebrow" style="margin:0">Job description · Data Analyst, Kestrel Analytics</span>
+      <div class="chips">${[["SQL", 1], ["Excel", 1], ["Reporting", 1], ["Stakeholder communication", 1], ["Tableau", 0]].map(([k, y]) => `<span class="chip ${y ? "on" : "gap"}">${y ? "✓" : "–"} ${k}</span>`).join("")}</div></div>
     <div class="paper rp diffp"><span class="eyebrow" style="margin:0">Your resume, tailored for this job</span>
-      <p><del>Cleaned and analyzed survey data on meal-plan cancellations.</del></p>
-      <p>Analyzed 2,400 survey responses in <mark>SQL</mark> and <mark>Python</mark> and built a logistic regression; <mark>presented findings to dining services</mark>, who changed plan options.</p>
+      <p><del>Resolved tickets and helped staff with technical issues.</del></p>
+      <p>Built a weekly ticket-trend report in <mark>SQL</mark> and <mark>Excel</mark> (~1,800 tickets a month) and <mark>presented findings to the IT director</mark>; password-reset tickets fell by half.</p>
       <p class="moved">↑ Moved to top: most relevant to this role</p>
       <div class="gapnote"><b>Gap, not added:</b> Tableau. You didn't mention it in your call. <span class="lnk">Talk it through →</span></div></div></div>`;
 }
@@ -2300,7 +2359,7 @@ function fvVerified() {
     <p class="small muted center">Example listings with fictional employers.</p></div>`;
 }
 function fvTracker() {
-  return `<div class="fv-stack"><div class="jcard"><div class="jc-head"><span class="logo-sq" style="background:#2b37d4">K</span><div><b>Data Analyst, New Grad</b><span>Kestrel Analytics</span></div><span class="tag warn">Viewed</span></div>
+  return `<div class="fv-stack"><div class="jcard"><div class="jc-head"><span class="logo-sq" style="background:#2b37d4">K</span><div><b>Data Analyst</b><span>Kestrel Analytics</span></div><span class="tag warn">Viewed</span></div>
       <ol class="stl">${[["Applied", "Nov 24, 9:41 AM · confirmation #GH-48213", 1], ["Viewed", "Nov 25, 2:10 PM", 1], ["Interview", "Waiting", 0]].map(([a, b, d]) => `<li class="${d ? "done" : ""}"><b>${a}</b><span>${b}</span></li>`).join("")}</ol>
       <div class="proofs">${["Receipt", "Original posting ↗", "Screenshot", "Submission log", "Resume sent · tailored v3"].map(p => `<span class="pf">${p}</span>`).join("")}</div>
       <div class="shot" aria-hidden="true"><i></i><i></i><i class="s"></i><i></i><b>Submitted</b></div></div>
@@ -2308,8 +2367,8 @@ function fvTracker() {
 }
 function fvInterview() {
   return `<div class="fv-stack"><div class="modes-tabs">${["Practice", "Live", "Debrief"].map((m, i) => `<span class="${i === 1 ? "on" : ""}">${m}</span>`).join("")}</div>
-    <div class="jcard live-int"><div class="li-q"><span class="tag">Behavioral · detected</span><p>“Tell me about a time you had to convince someone with data.”</p></div>
-      <div class="li-s"><span class="eyebrow" style="margin:0">Private suggestion · only you see this</span><p>Use your meal-plan study: <b>situation</b> (students dropping plans), <b>what you did</b> (2,400 responses, regression), <b>result</b> (dining services changed options).</p></div></div>
+    <div class="jcard live-int"><div class="li-q"><span class="tag">Career change · detected</span><p>“Why are you leaving IT support for data?”</p></div>
+      <div class="li-s"><span class="eyebrow" style="margin:0">Private suggestion · only you see this</span><p>Bridge it with your ticket report: <b>what you did</b> (weekly SQL report), <b>what changed</b> (password resets cut in half), <b>why data</b> (you liked finding the cause more than closing tickets).</p></div></div>
     <div class="jcard deb"><span class="eyebrow" style="margin:0">Debrief</span>${[["Structure", 80], ["Specifics", 64], ["Pace", 88]].map(([k, v]) => `<div class="tm-row"><span>${k}</span><div class="tm-bar"><i style="width:${v}%"></i></div></div>`).join("")}<p class="small"><b>Fix next:</b> say the number earlier. Next practice starts here.</p></div></div>`;
 }
 const FV = { "ai-career-coach": fvCoach, "job-match": fvMatch, "tailored-applications": fvTailor, "verified-jobs": fvVerified, "application-tracker": fvTracker, "ai-mock-interview": fvInterview };
@@ -2352,7 +2411,7 @@ pattern(/^feature-(.+)$/, raw => {
       <tbody>${f.vs.map(([a, b, c]) => `<tr><th scope="row">${a}</th><td>${b}</td><td><b>${c}</b></td></tr>`).join("")}</tbody></table></div>
       <p class="small muted" style="margin-top:14px">Based on our review study and public product pages. <a href="#compare">See named comparisons →</a></p></div></section>
 
-    <section class="section roomy"><div class="wrap"><div class="sec-head"><span class="eyebrow">Who it's for</span><h2 class="serif">Built for four kinds of job seekers</h2></div>
+    <section class="section roomy"><div class="wrap"><div class="sec-head"><span class="eyebrow">Who it's for</span><h2 class="serif">Built for people changing direction</h2></div>
       <div class="who-mini">${Object.entries(f.for).map(([k, line]) => { const p = PERSONAS[k.toLowerCase()]; return `<a class="wm" href="#report-${k.toLowerCase()}"><span class="wm-img" style="background-image:url(${p.img()})"></span><span class="wm-t"><small>${k} · ${ICP[k].tag}</small><b>${line}</b></span></a>`; }).join("")}</div></div></section>
 
     <section class="section roomy"><div class="wrap narrow"><h2 class="serif">${f.name} FAQ</h2>${faqBlock(f.faq)}</div></section>

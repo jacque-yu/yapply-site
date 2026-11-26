@@ -41,7 +41,7 @@ function faqBlock(items) {
 
 // ---------- NAV + FOOTER ----------
 const NAV = [
-  { label: "Features", items: [["how-it-works", "How it works", "Talk for 10 minutes, finish with a resume"], ...FEATURES.map(f => ["feature-" + f.slug, f.name + (f.flag ? " ★" : ""), f.short])] },
+  { label: "Features", mega: true, items: [] },
   { label: "Resources", items: [["blog", "Blog", "Product notes and recruiting advice"], ["help", "Help Center", "Answers about your account"], ["guides", "Guides", "Recruiting timeline, OPT, offers"], ["interview-questions", "Interview Questions", "By role and by company"], ["creator-program", "Creator Program", "Get paid to make videos about Yapply"], ["affiliate-program", "Affiliate Program", "Earn commission on every paid signup"]] },
   { label: "Mobile App", href: "app" },
   { label: "Pricing", href: "pricing" }
@@ -56,7 +56,9 @@ const FOOTER = [
 ];
 
 function renderChrome() {
-  $("#nav").innerHTML = NAV.map((n, i) => n.items
+  $("#nav").innerHTML = NAV.map((n, i) => n.mega
+    ? `<div class="has-dd"><button class="nl" aria-expanded="false" aria-controls="dd${i}" data-dd>${n.label} ▾</button><div class="dd mega" id="dd${i}">${FEATURE_GROUPS.map(([g, sub]) => `<div class="mg"><span class="mg-h">${g}<small>${sub}</small></span>${FEATURES.filter(f => f.group === g).map(f => `<a href="#feature-${f.slug}"><b>${f.name}${f.flag ? ' <span class="tag hi">Core</span>' : ""}</b><span>${esc(f.short)}</span></a>`).join("")}</div>`).join("")}<div class="mg-foot"><a href="#features">All features →</a><a href="#call">Start a free call →</a></div></div></div>`
+    : n.items
     ? `<div class="has-dd"><button class="nl" aria-expanded="false" aria-controls="dd${i}" data-dd>${n.label} ▾</button><div class="dd" id="dd${i}">${n.items.map(([h, t, s]) => `<a href="#${h}"><b>${t}</b><span>${esc(s)}</span></a>`).join("")}</div></div>`
     : `<a class="nl" href="#${n.href}">${n.label}</a>`).join("");
   $("#footer").innerHTML = `<div class="fgrid"><div class="fbrand"><a class="logo" href="#home"><span class="dot" aria-hidden="true"><i style="height:8px"></i><i style="height:13px"></i><i style="height:6px"></i></span>yapply</a><p class="small muted" style="margin-top:12px;max-width:30ch">The AI career coach you talk to. It finds your best work and writes it into your resume while you speak.</p><a class="btn sm" href="#app">Get the app</a></div>

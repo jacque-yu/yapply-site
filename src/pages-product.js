@@ -126,18 +126,13 @@ route("how-it-works", () => ({
   html: pageHead({ eyebrow: "Features", title: "How Yapply works", lead: "A voice conversation replaces the resume form, and the resume is written while you talk.", answer: "You talk with Yapply for about 10 minutes. Each answer is written onto your resume in real time, and you can correct any line out loud. When the conversation ends, the resume is finished; Yapply then tailors it to matched jobs, helps you apply and lets you practice the interview." }) + `
   <section class="section"><div class="wrap">${liveDemo("live-how")}</div></section>
   <section class="section"><div class="wrap">
-    ${[["1. Talk", "Yapply asks open questions about your classes, projects, jobs and clubs, then the follow-ups a recruiter would ask: how many, which tools, what changed.", "feature-ai-resume-builder"],
-      ["2. Watch it write", "Each answer becomes a resume bullet on screen within seconds. Interrupt to correct it: \"no, that was a team project\".", "feature-ai-resume-builder"],
-      ["3. Hang up with a resume", "One page, ATS-readable, exported as PDF or DOCX. Already have a resume? Upload it and talk through the weak lines instead.", "feature-ai-resume-review"],
-      ["4. Tailor and apply", "Say \"tailor it\" for any job. Approve, and Yapply applies.", "feature-resume-tailor"],
-      ["5. Practice", "Rehearse the interview with a voice interviewer that asks about your own resume.", "feature-ai-mock-interview"]].map(([t, d, h]) => `<div class="grid-2" style="padding:22px 0;border-bottom:1px solid var(--line)"><h3>${t}</h3><div><p>${d}</p><a href="#${h}">Learn more</a></div></div>`).join("")}
+    ${[["1. Talk", "The coach asks about your classes, projects and jobs, then the follow-ups a recruiter would ask: how many, which tools, what changed.", "feature-ai-career-coach"],
+      ["2. Watch it write", "Each answer lands on your resume as a card within seconds. Cut in to correct it: “no, that was a team project”.", "feature-ai-career-coach"],
+      ["3. Get matched", "Jobs ranked by your filters and your call, each with the reason it's there. Only fresh, verified listings.", "feature-job-match"],
+      ["4. Swipe to apply", "Every application goes out with a resume tailored to that job description, using only true facts.", "feature-tailored-applications"],
+      ["5. Track it, with proof", "Receipt, screenshot, original posting and the exact resume sent, with status as it changes.", "feature-application-tracker"],
+      ["6. Practice and debrief", "Rehearse with an interviewer that knows your resume, then get a debrief that sets the next round.", "feature-ai-mock-interview"]].map(([t, d, h]) => `<div class="grid-2" style="padding:22px 0;border-bottom:1px solid var(--line)"><h3>${t}</h3><div><p>${d}</p><a href="#${h}">Learn more</a></div></div>`).join("")}
   </div></section>${ctaBand()}`
-}));
-
-route("features", () => ({
-  title: "Features", seoTitle: "AI Resume Tools: Builder, Review, Tailor & Interview | Yapply", desc: "Every Yapply feature starts with a 10-minute conversation: an AI resume builder that writes while you talk, plus resume review, tailoring, cover letters, mock interviews and job matching.", path: "/features", crumbs: [["Home", "home"], ["Features"]],
-  html: pageHead({ eyebrow: "Features", title: "AI resume tools that start by listening", lead: "The AI Resume Builder writes your resume while you talk. Every other feature reuses that conversation, so nothing you said goes to waste." }) +
-  `<section class="section"><div class="wrap grid"><a class="card" href="#how-it-works"><h3>How it works</h3><p class="muted">Talk for 10 minutes, finish with a resume.</p></a>${FEATURES.map(f => `<a class="card" href="#feature-${f.slug}">${f.flag ? '<span class="tag hi">Core</span>' : ""}<h3 style="margin-top:6px">${f.name}</h3><p class="muted">${f.one}</p></a>`).join("")}</div></section>${ctaBand()}`
 }));
 
 function mockInterviewDemo() {
@@ -156,36 +151,6 @@ function mockInterviewDemo() {
   <form id="mi-form" class="row" style="margin-top:10px"><label for="mi-in" class="hidden">Your answer</label><input id="mi-in" style="flex:1" placeholder="Type your answer (the product listens by voice)"><button class="btn primary">Answer</button></form>
   <p class="small muted">Demo of the follow-up logic. In the product this is a live, full-duplex voice conversation.</p>`;
 }
-
-function featureDemo(slug) {
-  if (slug === "ai-resume-builder") return liveDemo("live-feat");
-  if (slug === "ai-mock-interview") return mockInterviewDemo();
-  if (slug === "resume-tailor") return `<div class="paper"><span class="eyebrow">Tailored for: Data Analyst, New Grad · Capital One</span>
-    <p class="small"><del class="muted">Built a booking app used by 300 club members.</del></p>
-    <p class="small"><mark>Analyzed</mark> usage <mark>data</mark> from a booking app with 300 users in <mark>SQL</mark> to cut double-bookings to zero.</p>
-    <p class="small muted">Highlighted terms come from the job description. Every fact comes from your conversation.</p>
-    <div class="row"><button class="btn sm primary" onclick="toast('Demo: change accepted')">Accept</button><button class="btn sm" onclick="toast('Demo: kept original')">Keep original</button></div></div>`;
-  if (slug === "ai-resume-review") return `<div class="paper"><div class="row" style="justify-content:space-between"><span class="eyebrow" style="margin:0">Resume review</span><span class="tag warn">62 / 100</span></div>
-    <p class="small"><b>Weak line:</b> “Helped with marketing for a student club.”</p>
-    <div class="bubble ai" style="background:var(--soft)"><small>YAPPLY ASKS</small>What did you actually do, and what happened after?</div>
-    <div class="bubble me" style="background:var(--soft)"><small>YOU SAY</small>I ran the Instagram and we got way more people at events, like double.</div>
-    <p class="small"><b>Rewritten live:</b> <mark>Ran</mark> the club's Instagram and <mark>doubled event attendance</mark> in one semester.</p></div>`;
-  if (slug === "ai-cover-letter") return `<div class="paper"><span class="eyebrow">You said (40 seconds)</span><p class="small muted">“I want Capital One because I used their app to learn budgeting and I want to work on data that helps people like me.”</p><span class="eyebrow">Yapply wrote</span><p class="small">Dear Capital One hiring team, I learned to budget in your app as a freshman, and that experience is why I want to work on the data behind it. In my study-room booking project I…</p></div>`;
-  return `<div class="jobs">${JOBS.slice(0, 3).map(jobRow).join("")}</div><div class="card" style="margin-top:10px"><span class="eyebrow">Review before sending</span><ul class="small"><li>Resume: tailored version ✓</li><li>“Why this company?” drafted from your conversation ✓</li><li>Work authorization answered from your profile ✓</li></ul><button class="btn sm primary" onclick="toast('Demo: application approved')">Approve & apply</button></div><p>${DEMO}</p>`;
-}
-
-pattern(/^feature-(.+)$/, slug => {
-  const f = FEATURES.find(x => x.slug === slug); if (!f) return null;
-  const faq = [[`Is Yapply's ${f.name.toLowerCase()} free?`, "Free during beta, with paid plans for heavy use. See Pricing."], ["Will it make things up?", "No. Everything it writes comes from what you said or uploaded, and you approve every line."], ["Do I need a resume to start?", "No. Start talking; the resume is written as you go."], ["Who is it for?", "New grads without a relevant internship, international students, grads whose first job is outside their field, and early-career people changing direction."]];
-  return { title: f.h1, seoTitle: f.title + " | Yapply", desc: f.desc, path: "/features/" + slug, crumbs: [["Home", "home"], ["Features", "features"], [f.name]],
-    html: pageHead({ eyebrow: f.flag ? "Core feature · " + f.name : "Features · " + f.name, title: f.h1, lead: `<b style="color:var(--ink)">${f.pain}</b> ${f.one}`, answer: f.answer, extra: `<div class="row" style="margin-top:16px"><a class="btn primary" href="#signup">Try it free</a><a class="btn" href="#how-it-works">How it works</a></div>` }) + `
-    <section class="section"><div class="wrap">${featureDemo(slug)}</div></section>
-    <section class="section"><div class="wrap"><h2>Who ${f.name} is for</h2><div class="icp-grid" style="margin-top:16px">${Object.entries(f.for).map(([k, line]) => `<div class="icp small-icp"><span class="icp-k">${k}</span><span class="eyebrow" style="margin:0">${ICP[k].tag}</span><p class="icp-pain">${ICP[k].pain}</p><p class="small"><b>${line}</b></p></div>`).join("")}</div></div></section>
-    <section class="section"><div class="wrap"><h2>What you get with ${f.name}</h2><div class="grid" style="margin-top:16px">${f.bullets.map(([t, d]) => `<div class="card"><h3>${t}</h3><p class="muted small">${d}</p></div>`).join("")}</div></div></section>
-    <section class="section"><div class="wrap grid-2"><div><h2>How it compares</h2><p>${f.vs}</p><a href="#compare">See all comparisons</a></div>
-      <div><h2>FAQ</h2>${faqBlock(faq)}</div></div></section>
-    <section class="section"><div class="wrap"><h2>Other features</h2><div class="grid" style="margin-top:16px">${FEATURES.filter(x => x.slug !== slug).map(x => `<a class="card" href="#feature-${x.slug}"><h3>${x.name}</h3><p class="muted small">${x.short}</p></a>`).join("")}</div></div></section>${ctaBand()}` };
-});
 
 route("pricing", () => ({
   title: "Pricing", path: "/pricing", crumbs: [["Home", "home"], ["Pricing"]],

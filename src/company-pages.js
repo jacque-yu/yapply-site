@@ -77,7 +77,7 @@ function companyPage(slug, tab) {
       <h2>Yapply's take for new grads</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
         <div class="card"><h4>When to apply</h4><p class="small">Roles at ${c.tags[0].toLowerCase()} employers like ${c.name} typically open in <b>${c.opens}</b> and mostly close by <b>${c.closes}</b>. Apply in the first weeks.</p></div>
         <div class="card"><h4>What the interview looks like</h4><p class="small">${c.interview[0]}, then ${c.interview.length - 1} more rounds. <a href="#company-${slug}-interview">Full process</a>.</p></div>
-        <div class="card"><h4>How to stand out</h4><p class="small">Show results with numbers in every bullet. <a href="#feature-ai-resume-builder">Talk through your projects</a> and Yapply writes them.</p></div></div>
+        <div class="card"><h4>How to stand out</h4><p class="small">Show results with numbers in every bullet. <a href="#feature-ai-career-coach">Talk through your projects</a> and Yapply writes them.</p></div></div>
       <h2>Hiring calendar</h2>${calendar(c)}
       <h2>H-1B sponsorship</h2>${slot("Filings by fiscal year, approval rate, new grad share", "the USCIS H-1B Employer Data Hub and DOL LCA disclosures", `<a href="${USCIS_HUB}">Look up ${c.name} on the USCIS hub ↗</a>`)}
       <h2>Benefits</h2>${slot("Health, 401(k), PTO, parental leave, stipends", `${c.name}'s job descriptions and careers site`)}

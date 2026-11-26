@@ -230,7 +230,7 @@ pattern(/^report-([abcd])$/, k => {
 
     <section class="section"><div class="wrap rep-final">
       <div><span class="eyebrow">04 · The resume</span><h2 class="serif">Ready the moment the call ended</h2><p class="muted">One page, ATS-friendly, every line from what ${p.first} said. Next: tailor it to a job, or practice the interview with the same coach.</p>
-        <div class="row" style="margin-top:20px"><a class="btn primary lg" href="#call">Start my own call</a><a class="btn" href="#feature-resume-tailor">Tailor to a job</a><a class="btn" href="#feature-ai-mock-interview">Practice the interview</a></div>
+        <div class="row" style="margin-top:20px"><a class="btn primary lg" href="#call">Start my own call</a><a class="btn" href="#feature-tailored-applications">Tailor to a job</a><a class="btn" href="#feature-ai-mock-interview">Practice the interview</a></div>
         <p class="small muted" style="margin-top:22px">Other sample reports: ${Object.keys(PERSONAS).filter(x => x !== k).map(x => `<a href="#report-${x}">${PERSONAS[x].first} (${ICP[PERSONAS[x].key].tag.toLowerCase()})</a>`).join(" · ")}</p></div>
       ${resumePaper(p, r.lines, false)}
     </div></section>` };

@@ -1,7 +1,7 @@
 import pathlib, base64, io
 from PIL import Image
 s=pathlib.Path('src')
-order=['companies.js','data.js','synonyms.js','features.js','guides.js','glossary.js','legal.js','core.js','call.js','company-pages.js','pages-tools.js','pages-product.js','pages-jobs.js','pages-resources.js']
+order=['companies.js','data.js','synonyms.js','features.js','guides.js','glossary.js','legal.js','core.js','call.js','company-pages.js','pages-tools.js','pages-product.js','feature-pages.js','pages-jobs.js','pages-resources.js']
 def enc(p):
     im=Image.open(p).convert('RGB'); im.thumbnail((880,1100)); buf=io.BytesIO(); im.save(buf,'JPEG',quality=80,optimize=True,progressive=True)
     return 'data:image/jpeg;base64,'+base64.b64encode(buf.getvalue()).decode()

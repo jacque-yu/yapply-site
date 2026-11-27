@@ -1,0 +1,74 @@
+# Yapply
+
+> Yapply helps people in their first few years of work change direction without starting over. On a free call (no sign-up), it shows why applicant tracking systems keep filtering a resume out, finds what transfers from the person's current job, and rewrites their real experience in the new field's language while they talk. Then the user swipes right on verified jobs and Yapply applies for them, with proof for every application.
+
+Key facts:
+
+- Who it's for: people 0–3 years into work who want to switch roles or fields (for example IT support to data analyst, teacher to sales, store manager to operations, consulting to product). New grads can use it too.
+- Whose side it's on: the job seeker's. Yapply is not an AI interviewer and does not screen candidates for employers.
+- No invented content: every resume line comes from something the user said or uploaded. Skills a job asks for that the user doesn't have are shown as gaps, not added. This is also why resumes read like the person, not like generic AI text.
+- How it works: (1) a free call where the user says the role they want, or that they're not sure, and talks about their current job; (2) the resume is rewritten live as cards the user can correct by cutting in; (3) matched, verified jobs; swipe right and Yapply fills out and submits the application with a resume tailored to that job description.
+- Applications: Yapply submits through Greenhouse and a dozen more applicant tracking systems, with more added all the time. The user approves every application; Yapply does not mass-apply.
+- Proof: every application has the employer system's confirmation receipt, the original job link, a submission screenshot and log, the exact resume sent, and status (applied, viewed, interview, rejected).
+- Jobs: collected from company career pages and applicant tracking systems, re-checked daily, deduplicated, with likely ghost jobs and scam patterns filtered out.
+- Pricing: the call and the rewritten resume are free with no sign-up. A subscription starts when the user sends their first application.
+- Compared with using ChatGPT or Claude on their own: no prompt writing or copy-pasting; Yapply asks follow-up questions to find real results, never fills gaps with invented details, finds and verifies jobs, applies for the user, and tracks every application.
+- Company: Yapply is a product of HOLOGROW INC, 160 Tasman Dr, Suite 125, San Jose, CA 95134, US. Contact: internal@hologrow.ai. Security: security@hologrow.io.
+
+## Product
+
+- [Home](https://yapply.ai/): Rejected before a human ever read it? Start a free call.
+- [Start a free call](https://yapply.ai/call): Free, no sign-up, about 10 minutes.
+- [All features](https://yapply.ai/features): Diagnose, rewrite, apply, interview.
+- [Free ATS Check](https://yapply.ai/features/ats-check): A free call to find out why the filter keeps saying no, then fix it together.
+- [Talk-to-Resume](https://yapply.ai/features/talk-to-resume): Say what you actually did; the resume is rewritten live for the role you want, from your own words.
+- [Tailored Applications](https://yapply.ai/features/tailored-applications): Every application gets its own resume, tailored to the job description with true keywords only.
+- [Swipe to Apply](https://yapply.ai/features/job-match): Matched jobs ranked by what you've actually done; swipe right and Yapply fills out and submits the application.
+- [Verified Jobs](https://yapply.ai/features/verified-jobs): Jobs re-checked daily; ghost jobs and scam patterns filtered out.
+- [Application Tracker](https://yapply.ai/features/application-tracker): Every application, verifiable: receipt, screenshot, resume sent and status.
+- [Interview Prep](https://yapply.ai/features/ai-mock-interview): Practice the career-change story, live interview CoPilot, and debriefs.
+- [Pricing](https://yapply.ai/pricing)
+
+## Sample career-change calls
+
+- [IT support to data analyst](https://yapply.ai/report/sample-a)
+- [Teacher to life-science sales](https://yapply.ai/report/sample-b)
+- [Store manager to operations analyst](https://yapply.ai/report/sample-c)
+- [Consulting analyst to product manager](https://yapply.ai/report/sample-d)
+
+## Free tools
+
+- [ATS Resume Checker](https://yapply.ai/tools/ats-resume-checker): Score a resume against a job description and see missing keywords.
+- [Resume Roaster](https://yapply.ai/tools/resume-roaster): Flags duty-only bullets, missing numbers, AI-sounding words and missing keywords for a target field.
+- [Resume Synonyms](https://yapply.ai/tools/resume-synonyms): Stronger action verbs, by intent.
+- [Resume Skills by Role](https://yapply.ai/tools/resume-skills): Hard skills, tools and soft skills each role expects.
+- [Cover Letter Generator](https://yapply.ai/tools/cover-letter-generator)
+- [H-1B Sponsor Checker](https://yapply.ai/tools/h1b-sponsor-checker)
+
+## Jobs
+
+- [Search all jobs](https://yapply.ai/jobs)
+- [Companies](https://yapply.ai/companies)
+- [Entry level and new grad jobs](https://yapply.ai/jobs/new-grad)
+- [Internships](https://yapply.ai/jobs/internships)
+- [Remote jobs](https://yapply.ai/jobs/remote)
+- [H-1B jobs](https://yapply.ai/h1b-jobs)
+- [International students](https://yapply.ai/international-students)
+
+## Resources
+
+- [Compare Yapply with other job-search tools](https://yapply.ai/compare)
+- [FAQ](https://yapply.ai/faq)
+- [Guides](https://yapply.ai/guides)
+- [Interview questions](https://yapply.ai/interview-questions)
+- [Glossary](https://yapply.ai/glossary)
+- [Help Center](https://yapply.ai/help)
+
+## Optional
+
+- [About](https://yapply.ai/about)
+- [Blog](https://yapply.ai/blog)
+- [Reports](https://yapply.ai/reports)
+- [Privacy policy](https://yapply.ai/privacy)
+- [Terms of service](https://yapply.ai/terms)
+- [Sitemap](https://yapply.ai/sitemap)

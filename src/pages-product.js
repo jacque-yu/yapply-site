@@ -55,8 +55,8 @@ function statBand() {
   return `<div class="stat-band">${STATS.map(([n, t, u, s]) => `<div><b class="serif">${n}</b><p>${t}</p><a class="small muted" href="${u}">Source: ${s} ↗</a></div>`).join("")}</div>`;
 }
 const HOME_FAQ = [
-  ["Why am I getting rejected so fast?", "Often software rejects the application before a person reads it, filtering on keywords and requirements. Career changers get hit hardest, because their resume uses the old field's words. A free roast call shows you exactly which lines are doing it."],
-  ["Is the resume roast really free?", "Yes. The call and your rewritten resume are free, with no sign-up. You pay only when you start applying through Yapply."],
+  ["Why am I getting rejected so fast?", "Often software rejects the application before a person reads it, filtering on keywords and requirements. Career changers get hit hardest, because their resume uses the old field's words. A free call shows you exactly which lines are doing it."],
+  ["Is the call really free?", "Yes. The call and your rewritten resume are free, with no sign-up. You pay only when you start applying through Yapply."],
   ["Can employers tell I used AI?", "What gives resumes away is generic, inflated wording. Yapply writes from your own words and real examples, which is also what holds up when an interviewer asks follow-up questions."],
   ["Why not just use ChatGPT or Claude?", "They're great writers, but you have to prompt them, paste everything in, catch any details they fill in, and still apply to every job yourself. Yapply asks the questions, only writes what you said, and applies for you with proof."],
   ["How do I write a resume for a career change?", "Keep your real job titles, but rewrite each bullet as evidence for the new role: the result, the number, and the skill the new field searches for."],
@@ -65,9 +65,9 @@ const HOME_FAQ = [
 ];
 function heroRoast() {
   return `<div class="hr-stage">${roastPaper()}
-    <div class="hr-phone" aria-label="Sample roast call">
-      <div class="fv-top"><span class="rec"></span>Free roast · live <span class="muted">2:41</span></div>
-      <div class="fv-b ai hb1">Be honest. “Handled scheduling.” What does that actually mean?</div>
+    <div class="hr-phone" aria-label="Sample call">
+      <div class="fv-top"><span class="rec"></span>Free call · live <span class="muted">2:41</span></div>
+      <div class="fv-b ai hb1">“Handled scheduling” is all the filter sees. What does it actually mean?</div>
       <div class="fv-b me hb2">I schedule twelve people around the busy hours, and I track sales and waste in Excel for my district—</div>
       <div class="fv-b ai cut hb3"><em>Yapply cut in</em>Stop. That's operations. How much waste did you cut?</div>
       <div class="fv-b me hb4">About twelve hundred a month.</div>
@@ -75,21 +75,21 @@ function heroRoast() {
     </div></div>`;
 }
 route("home", () => ({
-  title: "Yapply", seoTitle: "Free Resume Roast: Find Out Why You're Getting Rejected | Yapply",
-  desc: "Rejected before a human ever read it? Get your resume roasted on a free call, no sign-up. Yapply rewrites what you actually did for the job you want, then applies for you.",
-  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "Free resume roast on a call, resume rewritten from what you say, and swipe-to-apply with proof, for people changing direction.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
+  title: "Yapply", seoTitle: "Rejected by the ATS? Beat It With Your Real Story | Yapply",
+  desc: "Rejected before a human ever read it? Start a free call, no sign-up. Say what you actually did; Yapply rewrites it for the job you want, so it reads like you, then applies for you.",
+  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "On the job seeker's side: a free call that finds out why the ATS says no, a resume rewritten from what you say, and swipe-to-apply with proof.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
   html: `
   <section class="hero2"><div class="wrap h2-grid">
     <div class="h2-left">
       <p class="proof"><span class="pulse"></span>Free call · No sign-up · Zero AI-speak</p>
       <h1 class="serif">Rejected before a human ever read it?</h1>
       <div class="h2-bottom">
-        <p class="h2-lead">Companies screen you with AI and reject you in two minutes. Fight back with the one thing AI can't fake: the real story you tell out loud. On a free roast call, Yapply shows you exactly why you're getting filtered, then rewrites what you actually did in the new field's language. <b>Swipe right on real jobs, and we apply.</b></p>
-        <div class="row"><a class="btn primary lg" href="#call">Roast my resume, free</a><a class="btn lg" href="#call-c">Hear a sample roast</a></div>
+        <p class="h2-lead">Switching fields gets you filtered out by your old job's keywords. Tell us what you actually did. We'll rewrite it in the new field's language, so it reads like you and gets past the filter. <b>Then we apply for you.</b></p>
+        <div class="row"><a class="btn primary lg" href="#call">Start a free call</a><a class="btn lg" href="#call-c">Hear a sample call</a></div>
         <ul class="ticks"><li>Beats the filter</li><li>Zero AI-speak</li><li>Holds up in the interview</li></ul>
       </div>
     </div>
-    ${heroRoast()}
+    ${heroStage()}
   </div></section>
 
   <section class="section roomy dark-sec"><div class="wrap">
@@ -97,8 +97,13 @@ route("home", () => ({
     <div class="stat-band">${[["#1", "theme in 23,846 job-search comments we analyzed on TikTok: getting rejected or ghosted.", null, TIKTOK_STUDY], ["70.3%", "of job seekers applied to at least one role outside their resume's field, the people most likely to be filtered on keywords.", "https://huntr.co/research/career-changer", "Huntr, 15,175 job seekers"], ["18–22%", "of job posts on Greenhouse were ghost listings that companies weren't trying to fill.", "https://www.entrepreneur.com/business-news/ghost-job-listings-on-the-rise-how-to-spot-avoid-experts/485494", "Greenhouse via Entrepreneur"]].map(([n, t, u, src]) => `<div><b class="serif">${n}</b><p>${t}</p>${u ? `<a class="small muted" href="${u}">Source: ${src} ↗</a>` : `<span class="small muted">Source: ${src}</span>`}</div>`).join("")}</div>
   </div></section>
 
+  <section class="section roomy"><div class="wrap grid-2" style="align-items:center;gap:clamp(32px,6vw,96px)">
+    <div><span class="eyebrow">On the call</span><h2 class="serif">What the filter sees. What you actually did.</h2><p class="muted" style="font-size:1.1rem;line-height:1.65">We go through your resume together: what the filter can't find, what reads generic, what still sounds like your old job. Then you tell us what really happened, and we rewrite it while you talk. You can cut in any time.</p><a class="btn primary lg" href="#call">Start a free call</a></div>
+    ${heroRoast()}
+  </div></section>
+
   <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Whose side we're on</span><h2 class="serif">They screen you with AI. Then reject you for sounding like AI.</h2><p class="muted">Fine. Beat their filter with your real story, in your own words: the version a recruiter believes and an interviewer can't poke holes in.</p></div>
+    <div class="sec-head"><span class="eyebrow">Whose side we're on</span><h2 class="serif">They screen you with AI. Then reject you for sounding like AI.</h2><p class="muted">So let's beat their filter together, with your real story in your own words: the version a recruiter believes and an interviewer can't poke holes in.</p></div>
     <div class="sides"><div class="side them"><span class="eyebrow" style="margin:0">Their side</span><ul>${["AI screening that rejects you in two minutes", "Detectors that flag anything that sounds like AI", "Fake listings kept up to collect resumes", "Silence instead of feedback"].map(x => `<li>${x}</li>`).join("")}</ul></div>
       <div class="side us"><span class="eyebrow" style="margin:0">Your side</span><ul>${["Your real experience, said out loud, in the words their filter searches for", "Zero AI-speak: it sounds like you because it came from you", "Every line holds up when the interviewer digs", "A straight answer about why you're getting rejected, free"].map(x => `<li>${x}</li>`).join("")}</ul></div></div>
   </div></section>
@@ -129,14 +134,14 @@ route("home", () => ({
   </div></section>
 
   <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Same experience. New direction.</span><h2 class="serif">Four roasts. Four new directions.</h2><p class="muted">The most common ways people switch in their first few years. Each line came out of a conversation; nothing was invented.</p></div>
+    <div class="sec-head"><span class="eyebrow">Same experience. New direction.</span><h2 class="serif">Four switches. One call each.</h2><p class="muted">The most common ways people switch in their first few years. Each line came out of a conversation; nothing was invented.</p></div>
     <div class="who-grid">${["A", "B", "C", "D"].map(switchCard).join("")}</div>
     <p class="small muted" style="margin-top:18px">Sample calls with fictional people, built on the most common switch paths in Huntr's career-changer research.</p>
   </div></section>
 
-  <section class="section roomy"><div class="wrap"><div class="price-tease"><div><span class="eyebrow">Pricing</span><h2 class="serif">Free to roast. Pay when you apply.</h2><p class="muted">The roast call and your rewritten resume are free, with no sign-up. A subscription starts when you send your first application. Prefer to paste? Try the free <a href="#tool-resume-roaster">Resume Roaster</a>.</p></div><a class="btn lg" href="#pricing">See pricing →</a></div></div></section>
+  <section class="section roomy"><div class="wrap"><div class="price-tease"><div><span class="eyebrow">Pricing</span><h2 class="serif">Free to start. Pay when you apply.</h2><p class="muted">The call and your rewritten resume are free, with no sign-up. A subscription starts when you send your first application.</p></div><a class="btn lg" href="#pricing">See pricing →</a></div></div></section>
 
-  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions before you get roasted</h2>${faqBlock(HOME_FAQ)}</div></section>
+  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions before your first call</h2>${faqBlock(HOME_FAQ)}</div></section>
   ${ctaBand("Find out why. Then fix it, in one call.", "Free, no sign-up. Leave with a resume that sounds like you, written for the job you want.")}`
 }));
 

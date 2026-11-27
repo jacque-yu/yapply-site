@@ -98,11 +98,11 @@ function render() {
   afterRender = [];
   FAQ_LD = [];
   const page = resolve(name);
-  document.title = page.seoTitle || (page.title === "Yapply" ? "Free Resume Roast: Find Out Why You're Getting Rejected | Yapply" : `${page.title} | Yapply`);
+  document.title = page.seoTitle || (page.title === "Yapply" ? "Rejected by the ATS? Beat It With Your Real Story | Yapply" : `${page.title} | Yapply`);
   const plain = s => String(s || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
   const clip = t => t.length <= 160 ? t : t.slice(0, 157).replace(/\s+\S*$/, "") + "…";
   const desc = clip(plain(page.desc || (page.html.match(/class="answer">([\s\S]*?)<\/p>/) || [])[1] || (page.html.match(/class="lead"[^>]*>([\s\S]*?)<\/p>/) || [])[1]));
-  $("#meta-desc").setAttribute("content", desc || "Get your resume roasted on a free call. Yapply tells you why you're getting rejected, rewrites what you actually did for the job you want, and applies for you.");
+  $("#meta-desc").setAttribute("content", desc || "Rejected before a human ever read it? Start a free call. Say what you actually did; Yapply rewrites it for the job you want and applies for you.");
   $("#canonical").setAttribute("href", "https://yapply.ai" + (page.path || "/"));
   $("#app").innerHTML = (page.path ? urlbar(page.path, page.crumbs) : "") + page.html;
   window.scrollTo(0, 0);

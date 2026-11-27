@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Yapply</title>
-<meta name="description" id="meta-desc" content="Get your resume roasted on a free call. Yapply tells you why you're getting rejected, rewrites what you actually did for the job you want, and applies for you.">
+<meta name="description" id="meta-desc" content="Rejected before a human ever read it? Start a free call. Say what you actually did; Yapply rewrites it for the job you want and applies for you.">
 <link rel="canonical" id="canonical" href="https://yapply.ai/">
 <script type="application/ld+json" id="ld">{}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -821,6 +821,19 @@ h2.serif { font-size: clamp(2.2rem, 4.2vw, 3.4rem); line-height: 1.04; margin: 0
 .ticks li { font-weight: 600; font-size: .95rem; }
 .ticks li::before { content: "✓"; color: var(--good); font-weight: 800; margin-right: 6px; }
 
+/* ===== Call-first hero (Retell-style) ===== */
+.st-live { position: absolute; top: 30px; right: 24px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: rgba(20,22,42,.55); backdrop-filter: blur(10px); color: #fff; font: 600 .78rem var(--mono); }
+.st-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.st-call { font-size: 1.05rem; padding: 16px 26px; }
+.st-hear { color: #fff; font-weight: 600; font-size: .92rem; text-decoration: none; opacity: .9; }
+.st-hear:hover { text-decoration: underline; }
+.b-line del { display: block; color: #8a8fa6; font-size: .82rem; margin-bottom: 4px; }
+.b-ai { top: 20%; }
+.b-me { top: 40%; }
+.b-line { bottom: 132px; }
+@media (max-width: 560px) { .st-actions { align-items: stretch; width: 100%; } .st-call { justify-content: center; } .b-line { bottom: 170px; } }
+@media (max-width: 560px) { .st-live { display: none; } }
+
 </style>
 </head>
 <body>
@@ -830,7 +843,7 @@ h2.serif { font-size: clamp(2.2rem, 4.2vw, 3.4rem); line-height: 1.04; margin: 0
     <nav class="nav" id="nav" aria-label="Primary"></nav>
     <span class="spacer"></span>
     <a class="btn ghost sm login" href="#signup">Log in</a>
-    <a class="btn accent sm" href="#call">Free resume roast</a>
+    <a class="btn accent sm" href="#call">Start a free call</a>
     <button class="btn ghost sm menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
   </div>
 </header>
@@ -1010,7 +1023,7 @@ const COMPETITORS = [
 ];
 
 const FAQ = [
-  ["What is Yapply?", "Yapply is on the job seeker's side. On a free call it roasts your resume, tells you why it is getting filtered out, and rewrites what you actually did for the job you want while you talk. Then you swipe right on matched jobs and Yapply applies for you, with proof. After the call you get a report, then tailored resumes, interview practice and job matches."],
+  ["What is Yapply?", "Yapply is on the job seeker's side. On a free call it finds out why your resume is getting filtered out, and rewrites what you actually did for the job you want while you talk. Then you swipe right on matched jobs and Yapply applies for you, with proof. After the call you get a report, then tailored resumes, interview practice and job matches."],
   ["How do I write a resume with no internship experience?", "Count class projects, research, clubs and part-time jobs, and write each as a result with a number. Yapply asks the questions that surface those numbers and writes the bullets for you."],
   ["Can international students use Yapply?", "Yes. Speak in your own words; Yapply writes fluent, recruiter-ready English, and every job shows H-1B sponsorship likelihood."],
   ["My first job isn't in my field. Can Yapply help?", "Yes. Tell it the role you want; it rewrites your current experience as transferable results for that role."],
@@ -1267,20 +1280,20 @@ const REVIEW_STUDY = "Yapply analysis of 3,406 app-store and browser-extension r
 const TIKTOK_STUDY = "Yapply analysis of 56,172 comments on 351 popular US TikTok job-search videos, May–Nov 2026";
 const ATS_LINE = "Works with Greenhouse and a dozen more application systems, with more added all the time.";
 const FEATURES = [
-  { slug: "resume-roast", group: "Diagnose", flag: true, name: "Resume Roast", short: "A free call that tells you why you're getting rejected.",
-    title: "Resume Roast Call: Free, Blunt and On Your Side", desc: "Get your resume roasted on a free call, no sign-up. Yapply tells you bluntly why it's getting filtered out, then fixes it with you, from your real experience.",
-    h1: "Find out why you're getting rejected. In one call.", pain: "Silence isn't feedback. Two-minute rejections aren't either.",
-    sub: "Upload your resume and say the job you want. Yapply roasts it out loud, line by line: what the filter can't find, what sounds like ChatGPT, what reads like your old job. Then it fixes it with you, in the same call.",
-    cta: ["call", "Roast my resume, free"],
-    answer: "Resume Roast is a free call with Yapply, no sign-up needed. You upload your resume and name a target job; Yapply tells you, bluntly, why it's likely getting filtered out (missing keywords for the new field, duty-only bullets, generic AI-sounding lines) and then rewrites the weak lines from what you say. Prefer it gentler? Say so on the call.",
-    kws: [["ats resume checker", 12100, 62], ["ats cv checker", 6600, 53], ["resume roast", null, null], ["why am i getting rejected from jobs", null, null]],
+  { slug: "ats-check", group: "Diagnose", flag: true, name: "Free ATS Check", short: "A free call to find out why the filter says no.",
+    title: "Free ATS Check Call: Find Out Why You're Getting Rejected", desc: "Start a free call, no sign-up. Find out why applicant tracking systems keep filtering your resume out, then beat the filter together with your real experience.",
+    h1: "Find out why the filter says no. Then beat it together.", pain: "Silence isn't feedback. Neither is a rejection two minutes after you apply.",
+    sub: "Upload your resume and name the job you want. Yapply walks through it with you: what the filter can't find, what sounds generic or AI-written, what still reads like your old job. Then you fix it together, in the same call.",
+    cta: ["call", "Start a free call"],
+    answer: "The free ATS check is a call with Yapply, no sign-up needed. You upload your resume and name a target job; Yapply explains why it's likely getting filtered out (missing keywords for the new field, duty-only bullets, generic AI-sounding lines) and then rewrites the weak lines from what you say.",
+    kws: [["ats resume checker", 12100, 62], ["ats cv checker", 6600, 53], ["why am i getting rejected from jobs", null, null], ["how to beat ats", null, null]],
     proof: [["#1", "theme in job-search comments on TikTok: getting rejected or ghosted, often within minutes of applying.", null, TIKTOK_STUDY]],
-    steps: [["Start a call", "No sign-up. Upload your resume or read it out, and name the job you want."], ["Get roasted", "Blunt and specific: “The filter is looking for SQL. You wrote ‘handled data’.”"], ["Fix it out loud", "Answer one question per weak line. Yapply rewrites it while you talk."], ["Keep the new version", "Leave with the fixed resume. Save it when you're ready to apply."]],
-    points: [["Blunt, on your side", "It roasts the resume, not you. The goal is getting you read by a human."], ["Old-field language, flagged", "Words recruiters in your new field won't search for, called out line by line."], ["AI-sounding lines, flagged", "“Spearheaded synergies” gets caught before a recruiter rolls their eyes."], ["Fixed in the same call", "Every flag turns into a question, and every answer into a better line."]],
-    promise: ["Brutal about the resume. On your side about you.", "Companies use software to reject you in minutes. You deserve someone who tells you exactly why, and helps you fix it with the experience you actually have."],
-    vs: [["Feedback", "A score out of 100", "Line-by-line reasons, out loud"], ["Fixes", "Generic tips", "Rewritten from your answers"], ["Tone", "Polite and vague", "Blunt, and on your side"], ["Cost to start", "Sign-up, then a paywall", "Free call, no sign-up"]],
+    steps: [["Start a call", "No sign-up. Upload your resume or read it out, and name the job you want."], ["See what the filter sees", "Specific and honest: “The filter is looking for SQL. You wrote ‘handled data’.”"], ["Fix it out loud", "Answer one question per weak line. Yapply rewrites it while you talk."], ["Keep the new version", "Leave with the fixed resume. Save it when you're ready to apply."]],
+    points: [["On your side", "It's honest about the resume because the goal is getting you read by a human."], ["Old-field language, flagged", "Words recruiters in your new field won't search for, called out line by line."], ["Generic lines, flagged", "“Spearheaded synergies” gets caught before a recruiter rolls their eyes."], ["Fixed in the same call", "Every flag turns into a question, and every answer into a better line."]],
+    promise: ["Honest about the resume. On your side, always.", "Companies use software to reject you in minutes. You deserve someone who tells you exactly why, and helps you fix it with the experience you actually have."],
+    vs: [["Feedback", "A score out of 100", "Line-by-line reasons, out loud"], ["Fixes", "Generic tips", "Rewritten from your answers"], ["Whose side", "The employer's filter", "Yours"], ["Cost to start", "Sign-up, then a paywall", "Free call, no sign-up"]],
     for: { A: "Find out why data teams pass on a support resume.", B: "See what a sales manager skims past in a teaching resume.", C: "Learn why “store” keeps beating “operations”.", D: "Hear why consulting bullets don't read as product work." },
-    faq: [["Is the roast really free?", "Yes. The call and the fixed resume are free, with no sign-up. You pay only when you start applying through Yapply."], ["Will it be mean?", "It's blunt about the resume, never about you. Prefer it gentler? Just say so on the call."], ["Why am I getting rejected so fast?", "Often an applicant tracking system filters on keywords and requirements before a person reads anything. Career changers get hit hardest, because their resume uses the old field's words."], ["Can I just paste my resume instead?", "Yes, try the text-only Resume Roaster tool. The call goes further, because it can ask you what's missing."]] },
+    faq: [["Is the call really free?", "Yes. The call and the fixed resume are free, with no sign-up. You pay only when you start applying through Yapply."], ["Why am I getting rejected so fast?", "Often an applicant tracking system filters on keywords and requirements before a person reads anything. Career changers get hit hardest, because their resume uses the old field's words."], ["Will it be harsh?", "It's honest about the resume and always on your side. Prefer it gentler? Just say so on the call."], ["Can I just paste my resume instead?", "Yes, try the text-only Resume Roaster tool. The call goes further, because it can ask you what's missing."]] },
 
   { slug: "talk-to-resume", group: "Rewrite", flag: true, name: "Talk-to-Resume", short: "Say what you did. Watch it get rewritten for the new role.",
     title: "Talk-to-Resume: Say It, Get a Resume That Sounds Like You", desc: "Talk through your current job. Yapply finds what transfers, shows which directions fit, and rewrites your resume live for the role you want, from your own words.",
@@ -1374,7 +1387,7 @@ const FEATURES = [
     faq: [["How do I answer “why are you changing careers?”", "Tie the old job to the new one with a real example: what you did, what you learned you were good at, and why this role uses it more. Practice it in the Behavioral scenario until it sounds like you."], ["What scenarios can I practice?", "Eight, including Coding, System Design, Behavioral, Product Case and Salary Negotiation."], ["Can I use Live Interview CoPilot in any interview?", "Check each employer's rules first; some don't allow AI assistance during interviews. Practice and Debrief work for every interview."], ["What's in a debrief?", "What worked, what to fix, and how ready you sound, with the weak spots carried into your next practice."]] }
 ];
 // Old slugs → new pages (keeps earlier links and indexed URLs working)
-const FEATURE_ALIAS = { "ai-career-coach": "talk-to-resume", "ai-resume-builder": "talk-to-resume", "ai-resume-review": "resume-roast", "resume-tailor": "tailored-applications", "ai-cover-letter": "tailored-applications", "job-match-auto-apply": "job-match" };
+const FEATURE_ALIAS = { "ai-career-coach": "talk-to-resume", "ai-resume-builder": "talk-to-resume", "ai-resume-review": "ats-check", "resume-roast": "ats-check", "resume-tailor": "tailored-applications", "ai-cover-letter": "tailored-applications", "job-match-auto-apply": "job-match" };
 
 // ---------- GUIDES (by stage of the job search; kws = target keywords with US monthly volume from the gap export, null = to be pulled) ----------
 const STAGES = [
@@ -1676,11 +1689,11 @@ function render() {
   afterRender = [];
   FAQ_LD = [];
   const page = resolve(name);
-  document.title = page.seoTitle || (page.title === "Yapply" ? "Free Resume Roast: Find Out Why You're Getting Rejected | Yapply" : `${page.title} | Yapply`);
+  document.title = page.seoTitle || (page.title === "Yapply" ? "Rejected by the ATS? Beat It With Your Real Story | Yapply" : `${page.title} | Yapply`);
   const plain = s => String(s || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
   const clip = t => t.length <= 160 ? t : t.slice(0, 157).replace(/\s+\S*$/, "") + "…";
   const desc = clip(plain(page.desc || (page.html.match(/class="answer">([\s\S]*?)<\/p>/) || [])[1] || (page.html.match(/class="lead"[^>]*>([\s\S]*?)<\/p>/) || [])[1]));
-  $("#meta-desc").setAttribute("content", desc || "Get your resume roasted on a free call. Yapply tells you why you're getting rejected, rewrites what you actually did for the job you want, and applies for you.");
+  $("#meta-desc").setAttribute("content", desc || "Rejected before a human ever read it? Start a free call. Say what you actually did; Yapply rewrites it for the job you want and applies for you.");
   $("#canonical").setAttribute("href", "https://yapply.ai" + (page.path || "/"));
   $("#app").innerHTML = (page.path ? urlbar(page.path, page.crumbs) : "") + page.html;
   window.scrollTo(0, 0);
@@ -1702,7 +1715,7 @@ const PERSONAS = {
     before: [["Experience", "IT support specialist: resolved tickets and helped staff with technical issues."], ["Skills", "Windows, Active Directory, ServiceNow"]],
     sections: [["Experience", "IT Support Specialist · Regional Health Network", ["e1", "e2", "e3"]]],
     steps: [
-      { ai: "Honest take: “resolved tickets” is why data teams skip you. What do you actually measure in support?" },
+      { ai: "Here's what the filter sees: “resolved tickets”. Data teams search for analysis. What do you actually measure in support?" },
       { me: "We track tickets in ServiceNow. I export them every week to see what's breaking.", id: "e1", kind: "Reframed", html: "Built a weekly <mark>ticket-trend report</mark> from <mark>ServiceNow data</mark> to show which issues were rising." },
       { ai: "Which tools, and how much data?" },
       { me: "Excel, and some SQL against the ticket database. About 1,800 tickets a month.", id: "e1", kind: "Quantified", html: "Built a weekly ticket-trend report from ServiceNow data (<mark>~1,800 tickets a month</mark>) using <mark>SQL and Excel</mark>.", strength: ["Works with real operational data", "Technology"] },
@@ -1719,7 +1732,7 @@ const PERSONAS = {
     before: [["Experience", "Biology teacher: planned lessons and taught five classes."], ["Experience", "Lab coordinator for the science department."]],
     sections: [["Experience", "Biology Teacher · Lincoln High School", ["t1", "t2", "t3"]]],
     steps: [
-      { ai: "“Planned lessons” won't get you a sales interview. Where in teaching do you actually persuade people?" },
+      { ai: "Sales filters skip “planned lessons”. Let's find the selling. Where in teaching do you persuade people?" },
       { me: "Every day, honestly. Getting 150 teenagers to care about cell biology.", id: "t1", kind: "Reframed", html: "Taught biology to <mark>150 students</mark> across five sections, getting teenagers to care about cell biology." },
       { ai: "Have you ever had to win budget or buy-in?" },
       { me: "I pitched the principal for new lab equipment. Got about eight thousand dollars approved.", id: "t2", kind: "Quantified", html: "<mark>Secured $8K</mark> in lab-equipment funding by pitching the principal.", strength: ["Makes the case for budget", "Communication"] },
@@ -1736,7 +1749,7 @@ const PERSONAS = {
     before: [["Experience", "Assistant store manager. Handled customers, scheduling, opened and closed the store."]],
     sections: [["Experience", "Assistant Store Manager · Riverside Market", ["x1", "x2", "x3"]]],
     steps: [
-      { ai: "Be honest: “handled scheduling” is why ops roles pass on you. What do you actually track every week?" },
+      { ai: "Ops filters search for forecasting and process, not “handled scheduling”. What do you actually track every week?" },
       { me: "Sales, waste, labor hours. I keep a spreadsheet for the district manager.", id: "x1", kind: "Reframed", html: "Own the store's weekly <mark>sales, waste and labor-hours tracking</mark> in Excel for the district manager." },
       { ai: "What has that spreadsheet shown you?" },
       { me: "Three products we always threw away. We ordered less and saved about a thousand a month. Maybe twelve hundred.", id: "x1", kind: "Quantified", html: "Own the store's weekly sales, waste and labor-hours tracking in Excel; flagged <mark>3 slow-moving products</mark>, cutting waste by <mark>$1.2K a month</mark>.", strength: ["Finds the number that matters", "Critical thinking"] },
@@ -1753,7 +1766,7 @@ const PERSONAS = {
     before: [["Experience", "Business analyst: supported client engagements and built slide decks."], ["Experience", "Conducted research and analysis for logistics clients."]],
     sections: [["Experience", "Business Analyst · Supply-chain consulting", ["o1", "o2", "o3"]]],
     steps: [
-      { ai: "“Built slide decks” reads like a consultant, not a PM. Where do you want to go next?" },
+      { ai: "Product filters won't match “built slide decks”, but your work might. Where do you want to go next?" },
       { me: "Product management. But I've only done consulting." },
       { ai: "Let's find the product work in it. On your last project, what was the client's problem?" },
       { me: "Vendors kept missing their delivery slots. About 40 vendors.", id: "o1", kind: "Reframed", html: "Diagnosed missed delivery slots across <mark>40 vendors</mark> as a logistics client's top problem." },
@@ -1788,7 +1801,8 @@ function resumePaper(p, lines, live) {
 
 // Hero: persona switcher on a photo, with live bubbles (Retell-style)
 function heroStage() {
-  const keys = Object.keys(PERSONAS);
+  const keys = ["c", "a", "b", "d"];
+  const phone = '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>';
   onRender(() => {
     const root = $("#stage"); if (!root) return;
     let k = 0, timer, bub;
@@ -1797,36 +1811,38 @@ function heroStage() {
       root.querySelectorAll(".av").forEach((b, j) => { b.setAttribute("aria-pressed", j === i); });
       root.querySelector(".st-img").style.backgroundImage = `url(${p.img()})`;
       root.querySelector(".st-who").innerHTML = `<b>${p.name}</b><span>${ICP[p.key].tag}</span>`;
-      root.querySelector(".st-call").setAttribute("href", "#call-" + keys[i]);
-      root.querySelector(".st-call span").textContent = `Hear ${p.first}'s call`;
-      const qs = p.steps.filter(s => s.ai), ms = p.steps.filter(s => s.me && s.id);
+      root.querySelector(".st-hear").setAttribute("href", "#call-" + keys[i]);
+      root.querySelector(".st-hear").textContent = `Hear ${p.first}'s call →`;
+      // pair each rewrite with the question before it; show the old wording struck through
+      const pairs = [], seen = {}; let lastAi = "";
+      p.steps.forEach(st => { if (st.ai) lastAi = st.ai; if (st.me && st.id) { pairs.push({ ai: lastAi, me: st.me, html: st.html, prev: seen[st.id] || p.before[0][1] }); seen[st.id] = st.html.replace(/<\/?mark>/g, ""); } });
       let n = 0; clearInterval(bub);
       const paint = () => {
-        const q = qs[n % qs.length], m = ms[n % ms.length];
-        root.querySelector(".b-ai").textContent = q.ai; root.querySelector(".b-me").textContent = m.me;
-        root.querySelector(".b-line").innerHTML = `<small>${m.kind} · on your resume</small>${m.html}`;
+        const x = pairs[n % pairs.length];
+        root.querySelector(".b-ai").textContent = x.ai; root.querySelector(".b-me").textContent = x.me;
+        root.querySelector(".b-line").innerHTML = `<small>Rewritten for ${p.aim.toLowerCase()} roles</small><del>${esc(x.prev)}</del>${x.html}`;
         root.querySelectorAll(".bub").forEach(b => { b.classList.remove("in"); void b.offsetWidth; b.classList.add("in"); });
         n++;
       };
-      paint(); bub = setInterval(() => { if (!root.isConnected) return clearInterval(bub); paint(); }, 4200);
+      paint(); bub = setInterval(() => { if (!root.isConnected) return clearInterval(bub); paint(); }, 5200);
       if (manual) clearInterval(timer);
     };
     root.querySelectorAll(".av").forEach((b, j) => b.addEventListener("click", () => show(j, true)));
     show(0);
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => { if (!root.isConnected) return clearInterval(timer); show((k + 1) % keys.length); }, 12600);
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => { if (!root.isConnected) return clearInterval(timer); show((k + 1) % keys.length); }, 15600);
   });
   return `<div class="stage" id="stage">
     <div class="st-img" role="img" aria-label="A Yapply user on a call"></div><div class="st-shade"></div>
-    <div class="avs" role="group" aria-label="Choose whose call to hear">${keys.map(k => `<button class="av" type="button" aria-pressed="false" style="background-image:url(${PERSONAS[k].img()})" aria-label="${PERSONAS[k].name}, ${ICP[PERSONAS[k].key].tag}"><b>${PERSONAS[k].key}</b></button>`).join("")}</div>
+    <div class="avs" role="group" aria-label="Choose whose call to hear">${keys.map(k => `<button class="av" type="button" aria-pressed="false" style="background-image:url(${PERSONAS[k].img()})" aria-label="${PERSONAS[k].name}, ${ICP[PERSONAS[k].key].tag}"></button>`).join("")}</div>
+    <span class="st-live"><span class="rec"></span>Live call</span>
     <div class="bub b-ai"></div><div class="bub b-me"></div><div class="bub b-line"></div>
-    <div class="st-foot"><div class="st-who"></div><a class="st-call" href="#call-a"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg><span>Hear Maya's call</span></a></div>
+    <div class="st-foot"><div class="st-who"></div><div class="st-actions"><a class="st-call" href="#call">${phone}<span>Start your free call</span></a><a class="st-hear" href="#call-c">Hear Diego's call →</a></div></div>
   </div>`;
 }
 
 // Call lobby: in the product this opens the microphone; this prototype plays a sample call.
 route("call", () => {
   onRender(() => {
-    document.querySelectorAll(".roast-toggle button").forEach(b => b.addEventListener("click", () => document.querySelectorAll(".roast-toggle button").forEach(x => x.classList.toggle("on", x === b))));
     $("#mic").addEventListener("click", async () => {
       const note = $("#mic-note");
       try { const s = await navigator.mediaDevices.getUserMedia({ audio: true }); s.getTracks().forEach(t => t.stop()); note.textContent = "Microphone works. Live calls open at launch; for now, hear a sample call below."; }
@@ -1834,15 +1850,14 @@ route("call", () => {
       note.classList.remove("hidden");
     });
   });
-  return { title: "Start a free call", seoTitle: "Free Resume Roast Call, No Sign-Up | Yapply", desc: "Get your resume roasted on a free call, no sign-up. Yapply tells you why it's getting filtered out, then rewrites what you actually did for the job you want.", path: "/call", crumbs: [["Home", "home"], ["Call"]],
+  return { title: "Start a free call", seoTitle: "Start a Free Call, No Sign-Up | Yapply", desc: "Start a free call, no sign-up. Find out why the filter keeps saying no, then rewrite what you actually did for the job you want, together.", path: "/call", crumbs: [["Home", "home"], ["Call"]],
     html: `<section class="lobby"><div class="wrap lobby-in">
       <div class="orb big" aria-hidden="true"></div>
-      <h1 class="serif">Ready to get roasted?</h1>
-      <p class="lead muted">Free, no sign-up, about 10 minutes. Upload your resume (or don't), say the job you want, and hear exactly why it's getting filtered out. Then fix it out loud: Yapply rewrites what you actually did while you talk.</p>
-      <div class="roast-toggle" role="group" aria-label="How blunt"><button type="button" class="on" data-tone="roast">🔥 Roast me</button><button type="button" data-tone="gentle">Go easy</button></div>
+      <h1 class="serif">Let's find out why. Together.</h1>
+      <p class="lead muted">Free, no sign-up, about 10 minutes. Tell us the job you want and what you've actually done. We'll show you what the filter can't find, then rewrite it with you while you talk.</p>
       <div class="row center"><button class="btn primary lg" id="mic" type="button">Allow microphone & start</button></div>
       <p id="mic-note" class="answer hidden" style="max-width:560px;margin:18px auto 0"></p>
-      <p class="small muted" style="margin-top:34px">Or hear a sample roast first:</p>
+      <p class="small muted" style="margin-top:34px">Or hear a sample call first:</p>
       <div class="lobby-ps">${Object.entries(PERSONAS).map(([k, p]) => `<a class="lp" href="#call-${k}"><span class="lp-img" style="background-image:url(${p.img()})"></span><span><b>${p.first}</b><small>${ICP[p.key].tag}</small></span></a>`).join("")}</div>
     </div></section>` };
 });
@@ -1874,7 +1889,7 @@ pattern(/^call-([abcd])$/, k => {
     timers.push(setTimeout(step, reduce ? 0 : 600));
     root.querySelector(".skip").addEventListener("click", () => { timers.forEach(clearTimeout); while (i < p.steps.length) { const s = p.steps[i++]; tx.insertAdjacentHTML("beforeend", `<div class="bubble ${s.ai ? "ai" : "me"}"><small>${s.ai ? "YAPPLY" : p.first.toUpperCase()}</small>${esc(s.ai || s.me)}</div>`); } Object.entries(r.lines).forEach(([id, h]) => { const li = root.querySelector(`[data-l="${id}"]`); if (li) li.innerHTML = h; }); meter.innerHTML = `<b>${r.log.length}</b> live edits · <b>${r.numbers}</b> numbers found`; clearInterval(clock); root.querySelector(".clk").textContent = p.mins; root.classList.add("ended"); });
   });
-  return { title: `Sample call: ${p.name}`, seoTitle: `Sample Resume Roast: ${ICP[p.key].tag} | Yapply`, desc: `Hear a sample Yapply call with ${p.first} (${ICP[p.key].tag.toLowerCase()}) and watch the resume being written live as they talk.`, path: "/call/sample-" + k, crumbs: [["Home", "home"], ["Call", "call"], [p.first]],
+  return { title: `Sample call: ${p.name}`, seoTitle: `Sample Call: ${ICP[p.key].tag} | Yapply`, desc: `Hear a sample Yapply call with ${p.first} (${ICP[p.key].tag.toLowerCase()}) and watch the resume being written live as they talk.`, path: "/call/sample-" + k, crumbs: [["Home", "home"], ["Call", "call"], [p.first]],
     html: `<section class="callscr" id="callscr"><div class="wrap">
       <div class="cs-top"><div class="row" style="gap:12px"><span class="lp-img sm" style="background-image:url(${p.img()})"></span><div><b>${p.name}</b><div class="small" style="opacity:.7">${p.role} · aiming for ${p.aim}</div></div></div>
         <div class="row" style="gap:10px"><span class="live-dot">LIVE</span><span class="clk num">0:00</span><button class="btn sm ghost-d skip" type="button">Skip to end</button></div></div>
@@ -1893,7 +1908,7 @@ pattern(/^report-([abcd])$/, k => {
   const p = PERSONAS[k], r = personaReport(p), n = p.steps.length;
   const comp = NACE.map(c => [c, r.strengths.filter(s => s[1] === c).length]).filter(([, v]) => v);
   const max = Math.max(...comp.map(c => c[1]), 1);
-  return { title: `Call report: ${p.name}`, seoTitle: `Sample Roast Report: ${ICP[p.key].tag} | Yapply`, desc: `A sample Yapply career-change report: how ${p.first}'s resume was rewritten for ${p.aim.toLowerCase()} roles during the call, which directions fit, and what transfers.`, path: "/report/sample-" + k, crumbs: [["Home", "home"], ["Call", "call"], [p.first + "'s report"]],
+  return { title: `Call report: ${p.name}`, seoTitle: `Sample Career-Change Report: ${ICP[p.key].tag} | Yapply`, desc: `A sample Yapply career-change report: how ${p.first}'s resume was rewritten for ${p.aim.toLowerCase()} roles during the call, which directions fit, and what transfers.`, path: "/report/sample-" + k, crumbs: [["Home", "home"], ["Call", "call"], [p.first + "'s report"]],
     html: `<section class="rep-head"><div class="wrap">
       <div class="rh-grid"><div><span class="eyebrow">Call report · sample · ${p.mins}</span><h1 class="serif">${p.first} talked for ${p.mins.split(":")[0]} minutes. Here's what transfers.</h1>
         <p class="lead muted">${p.role}. Aiming for ${p.aim.toLowerCase()}. Came in saying: <i>${p.line}</i></p></div>
@@ -2198,7 +2213,7 @@ route("tool-resume-roaster", () => {
       const r = roastResume($("#rr-text").value, $("#rr-field").value, $("#rr-gentle").checked);
       $("#rr-out").innerHTML = `<div class="row" style="justify-content:space-between"><span class="eyebrow" style="margin:0">The roast</span><span class="tag ${r.risk[1]}">Filter risk: ${r.risk[0]}</span></div>
         ${r.out.length ? r.out.map(([t, q, m, fix]) => `<div class="rr-item"><b>${t}</b><p class="rr-q">“${esc(q)}”</p><p>${m}</p><p class="small muted">Fix: ${fix}</p></div>`).join("") : `<p>Honestly? Not much to roast here. Try it against a specific job on a call.</p>`}
-        <div class="rr-cta"><p class="small"><b>This tool only reads text.</b> On a free call, Yapply asks what's missing and rewrites the weak lines with you, from what you actually did.</p><a class="btn primary" href="#call">Roast me on a call, free</a></div>`;
+        <div class="rr-cta"><p class="small"><b>This tool only reads text.</b> On a free call, Yapply asks what's missing and rewrites the weak lines with you, from what you actually did.</p><a class="btn primary" href="#call">Start a free call</a></div>`;
     };
     ["#rr-text", "#rr-field", "#rr-gentle"].forEach(s => $(s).addEventListener("input", go)); go();
   });
@@ -2288,8 +2303,8 @@ function statBand() {
   return `<div class="stat-band">${STATS.map(([n, t, u, s]) => `<div><b class="serif">${n}</b><p>${t}</p><a class="small muted" href="${u}">Source: ${s} ↗</a></div>`).join("")}</div>`;
 }
 const HOME_FAQ = [
-  ["Why am I getting rejected so fast?", "Often software rejects the application before a person reads it, filtering on keywords and requirements. Career changers get hit hardest, because their resume uses the old field's words. A free roast call shows you exactly which lines are doing it."],
-  ["Is the resume roast really free?", "Yes. The call and your rewritten resume are free, with no sign-up. You pay only when you start applying through Yapply."],
+  ["Why am I getting rejected so fast?", "Often software rejects the application before a person reads it, filtering on keywords and requirements. Career changers get hit hardest, because their resume uses the old field's words. A free call shows you exactly which lines are doing it."],
+  ["Is the call really free?", "Yes. The call and your rewritten resume are free, with no sign-up. You pay only when you start applying through Yapply."],
   ["Can employers tell I used AI?", "What gives resumes away is generic, inflated wording. Yapply writes from your own words and real examples, which is also what holds up when an interviewer asks follow-up questions."],
   ["Why not just use ChatGPT or Claude?", "They're great writers, but you have to prompt them, paste everything in, catch any details they fill in, and still apply to every job yourself. Yapply asks the questions, only writes what you said, and applies for you with proof."],
   ["How do I write a resume for a career change?", "Keep your real job titles, but rewrite each bullet as evidence for the new role: the result, the number, and the skill the new field searches for."],
@@ -2298,9 +2313,9 @@ const HOME_FAQ = [
 ];
 function heroRoast() {
   return `<div class="hr-stage">${roastPaper()}
-    <div class="hr-phone" aria-label="Sample roast call">
-      <div class="fv-top"><span class="rec"></span>Free roast · live <span class="muted">2:41</span></div>
-      <div class="fv-b ai hb1">Be honest. “Handled scheduling.” What does that actually mean?</div>
+    <div class="hr-phone" aria-label="Sample call">
+      <div class="fv-top"><span class="rec"></span>Free call · live <span class="muted">2:41</span></div>
+      <div class="fv-b ai hb1">“Handled scheduling” is all the filter sees. What does it actually mean?</div>
       <div class="fv-b me hb2">I schedule twelve people around the busy hours, and I track sales and waste in Excel for my district—</div>
       <div class="fv-b ai cut hb3"><em>Yapply cut in</em>Stop. That's operations. How much waste did you cut?</div>
       <div class="fv-b me hb4">About twelve hundred a month.</div>
@@ -2308,21 +2323,21 @@ function heroRoast() {
     </div></div>`;
 }
 route("home", () => ({
-  title: "Yapply", seoTitle: "Free Resume Roast: Find Out Why You're Getting Rejected | Yapply",
-  desc: "Rejected before a human ever read it? Get your resume roasted on a free call, no sign-up. Yapply rewrites what you actually did for the job you want, then applies for you.",
-  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "Free resume roast on a call, resume rewritten from what you say, and swipe-to-apply with proof, for people changing direction.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
+  title: "Yapply", seoTitle: "Rejected by the ATS? Beat It With Your Real Story | Yapply",
+  desc: "Rejected before a human ever read it? Start a free call, no sign-up. Say what you actually did; Yapply rewrites it for the job you want, so it reads like you, then applies for you.",
+  ld: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Yapply", applicationCategory: "BusinessApplication", operatingSystem: "Web, iOS, Android", description: "On the job seeker's side: a free call that finds out why the ATS says no, a resume rewritten from what you say, and swipe-to-apply with proof.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@type": "Organization", name: "HOLOGROW INC" } },
   html: `
   <section class="hero2"><div class="wrap h2-grid">
     <div class="h2-left">
       <p class="proof"><span class="pulse"></span>Free call · No sign-up · Zero AI-speak</p>
       <h1 class="serif">Rejected before a human ever read it?</h1>
       <div class="h2-bottom">
-        <p class="h2-lead">Companies screen you with AI and reject you in two minutes. Fight back with the one thing AI can't fake: the real story you tell out loud. On a free roast call, Yapply shows you exactly why you're getting filtered, then rewrites what you actually did in the new field's language. <b>Swipe right on real jobs, and we apply.</b></p>
-        <div class="row"><a class="btn primary lg" href="#call">Roast my resume, free</a><a class="btn lg" href="#call-c">Hear a sample roast</a></div>
+        <p class="h2-lead">Switching fields gets you filtered out by your old job's keywords. Tell us what you actually did. We'll rewrite it in the new field's language, so it reads like you and gets past the filter. <b>Then we apply for you.</b></p>
+        <div class="row"><a class="btn primary lg" href="#call">Start a free call</a><a class="btn lg" href="#call-c">Hear a sample call</a></div>
         <ul class="ticks"><li>Beats the filter</li><li>Zero AI-speak</li><li>Holds up in the interview</li></ul>
       </div>
     </div>
-    ${heroRoast()}
+    ${heroStage()}
   </div></section>
 
   <section class="section roomy dark-sec"><div class="wrap">
@@ -2330,8 +2345,13 @@ route("home", () => ({
     <div class="stat-band">${[["#1", "theme in 23,846 job-search comments we analyzed on TikTok: getting rejected or ghosted.", null, TIKTOK_STUDY], ["70.3%", "of job seekers applied to at least one role outside their resume's field, the people most likely to be filtered on keywords.", "https://huntr.co/research/career-changer", "Huntr, 15,175 job seekers"], ["18–22%", "of job posts on Greenhouse were ghost listings that companies weren't trying to fill.", "https://www.entrepreneur.com/business-news/ghost-job-listings-on-the-rise-how-to-spot-avoid-experts/485494", "Greenhouse via Entrepreneur"]].map(([n, t, u, src]) => `<div><b class="serif">${n}</b><p>${t}</p>${u ? `<a class="small muted" href="${u}">Source: ${src} ↗</a>` : `<span class="small muted">Source: ${src}</span>`}</div>`).join("")}</div>
   </div></section>
 
+  <section class="section roomy"><div class="wrap grid-2" style="align-items:center;gap:clamp(32px,6vw,96px)">
+    <div><span class="eyebrow">On the call</span><h2 class="serif">What the filter sees. What you actually did.</h2><p class="muted" style="font-size:1.1rem;line-height:1.65">We go through your resume together: what the filter can't find, what reads generic, what still sounds like your old job. Then you tell us what really happened, and we rewrite it while you talk. You can cut in any time.</p><a class="btn primary lg" href="#call">Start a free call</a></div>
+    ${heroRoast()}
+  </div></section>
+
   <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Whose side we're on</span><h2 class="serif">They screen you with AI. Then reject you for sounding like AI.</h2><p class="muted">Fine. Beat their filter with your real story, in your own words: the version a recruiter believes and an interviewer can't poke holes in.</p></div>
+    <div class="sec-head"><span class="eyebrow">Whose side we're on</span><h2 class="serif">They screen you with AI. Then reject you for sounding like AI.</h2><p class="muted">So let's beat their filter together, with your real story in your own words: the version a recruiter believes and an interviewer can't poke holes in.</p></div>
     <div class="sides"><div class="side them"><span class="eyebrow" style="margin:0">Their side</span><ul>${["AI screening that rejects you in two minutes", "Detectors that flag anything that sounds like AI", "Fake listings kept up to collect resumes", "Silence instead of feedback"].map(x => `<li>${x}</li>`).join("")}</ul></div>
       <div class="side us"><span class="eyebrow" style="margin:0">Your side</span><ul>${["Your real experience, said out loud, in the words their filter searches for", "Zero AI-speak: it sounds like you because it came from you", "Every line holds up when the interviewer digs", "A straight answer about why you're getting rejected, free"].map(x => `<li>${x}</li>`).join("")}</ul></div></div>
   </div></section>
@@ -2362,14 +2382,14 @@ route("home", () => ({
   </div></section>
 
   <section class="section roomy"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Same experience. New direction.</span><h2 class="serif">Four roasts. Four new directions.</h2><p class="muted">The most common ways people switch in their first few years. Each line came out of a conversation; nothing was invented.</p></div>
+    <div class="sec-head"><span class="eyebrow">Same experience. New direction.</span><h2 class="serif">Four switches. One call each.</h2><p class="muted">The most common ways people switch in their first few years. Each line came out of a conversation; nothing was invented.</p></div>
     <div class="who-grid">${["A", "B", "C", "D"].map(switchCard).join("")}</div>
     <p class="small muted" style="margin-top:18px">Sample calls with fictional people, built on the most common switch paths in Huntr's career-changer research.</p>
   </div></section>
 
-  <section class="section roomy"><div class="wrap"><div class="price-tease"><div><span class="eyebrow">Pricing</span><h2 class="serif">Free to roast. Pay when you apply.</h2><p class="muted">The roast call and your rewritten resume are free, with no sign-up. A subscription starts when you send your first application. Prefer to paste? Try the free <a href="#tool-resume-roaster">Resume Roaster</a>.</p></div><a class="btn lg" href="#pricing">See pricing →</a></div></div></section>
+  <section class="section roomy"><div class="wrap"><div class="price-tease"><div><span class="eyebrow">Pricing</span><h2 class="serif">Free to start. Pay when you apply.</h2><p class="muted">The call and your rewritten resume are free, with no sign-up. A subscription starts when you send your first application.</p></div><a class="btn lg" href="#pricing">See pricing →</a></div></div></section>
 
-  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions before you get roasted</h2>${faqBlock(HOME_FAQ)}</div></section>
+  <section class="section roomy"><div class="wrap narrow"><h2 class="serif">Questions before your first call</h2>${faqBlock(HOME_FAQ)}</div></section>
   ${ctaBand("Find out why. Then fix it, in one call.", "Free, no sign-up. Leave with a resume that sounds like you, written for the job you want.")}`
 }));
 
@@ -2444,11 +2464,11 @@ function fvCoach() {
 function roastPaper() {
   const n = (t, k) => `<span class="rn rn-${k}">${t}</span>`;
   return `<div class="roast-paper"><div class="rp-h"><b>Diego Ramirez</b><span>Assistant Store Manager → applying to Operations Analyst</span></div>
-    <p><span class="circ">Results-driven, hard-working team player</span> passionate about leveraging synergies.</p>${n("Reads like ChatGPT. Recruiters skim right past it.", 1)}
+    <p><span class="circ">Results-driven, hard-working team player</span> passionate about leveraging synergies.</p>${n("Generic and AI-sounding. Recruiters skim past it.", 1)}
     <h5>Experience</h5><p>Assistant Store Manager, Riverside Market</p>
-    <ul><li><span class="circ">Responsible for</span> opening and closing the store</li><li><span class="circ">Handled</span> customers and scheduling</li></ul>${n("Duty, not result. What did you actually run?", 2)}
-    <h5>Skills</h5><p>Customer service, teamwork, <span class="circ">Microsoft Office</span></p>${n("The filter wants Excel, forecasting, inventory. It finds none.", 3)}
-    <span class="stamp">Likely auto-rejected</span></div>`;
+    <ul><li><span class="circ">Responsible for</span> opening and closing the store</li><li><span class="circ">Handled</span> customers and scheduling</li></ul>${n("Says what the job was, not what you did.", 2)}
+    <h5>Skills</h5><p>Customer service, teamwork, <span class="circ">Microsoft Office</span></p>${n("Ops filters search for Excel, forecasting, inventory. None found.", 3)}
+    <span class="stamp">Likely filtered out</span></div>`;
 }
 function fvMatch() {
   return `<div class="fv-stack"><div class="chips">${["Data analyst", "From IT support", "NYC or remote", "$70K+", "0–3 years"].map(c => `<span class="chip on">${c}</span>`).join("")}</div>
@@ -2488,7 +2508,7 @@ function fvInterview() {
       <div class="li-s"><span class="eyebrow" style="margin:0">Private suggestion · only you see this</span><p>Bridge it with your ticket report: <b>what you did</b> (weekly SQL report), <b>what changed</b> (password resets cut in half), <b>why data</b> (you liked finding the cause more than closing tickets).</p></div></div>
     <div class="jcard deb"><span class="eyebrow" style="margin:0">Debrief</span>${[["Structure", 80], ["Specifics", 64], ["Pace", 88]].map(([k, v]) => `<div class="tm-row"><span>${k}</span><div class="tm-bar"><i style="width:${v}%"></i></div></div>`).join("")}<p class="small"><b>Fix next:</b> say the number earlier. Next practice starts here.</p></div></div>`;
 }
-const FV = { "resume-roast": () => `<div class="fv-stack">${roastPaper()}</div>`, "talk-to-resume": fvCoach, "job-match": fvMatch, "tailored-applications": fvTailor, "verified-jobs": fvVerified, "application-tracker": fvTracker, "ai-mock-interview": fvInterview };
+const FV = { "ats-check": () => `<div class="fv-stack">${roastPaper()}</div>`, "talk-to-resume": fvCoach, "job-match": fvMatch, "tailored-applications": fvTailor, "verified-jobs": fvVerified, "application-tracker": fvTracker, "ai-mock-interview": fvInterview };
 
 function proofBlock(f) {
   return `<div class="proofs-band">${f.proof.map(([n, t, u, s]) => `<div><b class="serif">${n}</b><p>${t}</p><span class="small">${u ? `<a href="${u}">Source: ${s} ↗</a>` : `Source: ${s}`}</span></div>`).join("")}</div>`;
@@ -2503,7 +2523,7 @@ pattern(/^feature-(.+)$/, raw => {
     <section class="fhero"><div class="wrap fh-grid">
       <div class="fh-left"><span class="eyebrow">${f.group} · ${f.name}${f.flag ? " · Core" : ""}</span>
         <h1 class="serif">${f.h1}</h1><p class="fh-pain">${f.pain}</p><p class="fh-sub">${f.sub}</p>
-        <div class="row"><a class="btn primary lg" href="#${f.cta[0]}">${f.cta[1]}</a><a class="btn lg" href="#call-c">Hear a sample roast</a></div></div>
+        <div class="row"><a class="btn primary lg" href="#${f.cta[0]}">${f.cta[1]}</a><a class="btn lg" href="#call-c">Hear a sample call</a></div></div>
       <div class="fv">${FV[slug]()}</div>
     </div></section>
 
@@ -2539,7 +2559,7 @@ pattern(/^feature-(.+)$/, raw => {
 });
 
 route("features", () => ({
-  title: "Features", seoTitle: "Features: Resume Roast, Talk-to-Resume, Swipe to Apply & Interview Prep | Yapply", desc: "Yapply's features follow your job search: a free resume roast, a resume rewritten from what you say, swipe-to-apply on verified jobs with proof, and interview prep.", path: "/features", crumbs: [["Home", "home"], ["Features"]],
+  title: "Features", seoTitle: "Features: Free ATS Check, Talk-to-Resume, Swipe to Apply & Interview Prep | Yapply", desc: "Yapply's features follow your job search: a free ATS check call, a resume rewritten from what you say, swipe-to-apply on verified jobs with proof, and interview prep.", path: "/features", crumbs: [["Home", "home"], ["Features"]],
   html: `<section class="fhero"><div class="wrap narrow" style="text-align:left"><span class="eyebrow">Features</span><h1 class="serif" style="font-size:clamp(2.8rem,6vw,5rem);line-height:1">From “why am I getting rejected?” to an interview.</h1><p class="fh-sub">Every feature runs on what you said on one call, so nothing you said goes to waste and nothing on your resume is invented.</p></div></section>
   ${FEATURE_GROUPS.map(([g, sub]) => `<section class="section roomy-s"><div class="wrap"><div class="fg-head"><span class="eyebrow" style="margin:0">${g}</span><h2 class="serif">${sub}</h2></div>
     <div class="feat-grid">${FEATURES.filter(f => f.group === g).map(f => `<a class="feat" href="#feature-${f.slug}">${f.flag ? '<span class="tag hi">Core</span>' : ""}<h3>${f.name}</h3><p class="muted">${f.short}</p><span class="go">→</span></a>`).join("")}</div></div></section>`).join("")}
@@ -2778,7 +2798,7 @@ pattern(/^compare-yapply-vs-([a-z0-9-]+)$/, s => { const c = COMPETITORS.find(x 
 pattern(/^compare-([a-z0-9-]+)-alternatives$/, s => { const c = COMPETITORS.find(x => x.slug === s); if (!c) return null;
   return { title: `${c.name} alternatives for students`, path: `/alternatives/${s}-alternatives`, crumbs: resCrumbs("Compare", "compare", `${c.name} alternatives`),
     html: pageHead({ eyebrow: "Alternatives", title: `${c.name} alternatives for new grads`, answer: `Popular alternatives to ${c.name}: ${COMPETITORS.filter(x => x.slug !== s).map(x => x.name).join(", ")} and Yapply. Choose Yapply if your resume is thin and you want it written with you by voice; choose an auto-apply tool if you only need volume.` }) +
-    `<section class="section"><div class="wrap grid"><a class="card" href="#feature-talk-to-resume"><span class="tag hi">Yapply</span><h3>Yapply</h3><p class="small muted">Free resume roast on a call, a resume rewritten from what you say, and swipe-to-apply with proof for every application.</p></a>${COMPETITORS.filter(x => x.slug !== s).map(x => `<a class="card" href="#compare-yapply-vs-${x.slug}"><h3>${x.name}</h3><p class="small muted">${x.what}</p></a>`).join("")}</div></section>` }; });
+    `<section class="section"><div class="wrap grid"><a class="card" href="#feature-talk-to-resume"><span class="tag hi">Yapply</span><h3>Yapply</h3><p class="small muted">A free call that finds out why the ATS says no, a resume rewritten from what you say, and swipe-to-apply with proof for every application.</p></a>${COMPETITORS.filter(x => x.slug !== s).map(x => `<a class="card" href="#compare-yapply-vs-${x.slug}"><h3>${x.name}</h3><p class="small muted">${x.what}</p></a>`).join("")}</div></section>` }; });
 
 // ----- Creator program and affiliate program -----
 route("creator-program", () => {

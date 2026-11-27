@@ -162,7 +162,7 @@ route("tool-resume-roaster", () => {
       const r = roastResume($("#rr-text").value, $("#rr-field").value, $("#rr-gentle").checked);
       $("#rr-out").innerHTML = `<div class="row" style="justify-content:space-between"><span class="eyebrow" style="margin:0">The roast</span><span class="tag ${r.risk[1]}">Filter risk: ${r.risk[0]}</span></div>
         ${r.out.length ? r.out.map(([t, q, m, fix]) => `<div class="rr-item"><b>${t}</b><p class="rr-q">“${esc(q)}”</p><p>${m}</p><p class="small muted">Fix: ${fix}</p></div>`).join("") : `<p>Honestly? Not much to roast here. Try it against a specific job on a call.</p>`}
-        <div class="rr-cta"><p class="small"><b>This tool only reads text.</b> On a free call, Yapply asks what's missing and rewrites the weak lines with you, from what you actually did.</p><a class="btn primary" href="#call">Roast me on a call, free</a></div>`;
+        <div class="rr-cta"><p class="small"><b>This tool only reads text.</b> On a free call, Yapply asks what's missing and rewrites the weak lines with you, from what you actually did.</p><a class="btn primary" href="#call">Start a free call</a></div>`;
     };
     ["#rr-text", "#rr-field", "#rr-gentle"].forEach(s => $(s).addEventListener("input", go)); go();
   });

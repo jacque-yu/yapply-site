@@ -807,3 +807,16 @@ h2.serif { font-size: clamp(2.2rem, 4.2vw, 3.4rem); line-height: 1.04; margin: 0
 .ticks { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
 .ticks li { font-weight: 600; font-size: .95rem; }
 .ticks li::before { content: "✓"; color: var(--good); font-weight: 800; margin-right: 6px; }
+
+/* ===== Call-first hero (Retell-style) ===== */
+.st-live { position: absolute; top: 30px; right: 24px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: rgba(20,22,42,.55); backdrop-filter: blur(10px); color: #fff; font: 600 .78rem var(--mono); }
+.st-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.st-call { font-size: 1.05rem; padding: 16px 26px; }
+.st-hear { color: #fff; font-weight: 600; font-size: .92rem; text-decoration: none; opacity: .9; }
+.st-hear:hover { text-decoration: underline; }
+.b-line del { display: block; color: #8a8fa6; font-size: .82rem; margin-bottom: 4px; }
+.b-ai { top: 20%; }
+.b-me { top: 40%; }
+.b-line { bottom: 132px; }
+@media (max-width: 560px) { .st-actions { align-items: stretch; width: 100%; } .st-call { justify-content: center; } .b-line { bottom: 170px; } }
+@media (max-width: 560px) { .st-live { display: none; } }

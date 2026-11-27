@@ -121,7 +121,7 @@ const COMPETITORS = [
 ];
 
 const FAQ = [
-  ["What is Yapply?", "Yapply is on the job seeker's side. On a free call it roasts your resume, tells you why it is getting filtered out, and rewrites what you actually did for the job you want while you talk. Then you swipe right on matched jobs and Yapply applies for you, with proof. After the call you get a report, then tailored resumes, interview practice and job matches."],
+  ["What is Yapply?", "Yapply is on the job seeker's side. On a free call it finds out why your resume is getting filtered out, and rewrites what you actually did for the job you want while you talk. Then you swipe right on matched jobs and Yapply applies for you, with proof. After the call you get a report, then tailored resumes, interview practice and job matches."],
   ["How do I write a resume with no internship experience?", "Count class projects, research, clubs and part-time jobs, and write each as a result with a number. Yapply asks the questions that surface those numbers and writes the bullets for you."],
   ["Can international students use Yapply?", "Yes. Speak in your own words; Yapply writes fluent, recruiter-ready English, and every job shows H-1B sponsorship likelihood."],
   ["My first job isn't in my field. Can Yapply help?", "Yes. Tell it the role you want; it rewrites your current experience as transferable results for that role."],
